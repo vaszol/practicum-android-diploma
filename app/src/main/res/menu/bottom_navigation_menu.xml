@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/mainFragment"
+        android:icon="@drawable/icon_main"
+        android:title="Главное"/>
+    <item android:id="@+id/favoritesFragment"
+        android:icon="@drawable/icon_favorites"
+        android:title="Избранное"/>
+    <item android:id="@+id/teamFragment"
+        android:icon="@drawable/icon_team"
+        android:title="Команда"/>
+</menu>
