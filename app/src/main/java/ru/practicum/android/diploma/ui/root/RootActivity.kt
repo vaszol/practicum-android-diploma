@@ -60,9 +60,9 @@ class RootActivity : AppCompatActivity() {
     }
 
     private fun messageOk(ids: List<String>) {
-        Log.d(tag, String.format("Ответ c размером колекции %d", ids.size))
+        Log.d(tag, String.format(Locale.US, "Ответ c размером колекции %d", ids.size))
         ids.forEach {
-            Log.d(tag, String.format("id: %d", it))
+            Log.d(tag, String.format(Locale.US, "id: %s", it))
         }
     }
 }
