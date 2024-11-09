@@ -1,16 +1,26 @@
 package ru.practicum.android.diploma.ui.root
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ActivityRootBinding
+import ru.practicum.android.diploma.domain.impl.VacancyInteractorImpl
 
 class RootActivity : AppCompatActivity() {
     private var _binding: ActivityRootBinding? = null
     private val binding get() = _binding!!
+    private val vacancyInteractorImpl: VacancyInteractorImpl by inject()
+    private val TAG: String = "RootActivity";
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityRootBinding.inflate(layoutInflater)
@@ -31,7 +41,23 @@ class RootActivity : AppCompatActivity() {
     }
 
     private fun networkRequestExample(accessToken: String) {
-        // ...
+        Log.d(TAG, String.format("accessToken: %s", accessToken))
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vacancyInteractorImpl.searchVacancies("")
+                    .collect { pair ->
+                        if (pair.second != null) Log.d(TAG, String.format("Ошибка: %s", pair.second));
+                        else if (pair.first.isNullOrEmpty()) Log.d(TAG, "Ответ пустой")
+                        else messageOk(pair.first!!)
+                    }
+            }
+        }
     }
 
+    private fun messageOk(ids: List<String>) {
+        Log.d(TAG, String.format("Ответ c размером колекции %s", ids.size))
+        ids.forEach {
+            Log.d(TAG, String.format("id: %s", it))
+        }
+    }
 }
