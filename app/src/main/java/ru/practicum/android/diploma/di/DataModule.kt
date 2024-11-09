@@ -8,12 +8,12 @@ import ru.practicum.android.diploma.data.NetworkClient
 import ru.practicum.android.diploma.data.network.HHApiClient
 import ru.practicum.android.diploma.data.network.HhApi
 
-private const val hhBaseUrl = "https://api.hh.ru"
+private const val HHBaseUrl = "https://api.hh.ru"
 val dataModule = module {
 
     single<Retrofit> {
         Retrofit.Builder()
-            .baseUrl(hhBaseUrl)
+            .baseUrl(HHBaseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

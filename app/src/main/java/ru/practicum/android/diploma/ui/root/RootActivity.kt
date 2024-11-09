@@ -14,12 +14,13 @@ import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ActivityRootBinding
 import ru.practicum.android.diploma.domain.api.VacancyInteractor
+import java.util.Locale
 
 class RootActivity : AppCompatActivity() {
     private var _binding: ActivityRootBinding? = null
     private val binding get() = _binding!!
     private val vacancyInteractor: VacancyInteractor by inject()
-    private val TAG: String = "RootActivity";
+    private val tag: String = "RootActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,23 +42,27 @@ class RootActivity : AppCompatActivity() {
     }
 
     private fun networkRequestExample(accessToken: String) {
-        Log.d(TAG, String.format("accessToken: %s", accessToken))
+        Log.d(tag, String.format(Locale.US, "accessToken: %s", accessToken))
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vacancyInteractor.searchVacancies("")
                     .collect { pair ->
-                        if (pair.second != null) Log.d(TAG, String.format("Ошибка: %s", pair.second));
-                        else if (pair.first.isNullOrEmpty()) Log.d(TAG, "Ответ пустой")
-                        else messageOk(pair.first!!)
+                        if (pair.second != null) {
+                            Log.d(tag, String.format(Locale.US, "Ошибка: %s", pair.second))
+                        } else if (pair.first.isNullOrEmpty()) {
+                            Log.d(tag, "Ответ пустой")
+                        } else {
+                            messageOk(pair.first!!)
+                        }
                     }
             }
         }
     }
 
     private fun messageOk(ids: List<String>) {
-        Log.d(TAG, String.format("Ответ c размером колекции %s", ids.size))
+        Log.d(tag, String.format("Ответ c размером колекции %d", ids.size))
         ids.forEach {
-            Log.d(TAG, String.format("id: %s", it))
+            Log.d(tag, String.format("id: %d", it))
         }
     }
 }

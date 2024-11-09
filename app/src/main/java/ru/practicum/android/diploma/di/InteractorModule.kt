@@ -6,7 +6,7 @@ import ru.practicum.android.diploma.domain.impl.VacancyInteractorImpl
 import ru.practicum.android.diploma.ui.root.RootActivity
 
 val interactorModule = module {
-    factory <VacancyInteractor> {
+    factory<VacancyInteractor> {
         VacancyInteractorImpl(get())
     }
     scope<RootActivity> {
