@@ -13,12 +13,12 @@ import org.koin.android.ext.android.inject
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ActivityRootBinding
-import ru.practicum.android.diploma.domain.impl.VacancyInteractorImpl
+import ru.practicum.android.diploma.domain.api.VacancyInteractor
 
 class RootActivity : AppCompatActivity() {
     private var _binding: ActivityRootBinding? = null
     private val binding get() = _binding!!
-    private val vacancyInteractorImpl: VacancyInteractorImpl by inject()
+    private val vacancyInteractor: VacancyInteractor by inject()
     private val TAG: String = "RootActivity";
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,7 @@ class RootActivity : AppCompatActivity() {
         Log.d(TAG, String.format("accessToken: %s", accessToken))
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vacancyInteractorImpl.searchVacancies("")
+                vacancyInteractor.searchVacancies("")
                     .collect { pair ->
                         if (pair.second != null) Log.d(TAG, String.format("Ошибка: %s", pair.second));
                         else if (pair.first.isNullOrEmpty()) Log.d(TAG, "Ответ пустой")
