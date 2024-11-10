@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.root
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -13,6 +14,8 @@ class RootActivity : AppCompatActivity() {
     private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         _binding = ActivityRootBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
