@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.data.NetworkClient
 import ru.practicum.android.diploma.data.dto.Response
 import ru.practicum.android.diploma.data.dto.VacanciesRequest
+import javax.net.ssl.HttpsURLConnection
 
 class HHApiClient(private val hhApi: HhApi, private val context: Context) : NetworkClient {
 
@@ -19,13 +20,13 @@ class HHApiClient(private val hhApi: HhApi, private val context: Context) : Netw
                 }
                 if (dto is VacanciesRequest) {
                     hhApi.getVacancies(dto.text, dto.currency, dto.size, dto.page).apply {
-                        resultCode = 200
+                        resultCode = HttpsURLConnection.HTTP_OK
                     }
                 } else {
-                    Response().apply { resultCode = 400 }
+                    Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
                 }
             } catch (exception: Exception) {
-                Response().apply { resultCode = 400 }
+                Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
             }
         }
     }
