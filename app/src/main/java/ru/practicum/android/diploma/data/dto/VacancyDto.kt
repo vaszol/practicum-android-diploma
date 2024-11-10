@@ -24,12 +24,7 @@ fun VacancyDto.toDomain(): Vacancy =
         name = name ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE,
         employerName = employerName ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE,
         employerLogoUrl90 = employerLogoUrl90 ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE,
-        area = area?.toDomain() ?: Area(
-            id = Vacancy.VACANCY_DEFAULT_STRING_VALUE,
-            name = Vacancy.VACANCY_DEFAULT_STRING_VALUE,
-            parentId = Vacancy.VACANCY_DEFAULT_STRING_VALUE,
-            areas = emptyList()
-        ),
+        area = area?.toDomain() ?: createEmptyArea(),
         experience = experience?.name ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE,
         employment = employment?.name ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE,
         schedule = schedule?.name ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE,
@@ -38,4 +33,11 @@ fun VacancyDto.toDomain(): Vacancy =
         currency = currency ?: Vacancy.CURRENCY_DEFAULT_VALUE,
         description = description ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE
     )
+
+private fun createEmptyArea() = Area(
+    id = Vacancy.VACANCY_DEFAULT_STRING_VALUE,
+    name = Vacancy.VACANCY_DEFAULT_STRING_VALUE,
+    parentId = Vacancy.VACANCY_DEFAULT_STRING_VALUE,
+    areas = emptyList()
+)
 

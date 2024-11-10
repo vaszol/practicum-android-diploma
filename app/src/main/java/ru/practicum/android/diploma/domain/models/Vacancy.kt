@@ -28,6 +28,7 @@ data class Vacancy(
     }
 
     companion object {
+        private const val serialVersionUID: Long = 1L
         const val VACANCY_DEFAULT_STRING_VALUE = "-1"
         const val VACANCY_DEFAULT_INT_VALUE = -1
         const val CURRENCY_DEFAULT_VALUE = "RUR"
