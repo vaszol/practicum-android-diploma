@@ -35,6 +35,7 @@
         android:textSize="@dimen/size_32sp"
         android:gravity="center_vertical"
         style="@style/fragment_team_style"
+        android:textStyle="bold"
         android:text="@string/text_developers_worked"
         />
 
