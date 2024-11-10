@@ -21,17 +21,17 @@ data class VacancyDto(
 fun VacancyDto.toDomain(): Vacancy =
     Vacancy(
         id = id,
-        name = name ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE,
-        employerName = employerName ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE,
-        employerLogoUrl90 = employerLogoUrl90 ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE,
+        name = name.orDefault(),
+        employerName = employerName.orDefault(),
+        employerLogoUrl90 = employerLogoUrl90.orDefault(),
         area = area?.toDomain() ?: createEmptyArea(),
-        experience = experience?.name ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE,
-        employment = employment?.name ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE,
-        schedule = schedule?.name ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE,
-        salaryFrom = salaryFrom ?: Vacancy.VACANCY_DEFAULT_INT_VALUE,
-        salaryTo = salaryTo ?: Vacancy.VACANCY_DEFAULT_INT_VALUE,
-        currency = currency ?: Vacancy.CURRENCY_DEFAULT_VALUE,
-        description = description ?: Vacancy.VACANCY_DEFAULT_STRING_VALUE
+        experience = experience?.name.orDefault(),
+        employment = employment?.name.orDefault(),
+        schedule = schedule?.name.orDefault(),
+        salaryFrom = salaryFrom.orDefault(),
+        salaryTo = salaryTo.orDefault(),
+        currency = currency.orDefault(),
+        description = description.orDefault()
     )
 
 private fun createEmptyArea() = Area(
@@ -40,4 +40,8 @@ private fun createEmptyArea() = Area(
     parentId = Vacancy.VACANCY_DEFAULT_STRING_VALUE,
     areas = emptyList()
 )
+
+private fun Int?.orDefault(): Int = this ?: Vacancy.VACANCY_DEFAULT_INT_VALUE
+
+private fun String?.orDefault(): String = this ?: Vacancy.CURRENCY_DEFAULT_VALUE
 
