@@ -11,7 +11,6 @@ import ru.practicum.android.diploma.data.db.AppDataBase
 import ru.practicum.android.diploma.data.network.HHApiClient
 import ru.practicum.android.diploma.data.network.HhApi
 
-
 private const val HHBaseUrl = "https://api.hh.ru"
 val dataModule = module {
 
