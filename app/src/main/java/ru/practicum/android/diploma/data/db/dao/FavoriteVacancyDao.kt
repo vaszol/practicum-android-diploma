@@ -13,7 +13,7 @@ interface FavoriteVacancyDao {
     @Query("DELETE FROM favorite_vacancy_table WHERE id = :id")
     suspend fun deleteFavoriteVacancyById(id: String)
 
-    @Query("SELECT * FROM favorite_vacancy_table ORDER BY primaryKey DESC")
+    @Query("SELECT * FROM favorite_vacancy_table ORDER BY id DESC")
     suspend fun getFavoritesVacancy(): List<FavoriteVacancyEntity>
 
     @Query("SELECT id FROM favorite_vacancy_table")

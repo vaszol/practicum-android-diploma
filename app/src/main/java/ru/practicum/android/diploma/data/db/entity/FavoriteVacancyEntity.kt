@@ -6,8 +6,7 @@ import ru.practicum.android.diploma.domain.models.Area
 
 @Entity(tableName = "favorite_vacancy_table")
 data class FavoriteVacancyEntity(
-    @PrimaryKey(autoGenerate = true)
-    val primaryKey: Int,    // Первичный ключ
+    @PrimaryKey
     val id: String,
     val name: String,
     val employerName: String,

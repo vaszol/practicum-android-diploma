@@ -7,7 +7,7 @@ import ru.practicum.android.diploma.data.db.AppDataBase
 
 val dataModule = module {
 
-    single{
+    single {
         Room.databaseBuilder(androidContext(), AppDataBase::class.java, "app_database.db")
             .fallbackToDestructiveMigration()
             .build()
