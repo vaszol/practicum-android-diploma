@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/mainFragment"
         android:icon="@drawable/icon_main"
-        android:title="Главное"/>
+        android:title="@string/bot_nav_main"/>
     <item android:id="@+id/favoritesFragment"
         android:icon="@drawable/icon_favorites"
-        android:title="Избранное"/>
+        android:title="@string/bot_nav_favorites"/>
     <item android:id="@+id/teamFragment"
         android:icon="@drawable/icon_team"
-        android:title="Команда"/>
+        android:title="@string/bot_nav_team"/>
 </menu>
