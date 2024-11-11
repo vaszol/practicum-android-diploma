@@ -1,16 +1,17 @@
 package ru.practicum.android.diploma.util.debouncer
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class Debouncer(private val delayMillis: Long) {
+class Debouncer(private val coroutineScope: CoroutineScope, private val delayMillis: Long) {
     private var job: Job? = null
 
     fun debounce(action: () -> Unit) {
         job?.cancel()
-        job = GlobalScope.launch {
+        job = coroutineScope.launch { // coroutineScope нужно будет передавать при инициализации Debouncer
             delay(delayMillis)
             action()
         }
@@ -20,7 +21,7 @@ class Debouncer(private val delayMillis: Long) {
 /*
 -- Пример использования --
 fun main() = runBlocking {
-    val debouncer = Debouncer(500)
+    val debouncer = Debouncer(viewModelScope, 500)
 
     repeat(10) {
         debouncer.debounce {
