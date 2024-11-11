@@ -11,7 +11,7 @@ class Debouncer(private val coroutineScope: CoroutineScope, private val delayMil
 
     fun debounce(action: () -> Unit) {
         job?.cancel()
-        job = coroutineScope.launch { //coroutineScope нужно будет передавать при инициализации Debouncer
+        job = coroutineScope.launch { // coroutineScope нужно будет передавать при инициализации Debouncer
             delay(delayMillis)
             action()
         }
@@ -21,7 +21,7 @@ class Debouncer(private val coroutineScope: CoroutineScope, private val delayMil
 /*
 -- Пример использования --
 fun main() = runBlocking {
-    val debouncer = Debouncer(500)
+    val debouncer = Debouncer(viewModelScope, 500)
 
     repeat(10) {
         debouncer.debounce {

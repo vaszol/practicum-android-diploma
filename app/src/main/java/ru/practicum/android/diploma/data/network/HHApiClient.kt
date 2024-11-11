@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -27,6 +28,7 @@ class HHApiClient(private val hhApi: HhApi, private val context: Context) : Netw
                     Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
                 }
             } catch (exception: HttpException) {
+                Log.d("Exception caught in HHApiClient: $exception", exception.message())
                 Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
             }
         }
