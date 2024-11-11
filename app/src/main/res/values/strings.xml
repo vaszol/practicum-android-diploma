@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Practicum-Android-Diploma</string>
+    <string name="text_team">Команда</string>
+    <string name="text_developers_worked">Над приложением\nработали</string>
+    <string name="developers">Юлия Басалыгина\n\nМихаил Баландин\n\nПавел Давыдов\n\nВасилий Золотарев\n\nРуслан Коротнев</string>
 </resources>
