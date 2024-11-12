@@ -43,7 +43,7 @@
         android:scaleType="center"
         android:src="@drawable/ic_filter_not_active"
         app:layout_constraintBottom_toBottomOf="@+id/search_vacancy"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintTop_toTopOf="@+id/search_vacancy" />
 
     <!--Кнопка "Фильтр" активная-->
@@ -56,7 +56,7 @@
         android:scaleType="center"
         android:src="@drawable/ic_filter_active"
         app:layout_constraintBottom_toBottomOf="@+id/search_vacancy"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintTop_toTopOf="@+id/search_vacancy"
         android:visibility="invisible"/>
 
