@@ -6,6 +6,20 @@
     <string name="text_team">Команда</string>
     <string name="text_developers_worked">Над приложением\nработали</string>
     <string name="developers">Юлия Басалыгина\n\nМихаил Баландин\n\nПавел Давыдов\n\nВасилий Золотарев\n\nРуслан Коротнев</string>
+
+    <plurals name="vacancy_postfix">
+        <item quantity="zero">%d вакансий</item>
+        <item quantity="one">%d вакансия</item>
+        <item quantity="few">%d вакансии</item>
+        <item quantity="many">%d вакансий</item>
+        <item quantity="other">%d вакансий</item>
+    </plurals>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--Пример использования:
+    vacancyField.text = context.resources.getQuantityString(R.plurals.vacancy_postfix, vacancyCount, vacancyCount)-->
+
+    <!--Строки для экрана поиска-->
     <string name="search_vacancy">Поиск вакансий</string>
     <string name="search_request">Введите запрос</string>
     <string name="no_vacancies">Таких вакансий нет</string>
