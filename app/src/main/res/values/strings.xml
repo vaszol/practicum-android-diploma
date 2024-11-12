@@ -15,5 +15,13 @@
         <item quantity="other">%d вакансий</item>
     </plurals>
     <!--Пример использования:
-    vacancyField.text = context.resources.getQuantityString(R.plurals.vacancy_postfix, vacancyCount, vacancyCount)-->
+   vacancyField.text = context.resources.getQuantityString(R.plurals.vacancy_postfix, vacancyCount, vacancyCount)-->
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--Строки для экрана поиска-->
+    <string name="search_vacancy">Поиск вакансий</string>
+    <string name="search_request">Введите запрос</string>
+    <string name="no_vacancies">Таких вакансий нет</string>
 </resources>
