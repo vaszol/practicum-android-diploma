@@ -39,7 +39,7 @@
         android:layout_height="@dimen/size_48dp"
         android:layout_margin="@dimen/size_4dp"
         android:padding="@dimen/size_4dp"
-        android:background="@color/white"
+        android:background="?attr/colorPrimary"
         android:scaleType="center"
         android:src="@drawable/ic_filter_not_active"
         app:layout_constraintBottom_toBottomOf="@+id/search_vacancy"
