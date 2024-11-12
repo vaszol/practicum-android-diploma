@@ -4,12 +4,13 @@ java = "VERSION_1_8"
 
 # Build constants
 minSdk = "26"
-compileSdk = "34"
+compileSdk = "35"
 targetSdk = "33"
 
 # Detekt
 detekt = "1.23.3"
 detektTwitterComposeRules ="0.0.26"
+kotlin = "1.9.24"
 
 [libraries]
 
@@ -23,18 +24,39 @@ staticAnalysis-detektLibraries = { module = "io.gitlab.arturbosch.detekt:detekt-
 staticAnalysis-detektTwitterComposeRules = { module = "com.twitter.compose.rules:detekt", version.ref = "detektTwitterComposeRules" }
 
 # AndroidX
-androidX-core = "androidx.core:core-ktx:1.12.0"
-androidX-appCompat = "androidx.appcompat:appcompat:1.6.1"
+androidX-core = "androidx.core:core-ktx:1.15.0"
+androidX-appCompat = "androidx.appcompat:appcompat:1.7.0"
+
+io-insert-koin = "io.insert-koin:koin-android:3.5.3"
+kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+kotlin-dsl = "com.hannesdorfmann:adapterdelegates4-kotlin-dsl:4.3.2"
+kotlin-dsl-viewbinding = "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:4.3.2"
 
 # UI layer libraries
-ui-material = "com.google.android.material:material:1.10.0"
-ui-constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.4"
+ui-material = "com.google.android.material:material:1.12.0"
+ui-constraintLayout = "androidx.constraintlayout:constraintlayout:2.2.0"
+androidX-fragment = "androidx.fragment:fragment-ktx:1.8.5"
+lifecycle-viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7"
+glide = "com.github.bumptech.glide:glide:4.15.1"
+glide-compiler = "com.github.bumptech.glide:compiler:4.14.2"
+navigation-fragment = "androidx.navigation:navigation-fragment-ktx:2.8.3"
+navigation-ui = "androidx.navigation:navigation-ui-ktx:2.8.3"
+viewpager2 = "androidx.viewpager2:viewpager2:1.1.0"
+
+# data layer libraries
+retrofit2 = "com.squareup.retrofit2:retrofit:2.9.0"
+converter-gson = "com.squareup.retrofit2:converter-gson:2.9.0"
+room = "androidx.room:room-ktx:2.6.1"
+room-runtime = "androidx.room:room-runtime:2.6.1"
+room-compiler = "androidx.room:room-compiler:2.6.1"
 
 # Unit tests
 unitTests-junit = "junit:junit:4.13.2"
 
 # UI tests
-uiTests-junitExt = "androidx.test.ext:junit:1.1.5"
-uiTests-espressoCore = "androidx.test.espresso:espresso-core:3.5.1"
+uiTests-junitExt = "androidx.test.ext:junit:1.2.1"
+uiTests-espressoCore = "androidx.test.espresso:espresso-core:3.6.1"
+[plugins]
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
 [bundles]

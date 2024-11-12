@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("ru.practicum.android.diploma.plugins.developproperties")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -36,6 +37,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        viewBinding = true
     }
 }
 
@@ -43,9 +45,28 @@ dependencies {
     implementation(libs.androidX.core)
     implementation(libs.androidX.appCompat)
 
+    implementation(libs.io.insert.koin)
+    implementation(libs.kotlinx.coroutines)
+    implementation(libs.kotlin.dsl)
+    implementation(libs.kotlin.dsl.viewbinding)
+
     // UI layer libraries
     implementation(libs.ui.material)
     implementation(libs.ui.constraintLayout)
+    implementation(libs.androidX.fragment)
+    implementation(libs.lifecycle.viewmodel)
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
+    implementation(libs.viewpager2)
+
+    // data layer libraries
+    implementation(libs.retrofit2)
+    implementation(libs.converter.gson)
+    implementation(libs.room)
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
 
     // region Unit tests
     testImplementation(libs.unitTests.junit)
