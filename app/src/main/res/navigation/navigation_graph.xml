@@ -9,11 +9,7 @@
         android:id="@+id/mainFragment"
         android:name="ru.practicum.android.diploma.ui.root.search.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
-        <action
-            android:id="@+id/action_mainFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_main" />
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="ru.practicum.android.diploma.ui.root.favourite.FavoritesFragment"
@@ -24,9 +20,4 @@
         android:name="ru.practicum.android.diploma.ui.root.team.TeamFragment"
         android:label="fragment_team"
         tools:layout="@layout/fragment_team" />
-    <fragment
-        android:id="@+id/detailsFragment"
-        android:name="ru.practicum.android.diploma.ui.root.details.DetailsFragment"
-        android:label="fragment_details"
-        tools:layout="@layout/fragment_details" />
 </navigation>
