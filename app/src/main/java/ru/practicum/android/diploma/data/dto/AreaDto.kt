@@ -14,6 +14,8 @@ fun AreaDto.toDomain(): Area =
         id = id,
         name = name ?: Area.AREA_DEFAULT_VALUE,
         parentId = parentId ?: Area.AREA_DEFAULT_VALUE,
-        areas = if (areas.isEmpty()) emptyList() else areas.map { it.toDomain() }
+        areas = if (areas.isEmpty()) {
+            emptyList()
+        } else areas.map { it.toDomain() }
     )
 

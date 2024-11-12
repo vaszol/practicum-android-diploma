@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.root
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
@@ -18,16 +19,16 @@ import ru.practicum.android.diploma.domain.api.VacancyInteractor
 import java.util.Locale
 
 class RootActivity : AppCompatActivity() {
-    private var _binding: ActivityRootBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: ActivityRootBinding
     private val vacancyInteractor: VacancyInteractor by inject()
     private val tag: String = "RootActivity"
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        _binding = ActivityRootBinding.inflate(layoutInflater)
+        binding = ActivityRootBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
@@ -39,16 +40,11 @@ class RootActivity : AppCompatActivity() {
         networkRequestExample(accessToken = BuildConfig.HH_ACCESS_TOKEN)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
     private fun networkRequestExample(accessToken: String) {
         Log.d(tag, String.format(Locale.US, "accessToken: %s", accessToken))
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vacancyInteractor.searchVacancies("")
+                vacancyInteractor.searchVacancies("", "RUR", "1")
                     .collect { pair ->
                         if (pair.second != null) {
                             Log.d(tag, String.format(Locale.US, "Ошибка: %s", pair.second))
