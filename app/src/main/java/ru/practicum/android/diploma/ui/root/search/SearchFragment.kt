@@ -1,79 +1,154 @@
 package ru.practicum.android.diploma.ui.root.search
 
-import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
+import android.content.Context
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
+import ru.practicum.android.diploma.presentation.search.SearchScreenState
+import ru.practicum.android.diploma.presentation.search.SearchViewModel
+import ru.practicum.android.diploma.domain.models.Vacancy
 
 class SearchFragment : Fragment() {
-    private lateinit var searchBinding: FragmentSearchBinding
-    private val viewModel by viewModel<SearchViewModel>()
+    private val viewModel: SearchViewModel by viewModel()
+    private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
+    private val adapter by lazy { VacancyAdapter(mutableListOf()) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        searchBinding = FragmentSearchBinding.inflate(layoutInflater)
-        return searchBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        searchBinding.apply {
-//            searchMagnifier.setOnClickListener(viewModel.search())    // TODO если не крестик
-//            searchMagnifier.setOnClickListener { viewModel.clearText() }  // TODO если крестик
-            searchEditText.apply {
-                doOnTextChanged { searchText, _, _, _ ->
-                    run {
-                        // TODO реализовать clearIcon через searchMagnifier
-                        if (searchText?.isNotEmpty() == true) {
-                            // searchBinding.searchMagnifier     // TODO надеть крестик
-                        } else {
-                            // searchBinding.searchMagnifier     // TODO снять крестик
-                        }
+        binding.searchEditText.requestFocus()
 
-                        if (searchBinding.searchEditText.hasFocus() && searchText?.isEmpty() == true) {
-                            viewModel.showImage()
-                        } else {
-                            viewModel.searchDebounce()
-                        }
-                    }
+        viewModel.searchScreenState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                SearchScreenState.Loading -> showLoading()
+                SearchScreenState.NoInternet -> showNoInternet()
+                SearchScreenState.NothingFound -> showNothingFound()
+                SearchScreenState.Error -> showError()
+                is SearchScreenState.Results -> showResults(state.resultsList)
+            }
+        }
+
+        val textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!s.isNullOrBlank()) {
+                    binding.searchMagnifier.setImageResource(R.drawable.ic_close)
+                    viewModel.searchDebounce(s.toString())
+                } else {
+                    binding.searchMagnifier.setImageResource(R.drawable.ic_search)
                 }
-                doAfterTextChanged { searchText -> viewModel.doAfterTextChanged(searchText.toString()) }
-                setOnEditorActionListener { _, actionId, _ ->
-                    if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        viewModel.search()
-                    }
-                    false
-                }
-                setOnFocusChangeListener { _, hasFocus -> viewModel.focusChange(hasFocus) }
             }
 
-        }
-        viewModel.state.observe(viewLifecycleOwner) {
-            // TODO("задать список адаптеру, менять картинки")
+            override fun afterTextChanged(s: Editable?) = Unit
         }
 
-        viewModel.event.observe(viewLifecycleOwner) {
-            when (it) {
-                SearchScreenEvent.ClearSearch -> searchBinding.searchEditText.text.clear()
-                else -> hideKeyboard()
+        with(binding) {
+            searchRecyclerView.adapter = adapter
+            searchEditText.addTextChangedListener(textWatcher)
+            searchMagnifier.setOnClickListener {
+                searchEditText.setText(EMPTY_TEXT)
+                setKeyboardVisibility(searchEditText, false)
             }
         }
     }
 
-    private fun hideKeyboard() {
-        val imm =
+    private fun showError() {
+        with(binding) {
+            searchImgPlaceholder.setImageResource(R.drawable.placeholder_error)
+            searchError.setText(R.string.error)
+            searchProgressBar.visibility = View.GONE
+            searchRecyclerView.visibility = View.GONE
+            searchVacancyCount.visibility = View.GONE
+            searchImgPlaceholder.visibility = View.VISIBLE
+            searchError.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showResults(vacancies: List<Vacancy>) {
+        with(binding) {
+            searchImgPlaceholder.visibility = View.GONE
+            searchError.visibility = View.GONE
+            searchProgressBar.visibility = View.GONE
+            searchVacancyCount.text =
+                resources.getQuantityString(R.plurals.vacancy_postfix, vacancies.size, vacancies.size)
+            searchVacancyCount.visibility = View.VISIBLE
+            searchRecyclerView.visibility = View.VISIBLE
+        }
+        adapter.updateData(vacancies)
+    }
+
+    private fun showNoInternet() {
+        with(binding) {
+            searchImgPlaceholder.setImageResource(R.drawable.placeholder_no_internet)
+            searchError.setText(R.string.no_internet)
+            searchProgressBar.visibility = View.GONE
+            searchRecyclerView.visibility = View.GONE
+            searchVacancyCount.visibility = View.GONE
+            searchImgPlaceholder.visibility = View.VISIBLE
+            searchError.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showNothingFound() {
+        with(binding) {
+            searchImgPlaceholder.setImageResource(R.drawable.placeholder_no_vacancy)
+            searchError.setText(R.string.nothing_found)
+            searchVacancyCount.setText(R.string.no_vacancies)
+            searchProgressBar.visibility = View.GONE
+            searchRecyclerView.visibility = View.GONE
+            searchImgPlaceholder.visibility = View.VISIBLE
+            searchError.visibility = View.VISIBLE
+            searchVacancyCount.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showLoading() {
+        with(binding) {
+            searchRecyclerView.visibility = View.GONE
+            searchImgPlaceholder.visibility = View.GONE
+            searchError.visibility = View.GONE
+            searchVacancyCount.visibility = View.GONE
+            searchProgressBar.visibility = View.VISIBLE
+            setKeyboardVisibility(searchEditText, false)
+        }
+    }
+
+    private fun setKeyboardVisibility(view: View, isVisible: Boolean) {
+        val inputMethodManager =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//        imm.hideSoftInputFromWindow(searchBinding.clearIcon.windowToken, 0)       //TODO снять крестик
+
+        if (isVisible) {
+            inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        } else {
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        with(binding) {
+            searchEditText.requestFocus()
+            setKeyboardVisibility(searchEditText, true)
+        }
+    }
+
+    companion object {
+        const val EMPTY_TEXT = ""
     }
 }
