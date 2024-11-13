@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 
 import androidx.fragment.app.Fragment
-
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 import ru.practicum.android.diploma.R
