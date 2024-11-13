@@ -26,4 +26,5 @@
     <string name="no_vacancies">Таких вакансий нет</string>
     <string name="no_internet">Нет интернета</string>
     <string name="nothing_found">Не удалось получить список вакансий</string>
+    <string name="error">Ошибка сервера</string>
 </resources>

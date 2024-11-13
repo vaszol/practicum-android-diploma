@@ -6,5 +6,6 @@ sealed class SearchScreenState {
     object Loading : SearchScreenState()
     object NoInternet : SearchScreenState()
     object NothingFound : SearchScreenState()
+    object Error : SearchScreenState()
     data class Results(val resultsList: List<Vacancy>) : SearchScreenState()
 }

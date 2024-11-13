@@ -38,6 +38,7 @@ class MainFragment : Fragment() {
                 SearchScreenState.Loading -> showLoading()
                 SearchScreenState.NoInternet -> showNoInternet()
                 SearchScreenState.NothingFound -> showNothingFound()
+                SearchScreenState.Error -> showError()
                 is SearchScreenState.Results -> showResults(state.resultsList)
             }
         }
@@ -67,6 +68,18 @@ class MainFragment : Fragment() {
         }
     }
 
+    private fun showError() {
+        with(binding) {
+            searchImgPlaceholder.setImageResource(R.drawable.placeholder_error)
+            searchError.setText(R.string.error)
+            searchProgressBar.visibility = View.GONE
+            searchRecyclerView.visibility = View.GONE
+            searchVacancyCount.visibility = View.GONE
+            searchImgPlaceholder.visibility = View.VISIBLE
+            searchError.visibility = View.VISIBLE
+        }
+    }
+
     private fun showResults(vacancies: List<Vacancy>) {
         with(binding) {
             searchImgPlaceholder.visibility = View.GONE
@@ -82,7 +95,7 @@ class MainFragment : Fragment() {
 
     private fun showNoInternet() {
         with(binding) {
-            searchImgPlaceholder.setImageResource(R.drawable.placeholder_error)
+            searchImgPlaceholder.setImageResource(R.drawable.placeholder_no_internet)
             searchError.setText(R.string.no_internet)
             searchProgressBar.visibility = View.GONE
             searchRecyclerView.visibility = View.GONE
