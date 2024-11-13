@@ -19,7 +19,6 @@ import ru.practicum.android.diploma.domain.api.VacancyInteractor
 import java.util.Locale
 
 class RootActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityRootBinding
     private val vacancyInteractor: VacancyInteractor by inject()
     private val tag: String = "RootActivity"
 
@@ -28,7 +27,7 @@ class RootActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        binding = ActivityRootBinding.inflate(layoutInflater)
+        val binding = ActivityRootBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
