@@ -13,16 +13,28 @@
         android:layout_height="wrap_content">
 
         <!-- Логотип компании -->
-        <ImageView
-            android:id="@+id/company_logo"
+        <FrameLayout
+            android:id="@+id/company_logo_container"
             android:layout_width="@dimen/size_48dp"
             android:layout_height="@dimen/size_48dp"
-            android:background="@drawable/rounded_background_12dp"
-            android:contentDescription="@string/company_logo_description"
-            android:scaleType="centerCrop"
-            android:src="@drawable/employer_logo_placeholder"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/vacancy_title" />
+            app:layout_constraintTop_toTopOf="@id/vacancy_title">
+
+            <!-- ImageView с загружаемым изображением -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/company_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/employer_logo_placeholder" />
+
+            <!-- View поверх изображения для создания фона с границей -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_background_12dp" />
+
+        </FrameLayout>
 
         <!-- Название вакансии и город -->
         <TextView
@@ -37,7 +49,7 @@
             android:textColor="?attr/colorOnPrimary"
             android:textSize="@dimen/size_22sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/company_logo"
+            app:layout_constraintStart_toEndOf="@id/company_logo_container"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Android-разработчик, Москва" />
 
