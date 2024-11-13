@@ -10,24 +10,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentMainBinding
 import ru.practicum.android.diploma.presentation.search.SearchScreenState
 import ru.practicum.android.diploma.presentation.search.SearchViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.domain.models.Vacancy
 
 class MainFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
-    private lateinit var binding: FragmentMainBinding
-    private lateinit var adapter: VacancyAdapter
+    private val binding by lazy { FragmentMainBinding.inflate(layoutInflater) }
+    private val adapter by lazy { VacancyAdapter(mutableListOf()) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentMainBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -45,7 +44,7 @@ class MainFragment : Fragment() {
         }
 
         val textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!s.isNullOrBlank()) {
@@ -56,10 +55,9 @@ class MainFragment : Fragment() {
                 }
             }
 
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) = Unit
         }
 
-        adapter = VacancyAdapter(mutableListOf())
         with(binding) {
             searchRecyclerView.adapter = adapter
             searchEditText.addTextChangedListener(textWatcher)
