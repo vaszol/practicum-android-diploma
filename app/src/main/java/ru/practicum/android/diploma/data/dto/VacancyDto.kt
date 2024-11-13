@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.data.dto
 
+import com.google.gson.annotations.SerializedName
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Vacancy
 
@@ -9,9 +10,12 @@ data class VacancyDto(
     val employerName: String?, // employer.name
     val employerLogoUrl90: String?, // URL логотипа (90x90), employer.logo_urls.90
     val area: AreaDto?, // Регион
-    val experience: BaseDto?, // Опыт работы
-    val employment: BaseDto?, // Тип занятости
-    val schedule: BaseDto?, // График работы
+    @SerializedName("experience.name")
+    val experience: String?, // Опыт работы
+    @SerializedName("employment.name")
+    val employment: String?, // Тип занятости
+    @SerializedName("schedule.name")
+    val schedule: String?, // График работы
     val salaryFrom: Int?, // Нижний предел зарплаты, salary.from
     val salaryTo: Int?, // Верхний предел зарплаты, salary.to
     val currency: String?, // Код валюты, salary.currency
@@ -21,17 +25,17 @@ data class VacancyDto(
 fun VacancyDto.toDomain(): Vacancy =
     Vacancy(
         id = id,
-        name = name.orDefault(),
-        employerName = employerName.orDefault(),
-        employerLogoUrl90 = employerLogoUrl90.orDefault(),
+        name = name.orDefaultVacancy(),
+        employerName = employerName.orDefaultVacancy(),
+        employerLogoUrl90 = employerLogoUrl90.orDefaultVacancy(),
         area = area?.toDomain() ?: createEmptyArea(),
-        experience = experience?.name.orDefault(),
-        employment = employment?.name.orDefault(),
-        schedule = schedule?.name.orDefault(),
-        salaryFrom = salaryFrom.orDefault(),
-        salaryTo = salaryTo.orDefault(),
-        currency = currency.orDefault(),
-        description = description.orDefault()
+        experience = experience.orDefaultVacancy(),
+        employment = employment.orDefaultVacancy(),
+        schedule = schedule.orDefaultVacancy(),
+        salaryFrom = salaryFrom.orDefaultVacancy(),
+        salaryTo = salaryTo.orDefaultVacancy(),
+        currency = currency.orDefaultVacancy(),
+        description = description.orDefaultVacancy()
     )
 
 private fun createEmptyArea() = Area(
@@ -41,7 +45,7 @@ private fun createEmptyArea() = Area(
     areas = emptyList()
 )
 
-private fun Int?.orDefault(): Int = this ?: Vacancy.VACANCY_DEFAULT_INT_VALUE
+private fun Int?.orDefaultVacancy(): Int = this ?: Vacancy.VACANCY_DEFAULT_INT_VALUE
 
-private fun String?.orDefault(): String = this ?: Vacancy.CURRENCY_DEFAULT_VALUE
+private fun String?.orDefaultVacancy(): String = this ?: Vacancy.CURRENCY_DEFAULT_VALUE
 

@@ -7,8 +7,8 @@ import ru.practicum.android.diploma.domain.api.VacancyRepository
 import ru.practicum.android.diploma.domain.models.Resource
 
 class VacancyInteractorImpl(private val repository: VacancyRepository) : VacancyInteractor {
-    override fun searchVacancies(text: String): Flow<Pair<List<String>?, String?>> {
-        return repository.searchVacancies(text).map { result ->
+    override fun searchVacancies(text: String, currency: String, page: String): Flow<Pair<List<String>?, String?>> {
+        return repository.searchVacancies(text, currency, page).map { result ->
             when (result) {
                 is Resource.Success -> Pair(result.data, null)
                 is Resource.Error -> Pair(null, result.message)

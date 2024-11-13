@@ -12,7 +12,10 @@ import ru.practicum.android.diploma.data.dto.Response
 import ru.practicum.android.diploma.data.dto.VacanciesRequest
 import javax.net.ssl.HttpsURLConnection
 
-class HHApiClient(private val hhApi: HhApi, private val context: Context) : NetworkClient {
+class HHApiClient(
+    private val hhApi: HhApi,
+    private val context: Context
+) : NetworkClient {
 
     override suspend fun vacancies(dto: Any): Response {
         return withContext(Dispatchers.IO) {
