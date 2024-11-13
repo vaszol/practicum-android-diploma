@@ -28,4 +28,11 @@
     <string name="nothing_found">Не удалось получить список вакансий</string>
     <string name="error">Ошибка сервера</string>
     <string name="company_logo_description">Логотип компании</string>
+    <string name="filter_description">Добавить фильтр</string>
+    <string name="clear_description">Очистить окно ввода</string>
+
+    <!--Строки для экрана избранного-->
+    <string name="favorite">Избранное</string>
+    <string name="favorite_empty">Список пуст</string>
+    <string name="favorire_error">Не удалось получить список вакансий</string>
 </resources>
