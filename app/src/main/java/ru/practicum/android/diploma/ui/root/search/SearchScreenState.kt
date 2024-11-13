@@ -8,9 +8,9 @@ data class SearchScreenState(
 )
 
 enum class Show {
-    BINOCULARS,     //показывать бинокль
-    TROBER,         //показывать тробер
-    FAIL,          //показывать череп
-    LIST,           //показывать список
-    EMPTY             //показывать кота
+    BINOCULARS, //показывать бинокль
+    TROBER,     //показывать тробер
+    FAIL,       //показывать череп
+    LIST,       //показывать список
+    EMPTY       //показывать кота
 }

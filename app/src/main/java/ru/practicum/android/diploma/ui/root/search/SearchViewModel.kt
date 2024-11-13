@@ -37,9 +37,13 @@ class SearchViewModel(
             viewModelScope.launch(Dispatchers.IO) {
                 vacancyInteractor.searchVacancies(searchText, Vacancy.CURRENCY_DEFAULT_VALUE, page)
                     .collect { pair ->
-                        if (pair.second != null) messageFail()
-                        else if (pair.first.isNullOrEmpty()) messageEmpty()
-                        else messageOk(pair.first!!)
+                        if (pair.second != null) {
+                            messageFail()
+                        } else if (pair.first.isNullOrEmpty()) {
+                            messageEmpty()
+                        } else {
+                            messageOk(pair.first!!)
+                        }
                     }
             }
         }

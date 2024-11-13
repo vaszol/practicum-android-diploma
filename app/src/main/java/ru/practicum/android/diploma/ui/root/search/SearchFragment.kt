@@ -29,22 +29,23 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         searchBinding.apply {
-//            searchMagnifier.setOnClickListener(viewModel.search())    //TODO если не крестик
-//            searchMagnifier.setOnClickListener { viewModel.clearText() }  //TODO если крестик
+//            searchMagnifier.setOnClickListener(viewModel.search())    // TODO если не крестик
+//            searchMagnifier.setOnClickListener { viewModel.clearText() }  // TODO если крестик
             searchEditText.apply {
                 doOnTextChanged { searchText, _, _, _ ->
                     run {
-                        //TODO реализовать clearIcon через searchMagnifier
+                        // TODO реализовать clearIcon через searchMagnifier
                         if (searchText?.isNotEmpty() == true) {
-                            //searchBinding.searchMagnifier     //TODO надеть крестик
+                            // searchBinding.searchMagnifier     // TODO надеть крестик
                         } else {
-                            //searchBinding.searchMagnifier     //TODO снять крестик
+                            // searchBinding.searchMagnifier     // TODO снять крестик
                         }
 
-                        if (searchBinding.searchEditText.hasFocus() && searchText?.isEmpty() == true)
+                        if (searchBinding.searchEditText.hasFocus() && searchText?.isEmpty() == true) {
                             viewModel.showImage()
-                        else
+                        } else {
                             viewModel.searchDebounce()
+                        }
                     }
                 }
                 doAfterTextChanged { searchText -> viewModel.doAfterTextChanged(searchText.toString()) }
@@ -59,7 +60,7 @@ class SearchFragment : Fragment() {
 
         }
         viewModel.state.observe(viewLifecycleOwner) {
-            //TODO("задать список адаптеру, менять картинки")
+            // TODO("задать список адаптеру, менять картинки")
         }
 
         viewModel.event.observe(viewLifecycleOwner) {
