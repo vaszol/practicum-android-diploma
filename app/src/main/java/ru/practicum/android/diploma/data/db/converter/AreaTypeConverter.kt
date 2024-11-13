@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.data.db.converter
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import ru.practicum.android.diploma.domain.models.Area
 
 class AreaTypeConverter {
@@ -11,16 +10,11 @@ class AreaTypeConverter {
 
     @TypeConverter
     fun fromArea(area: Area?): String? {
-        return area?.let {
-            gson.toJson(it)
-        }
+        return gson.toJson(area)
     }
 
     @TypeConverter
     fun toArea(areaString: String?): Area? {
-        return areaString?.let {
-            val type = object : TypeToken<Area>() {}.type
-            gson.fromJson(it, type)
-        }
+        return gson.fromJson(areaString, Area::class.java)
     }
 }

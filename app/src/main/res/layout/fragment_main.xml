@@ -170,7 +170,8 @@
         android:layout_marginTop="@dimen/size_164dp"
         android:orientation="vertical"
         app:reverseLayout="false"
-        tools:visibility="gone" />
+        tools:visibility="gone"
+        tools:listitem="@layout/item_vacancy"/>
 
     <ProgressBar
         android:id="@+id/search_progress_bar"
