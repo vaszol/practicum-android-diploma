@@ -1,18 +1,15 @@
 package ru.practicum.android.diploma.ui.root.search
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-
+import android.content.Context
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentMainBinding
 import ru.practicum.android.diploma.presentation.search.SearchScreenState
@@ -132,7 +129,6 @@ class MainFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Log.d("Test", "onResume")
         with(binding) {
             searchEditText.requestFocus()
             setKeyboardVisibility(searchEditText, true)
