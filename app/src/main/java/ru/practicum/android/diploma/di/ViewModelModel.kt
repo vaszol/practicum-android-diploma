@@ -1,12 +1,9 @@
 package ru.practicum.android.diploma.di
 
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
-import ru.practicum.android.diploma.ui.root.search.SearchViewModel
+import ru.practicum.android.diploma.presentation.search.SearchViewModel
 
 val viewModelModule = module {
-
-    viewModel<SearchViewModel> {
-        SearchViewModel(get())
-    }
+    viewModelOf(::SearchViewModel)
 }
