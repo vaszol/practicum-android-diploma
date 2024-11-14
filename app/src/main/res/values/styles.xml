@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="fragment_team_style">
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
@@ -17,5 +17,16 @@
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:textSize">@dimen/size_16sp</item>
         <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:fontFamily">@font/ys_display_medium"</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:textSize">@dimen/size_16sp</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:backgroundTint">?attr/colorPrimary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/size_60dp</item>
     </style>
 </resources>

@@ -24,4 +24,7 @@
     <string name="search_vacancy">Поиск вакансий</string>
     <string name="search_request">Введите запрос</string>
     <string name="no_vacancies">Таких вакансий нет</string>
+    <string name="select_place_work">Выбор места работы</string>
+    <string name="country">Страна</string>
+    <string name="region">Регион</string>
 </resources>
