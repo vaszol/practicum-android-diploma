@@ -20,7 +20,10 @@ class VacancyConvertor {
             salaryFrom = vacancy.salaryFrom.orDefaultVacancy(),
             salaryTo = vacancy.salaryTo.orDefaultVacancy(),
             currency = vacancy.currency.orDefaultVacancy(),
-            description = vacancy.description.orDefaultVacancy()
+            description = vacancy.description.orDefaultVacancy(),
+            keySkills = vacancy.keySkills?.map { it.name } ?: emptyList(),
+            street = vacancy.street.orDefaultVacancy(),
+            building = vacancy.building.orDefaultVacancy()
         )
     }
 
