@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="?attr/colorPrimary"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="ui.root.select_place.SelectPlaceFragment">
+    tools:context="ui.root.selectPlace.SelectPlaceFragment">
 
     <ImageView
         android:id="@+id/back_arrow"
