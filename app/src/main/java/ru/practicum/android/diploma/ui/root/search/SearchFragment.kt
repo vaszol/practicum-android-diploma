@@ -11,14 +11,14 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.databinding.FragmentMainBinding
+import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.presentation.search.SearchScreenState
 import ru.practicum.android.diploma.presentation.search.SearchViewModel
 import ru.practicum.android.diploma.domain.models.Vacancy
 
-class MainFragment : Fragment() {
+class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
-    private val binding by lazy { FragmentMainBinding.inflate(layoutInflater) }
+    private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
     private val adapter by lazy { VacancyAdapter(mutableListOf()) }
 
     override fun onCreateView(

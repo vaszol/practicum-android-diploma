@@ -10,7 +10,7 @@ interface HhApi {
     suspend fun getVacancies(
         @Query("text") text: String,
         @Query("currency") currency: String,
-        @Query("per_page") size: String,
-        @Query("page") page: String
+        @Query("per_page") size: Int,
+        @Query("page") page: Int
     ): VacanciesResponse
 }

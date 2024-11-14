@@ -4,11 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.api.VacancyInteractor
+import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.util.debouncer.Debouncer
 
-class SearchViewModel : ViewModel() {
+class SearchViewModel(
+    private val vacancyInteractor: VacancyInteractor,
+) : ViewModel() {
+    private var page: Int = 0
     private val _searchScreenState = MutableLiveData<SearchScreenState>()
     val searchScreenState: LiveData<SearchScreenState> = _searchScreenState
     private var latestSearchText: String? = null
@@ -26,10 +31,19 @@ class SearchViewModel : ViewModel() {
 
     private fun searchRequest(query: String) {
         if (query.isNotEmpty()) {
-            viewModelScope.launch {
-                _searchScreenState.postValue(SearchScreenState.Loading)
-                delay(SEARCH_DEBOUNCE_DELAY)
-                _searchScreenState.postValue(SearchScreenState.NothingFound)
+            _searchScreenState.postValue(SearchScreenState.Loading)
+
+            viewModelScope.launch(Dispatchers.IO) {
+                vacancyInteractor.searchVacancies(query, Vacancy.CURRENCY_DEFAULT_VALUE, page)
+                    .collect { pair ->
+                        if (pair.second != null) {
+                            _searchScreenState.postValue(SearchScreenState.NoInternet)
+                        } else if (pair.first.isNullOrEmpty()) {
+                            _searchScreenState.postValue(SearchScreenState.NothingFound)
+                        } else {
+                            _searchScreenState.postValue(SearchScreenState.Results(pair.first!!))
+                        }
+                    }
             }
         }
     }

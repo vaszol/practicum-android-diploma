@@ -2,24 +2,26 @@ package ru.practicum.android.diploma.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import ru.practicum.android.diploma.data.converter.VacancyConvertor
 import ru.practicum.android.diploma.data.dto.VacanciesRequest
 import ru.practicum.android.diploma.data.dto.VacanciesResponse
 import ru.practicum.android.diploma.domain.api.VacancyRepository
 import ru.practicum.android.diploma.domain.models.Resource
-import java.util.stream.Collectors
+import ru.practicum.android.diploma.domain.models.Vacancy
 import javax.net.ssl.HttpsURLConnection
 
-private const val PAGES = "20"
+private const val PAGES = 20
 
 class VacanciesRepositoryImpl(
     private val networkClient: NetworkClient,
+    private val vacancyConvertor: VacancyConvertor,
 ) : VacancyRepository {
-    override fun searchVacancies(text: String, currency: String, page: String): Flow<Resource<List<String>>> = flow {
+    override fun searchVacancies(text: String, currency: String, page: Int): Flow<Resource<List<Vacancy>>> = flow {
         val response =
             networkClient.vacancies(VacanciesRequest(text = text, currency = currency, size = PAGES, page = page))
         if (response.resultCode == HttpsURLConnection.HTTP_OK) {
-            val ids = (response as VacanciesResponse).items.stream().map { e -> e.id }.collect(Collectors.toList())
-            emit(Resource.Success(ids))
+            val vacancies = (response as VacanciesResponse).items.map { vacancyConvertor.mapToDomain(it) }
+            emit(Resource.Success(vacancies))
         } else {
             emit(Resource.Error(response.resultCode.toString()))
         }
