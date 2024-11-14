@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui.root.selectPlace
+package ru.practicum.android.diploma.ui.root.selectplace
 
 import android.os.Bundle
 import android.view.LayoutInflater
