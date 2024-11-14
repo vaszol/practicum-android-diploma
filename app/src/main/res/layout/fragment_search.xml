@@ -24,7 +24,7 @@
     <TextView
         android:id="@+id/search_vacancy"
         style="@style/TextStyleMedium"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/size_0dp"
         android:layout_height="@dimen/size_64dp"
         android:layout_marginEnd="@dimen/size_8dp"
         android:text="@string/search_vacancy"
@@ -44,7 +44,8 @@
         android:src="@drawable/ic_filter_not_active"
         app:layout_constraintBottom_toBottomOf="@+id/search_vacancy"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
-        app:layout_constraintTop_toTopOf="@+id/search_vacancy" />
+        app:layout_constraintTop_toTopOf="@+id/search_vacancy"
+        android:contentDescription="@string/filter_description"/>
 
     <!--Кнопка "Фильтр" активная-->
     <ImageButton
@@ -58,12 +59,13 @@
         app:layout_constraintBottom_toBottomOf="@+id/search_vacancy"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintTop_toTopOf="@+id/search_vacancy"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:contentDescription="@string/filter_description"/>
 
     <!--Поисковый запрос-->
     <View
         android:id="@+id/search_view"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/size_0dp"
         android:layout_height="@dimen/size_48dp"
         android:background="@drawable/background_edit_text_search"
         android:backgroundTint="?attr/colorSurfaceContainer"
@@ -76,7 +78,7 @@
     <EditText
         android:id="@+id/search_edit_text"
         style="@style/TextStyleRegular"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/size_0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/size_8dp"
         app:layout_constraintBottom_toBottomOf="@+id/search_view"
@@ -95,7 +97,7 @@
         android:textColor="@color/black"
         android:textColorHint="?attr/colorOnSecondary" />
 
-    <!--Изменяемый значек "очистить поиск" и "лупа"-->
+    <!--Изменяемый значoк "очистить поиск" и "лупа"-->
     <ImageView
         android:id="@+id/search_magnifier"
         android:layout_width="@dimen/size_48dp"
@@ -105,11 +107,12 @@
         app:layout_constraintTop_toTopOf="@+id/search_edit_text"
         android:scaleType="center"
         android:src="@drawable/ic_search"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:contentDescription="@string/clear_description"/>
 
-    <!--Надпись "Таких вакансий нет"-->
+    <!--Надпись с количеством найденных вакансий или "Таких вакансий нет"-->
     <TextView
-        android:id="@+id/search_not_vacancy"
+        android:id="@+id/search_vacancy_count"
         style="@style/TextStyleRegular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -130,8 +133,8 @@
     <!-- Изображение экрана поиск. В случае ошибки заменить на картинку ошибки-->
     <ImageView
         android:id="@+id/search_img_placeholder"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/size_0dp"
+        android:layout_height="@dimen/size_0dp"
         android:scaleType="fitCenter"
         android:src="@drawable/placeholder_search"
         app:layout_constraintBottom_toTopOf="@id/search_error"
@@ -140,12 +143,13 @@
         app:layout_constraintStart_toStartOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/search_view"
         app:layout_constraintVertical_chainStyle="packed"
+        android:contentDescription="@null"
         tools:visibility="visible" />
 
     <!-- Сообщение об ошибке! Текст заменится в зависимости от ошибки -->
     <TextView
         android:id="@+id/search_error"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/size_0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
@@ -160,8 +164,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/size_0dp"
+        android:layout_height="@dimen/size_0dp"
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
         app:layout_constraintStart_toEndOf="@id/left_guideline"
@@ -170,7 +174,8 @@
         android:layout_marginTop="@dimen/size_164dp"
         android:orientation="vertical"
         app:reverseLayout="false"
-        tools:visibility="gone" />
+        tools:visibility="gone"
+        tools:listitem="@layout/item_vacancy"/>
 
     <ProgressBar
         android:id="@+id/search_progress_bar"
@@ -179,7 +184,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/search_recycler_view"
+        app:layout_constraintTop_toBottomOf="@+id/search_edit_text"
         android:layout_marginBottom="@dimen/size_24dp"
         android:indeterminateTint="@color/blue"
         android:visibility="gone" />

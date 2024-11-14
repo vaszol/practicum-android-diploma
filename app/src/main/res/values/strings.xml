@@ -8,11 +8,11 @@
     <string name="developers">Юлия Басалыгина\n\nМихаил Баландин\n\nПавел Давыдов\n\nВасилий Золотарев\n\nРуслан Коротнев</string>
 
     <plurals name="vacancy_postfix">
-        <item quantity="zero">%d вакансий</item>
-        <item quantity="one">%d вакансия</item>
-        <item quantity="few">%d вакансии</item>
-        <item quantity="many">%d вакансий</item>
-        <item quantity="other">%d вакансий</item>
+        <item quantity="zero">Найдено %d вакансий</item>
+        <item quantity="one">Найдена %d вакансия</item>
+        <item quantity="few">Найдено %d вакансии</item>
+        <item quantity="many">Найдено %d вакансий</item>
+        <item quantity="other">Найдено %d вакансий</item>
     </plurals>
     <!--Пример использования:
    vacancyField.text = context.resources.getQuantityString(R.plurals.vacancy_postfix, vacancyCount, vacancyCount)-->
@@ -24,7 +24,21 @@
     <string name="search_vacancy">Поиск вакансий</string>
     <string name="search_request">Введите запрос</string>
     <string name="no_vacancies">Таких вакансий нет</string>
+
     <string name="select_place_work">Выбор места работы</string>
     <string name="country">Страна</string>
     <string name="region">Регион</string>
+
+    <string name="no_internet">Нет интернета</string>
+    <string name="nothing_found">Не удалось получить список вакансий</string>
+    <string name="error">Ошибка сервера</string>
+    <string name="company_logo_description">Логотип компании</string>
+    <string name="filter_description">Добавить фильтр</string>
+    <string name="clear_description">Очистить окно ввода</string>
+
+    <!--Строки для экрана избранного-->
+    <string name="favorite">Избранное</string>
+    <string name="favorite_empty">Список пуст</string>
+    <string name="favorire_error">Не удалось получить список вакансий</string>
+
 </resources>
