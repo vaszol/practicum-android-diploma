@@ -6,7 +6,7 @@ data class Area(
     val id: String,
     val name: String,
     val parentId: String, // Идентификатор родительского региона
-    val areas: List<Area> // Список вложенных областей
+    val areas: List<Area>? // Список вложенных областей
 ) : Serializable {
     override fun hashCode(): Int {
         return id.hashCode()
@@ -20,7 +20,6 @@ data class Area(
     }
 
     companion object {
-        private const val serialVersionUID: Long = 1L
         const val AREA_DEFAULT_VALUE = "-1"
     }
 }

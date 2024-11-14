@@ -7,20 +7,12 @@
     android:background="?attr/colorPrimary"
     tools:context=".ui.root.team.TeamFragment">
 
-    <ImageView
-        android:id="@+id/mask"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/size_24dp"
-        android:src="@drawable/mask"
-        app:layout_constraintEnd_toEndOf="@id/guideline_right"
-        app:layout_constraintTop_toTopOf="parent"/>
-
     <TextView
         android:id="@+id/text_team"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/size_64dp"
         app:layout_constraintStart_toEndOf="@id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@id/mask"
+        app:layout_constraintTop_toTopOf="parent"
         android:textSize="@dimen/size_22sp"
         style="@style/fragment_team_style"
         android:gravity="center_vertical"
@@ -54,13 +46,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/size_16dp" />
+        app:layout_constraintGuide_percent="0.05" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="@dimen/size_8dp" />
+        app:layout_constraintGuide_percent="0.95" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
