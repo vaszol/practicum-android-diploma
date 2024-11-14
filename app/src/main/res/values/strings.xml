@@ -35,4 +35,7 @@
     <string name="favorite">Избранное</string>
     <string name="favorite_empty">Список пуст</string>
     <string name="favorire_error">Не удалось получить список вакансий</string>
+    <string name="select_place_work">Выбор места работы</string>
+    <string name="country">Страна</string>
+    <string name="region">Регион</string>
 </resources>
