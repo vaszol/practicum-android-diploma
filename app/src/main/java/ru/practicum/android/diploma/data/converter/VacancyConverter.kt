@@ -1,12 +1,14 @@
 package ru.practicum.android.diploma.data.converter
 
 import ru.practicum.android.diploma.data.dto.AreaDto
+import ru.practicum.android.diploma.data.dto.VacancyDetailDto
 import ru.practicum.android.diploma.data.dto.VacancyDto
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Area.Companion.AREA_DEFAULT_VALUE
 import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.domain.models.VacancyDetail
 
-object VacancyConverter {
+class VacancyConverter {
 
     fun mapToDomain(vacancy: VacancyDto): Vacancy {
         return Vacancy(
@@ -25,6 +27,29 @@ object VacancyConverter {
             keySkills = vacancy.keySkills?.map { it.name } ?: emptyList(),
             street = vacancy.street.orDefaultVacancy(),
             building = vacancy.building.orDefaultVacancy()
+        )
+    }
+
+    fun mapToDomain(vacancy: VacancyDetailDto): VacancyDetail {
+        return VacancyDetail(
+            id = vacancy.id,
+            name = vacancy.name.orDefaultVacancy(),
+            employerName = vacancy.employer.name,
+            employerLogoUrl90 = vacancy.employer.logoUrls?.url90.orDefaultVacancy(),
+            area = mapToDomain(vacancy.area),
+            experience = vacancy.experience?.name.orDefaultVacancy(),
+            employment = vacancy.employment?.name.orDefaultVacancy(),
+            schedule = vacancy.schedule?.name.orDefaultVacancy(),
+            salaryFrom = vacancy.salary?.from.orDefaultVacancy(),
+            salaryTo = vacancy.salary?.to.orDefaultVacancy(),
+            currency = vacancy.salary?.currency.orDefaultVacancy(),
+            description = vacancy.description.orDefaultVacancy(),
+            keySkills = vacancy.keySkills?.map { it.name } ?: emptyList(),
+            street = vacancy.address?.street.orDefaultVacancy(),
+            building = vacancy.address?.building.orDefaultVacancy(),
+            url = vacancy.url.orDefaultVacancy(),
+            contactsEmail = vacancy.contacts?.email.orDefaultVacancy(),
+            contactsName = vacancy.contacts?.name.orDefaultVacancy()
         )
     }
 
