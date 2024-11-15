@@ -42,7 +42,7 @@ class VacanciesRepositoryImpl(
         val response =
             networkClient.vacancy(VacancyRequest(id = id, locale = locale, host = host.text))
         if (response.resultCode == HttpsURLConnection.HTTP_OK) {
-            val vacancy = vacancyConvertor.mapToDomain((response as VacancyResponse))
+            val vacancy = vacancyConvertor.mapToDomain(response as VacancyResponse)
             emit(Resource.Success(vacancy))
         } else {
             emit(Resource.Error(response.resultCode.toString()))
