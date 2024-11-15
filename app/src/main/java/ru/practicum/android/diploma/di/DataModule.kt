@@ -53,4 +53,6 @@ val dataModule = module {
                 it.proceed(request)
             }.build()
     }
+
+    single { get<AppDataBase>().getFavoriteVacancyDao() }
 }
