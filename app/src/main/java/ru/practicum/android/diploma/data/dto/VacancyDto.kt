@@ -18,4 +18,10 @@ data class VacancyDto(
     val salaryTo: Int?, // Верхний предел зарплаты, salary.to
     val currency: String?, // Код валюты, salary.currency
     val description: String?, // Описание вакансии в формате HTML
+    @SerializedName("key_skills")
+    val keySkills: List<KeySkillDto>?, // Ключевые навыки
+    @SerializedName("address.street")
+    val street: String?, // Адрес (улица)
+    @SerializedName("address.building")
+    val building: String? // Адрес (номер дома)
 )
