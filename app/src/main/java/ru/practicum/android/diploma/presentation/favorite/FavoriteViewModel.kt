@@ -13,12 +13,6 @@ class FavoriteViewModel(
     private val _favoriteScreenState = MutableLiveData<FavoriteScreenState>()
     val favoriteScreenState: LiveData<FavoriteScreenState> = _favoriteScreenState
 
-    suspend fun test() {
-
-        favoriteInteractor.deleteFavoriteVacancyById("1")
-
-    }
-
     fun getFavoriteVacancies() {
         viewModelScope.launch {
             favoriteInteractor.getAllFavoriteVacancies().collect { vacancies ->
