@@ -1,11 +1,12 @@
 package ru.practicum.android.diploma.data.network
 
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import ru.practicum.android.diploma.data.dto.Locale
+import ru.practicum.android.diploma.data.dto.LocaleDto
 import ru.practicum.android.diploma.data.dto.VacanciesResponse
-import ru.practicum.android.diploma.data.dto.VacancyResponse
+import ru.practicum.android.diploma.data.dto.VacancyDetailDto
 
 interface HhApi {
 
@@ -22,11 +23,11 @@ interface HhApi {
         @Path("vacancy_id") id: String,
         @Query("locale") locale: String,
         @Query("host") host: String
-    ): VacancyResponse
+    ): Response<VacancyDetailDto>
 
     @GET("/locales")
     suspend fun getLocales(
         @Query("locale") locale: String,
         @Query("host") host: String
-    ): List<Locale>
+    ): List<LocaleDto>
 }

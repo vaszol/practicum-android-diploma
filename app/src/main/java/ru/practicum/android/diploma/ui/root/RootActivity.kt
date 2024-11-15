@@ -47,8 +47,27 @@ class RootActivity : AppCompatActivity() {
                             val vacancy = pair.first
                             Log.d(tag, String.format(Locale.US, "Vacancy.id %s", vacancy?.id))
                             Log.d(tag, String.format(Locale.US, "Vacancy.name %s", vacancy?.name))
+                            Log.d(tag, String.format(Locale.US, "Vacancy.employerName %s", vacancy?.employerName))
+                            Log.d(tag, String.format(Locale.US, "Vacancy.experience %s", vacancy?.experience))
+                            Log.d(tag, String.format(Locale.US, "Vacancy.employment %s", vacancy?.employment))
+                            Log.d(tag, String.format(Locale.US, "Vacancy.schedule %s", vacancy?.schedule))
+                            Log.d(tag, String.format(Locale.US, "Vacancy.salaryFrom %s", vacancy?.salaryFrom))
+                            Log.d(tag, String.format(Locale.US, "Vacancy.salaryTo %s", vacancy?.salaryTo))
+                            Log.d(tag, String.format(Locale.US, "Vacancy.keySkills %s", vacancy?.keySkills?.size ?: 0))
+                            vacancy?.keySkills!!.map {
+                                Log.d(tag, String.format(Locale.US, "Vacancy.keySkill %s", it))
+                            }
+                            Log.d(tag, String.format(Locale.US, "Vacancy.street %s", vacancy?.street))
+                            Log.d(tag, String.format(Locale.US, "Vacancy.building %s", vacancy?.building))
+                            Log.d(tag, String.format(Locale.US, "Vacancy.url %s", vacancy?.url))
+                            Log.d(tag, String.format(Locale.US, "Vacancy.contactsName %s", vacancy?.contactsName))
+                            Log.d(tag, String.format(Locale.US, "Vacancy.contactsEmail %s", vacancy?.contactsEmail))
                             Log.d(tag, String.format(Locale.US, "Vacancy.description %s", vacancy?.description))
                             Log.d(tag, String.format(Locale.US, "Vacancy.currency %s", vacancy?.currency))
+                            Log.d(
+                                tag,
+                                String.format(Locale.US, "Vacancy.employerLogoUrl90 %s", vacancy?.employerLogoUrl90)
+                            )
                         }
                     }
             }
