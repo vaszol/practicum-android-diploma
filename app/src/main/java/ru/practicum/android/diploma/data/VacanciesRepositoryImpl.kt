@@ -2,7 +2,7 @@ package ru.practicum.android.diploma.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.practicum.android.diploma.data.converter.VacancyConvertor
+import ru.practicum.android.diploma.data.converter.VacancyConverter
 import ru.practicum.android.diploma.data.dto.Locale
 import ru.practicum.android.diploma.data.dto.LocaleRequest
 import ru.practicum.android.diploma.data.dto.VacanciesRequest
@@ -19,7 +19,7 @@ private const val PAGES = 20
 
 class VacanciesRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val vacancyConvertor: VacancyConvertor,
+    private val vacancyConverter: VacancyConverter,
 ) : VacancyRepository {
     override fun searchVacancies(
         text: String,
@@ -31,7 +31,7 @@ class VacanciesRepositoryImpl(
         val response =
             networkClient.vacancies(VacanciesRequest(text = text, currency = currency, size = PAGES, page = page))
         if (response.resultCode == HttpsURLConnection.HTTP_OK) {
-            val vacancies = (response as VacanciesResponse).items.map { vacancyConvertor.mapToDomain(it) }
+            val vacancies = (response as VacanciesResponse).items.map { VacancyConverter.mapToDomain(it) }
             emit(Resource.Success(vacancies))
         } else {
             emit(Resource.Error(response.resultCode.toString()))
@@ -42,7 +42,7 @@ class VacanciesRepositoryImpl(
         val response =
             networkClient.vacancy(VacancyRequest(id = id, locale = locale, host = host.text))
         if (response.resultCode == HttpsURLConnection.HTTP_OK) {
-            val vacancy = vacancyConvertor.mapToDomain(response as VacancyResponse)
+            val vacancy = vacancyConverter.mapToDomain(response as VacancyResponse)
             emit(Resource.Success(vacancy))
         } else {
             emit(Resource.Error(response.resultCode.toString()))
