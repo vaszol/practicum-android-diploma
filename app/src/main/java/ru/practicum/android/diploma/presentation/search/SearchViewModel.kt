@@ -10,6 +10,7 @@ import ru.practicum.android.diploma.domain.api.VacancyInteractor
 import ru.practicum.android.diploma.domain.models.Host
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.util.debouncer.Debouncer
+import javax.net.ssl.HttpsURLConnection
 
 class SearchViewModel(
     private val vacancyInteractor: VacancyInteractor,
@@ -38,7 +39,11 @@ class SearchViewModel(
                 vacancyInteractor.searchVacancies(query, Vacancy.CURRENCY_DEFAULT_VALUE, page, "RU", Host.HH_RU)
                     .collect { pair ->
                         if (pair.second != null) {
-                            _searchScreenState.postValue(SearchScreenState.NoInternet)
+                            if (pair.second == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
+                                _searchScreenState.postValue(SearchScreenState.Error)
+                            } else {
+                                _searchScreenState.postValue(SearchScreenState.NoInternet)
+                            }
                         } else if (pair.first.isNullOrEmpty()) {
                             _searchScreenState.postValue(SearchScreenState.NothingFound)
                         } else {

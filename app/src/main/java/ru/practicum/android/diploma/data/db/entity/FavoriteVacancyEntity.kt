@@ -11,14 +11,7 @@ data class FavoriteVacancyEntity(
     val employerName: String,
     val employerLogoUrl90: String,
     val areaString: String,
-    val experience: String,
-    val employment: String,
-    val schedule: String,
     val salaryFrom: Int,
     val salaryTo: Int,
-    val currency: String,
-    val description: String,
-    val keySkills: String,
-    val street: String,
-    val building: String
+    val currency: String
 )

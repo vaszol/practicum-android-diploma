@@ -14,19 +14,12 @@ class VacancyConverter {
         return Vacancy(
             id = vacancy.id,
             name = vacancy.name.orDefaultVacancy(),
-            employerName = vacancy.employerName.orDefaultVacancy(),
-            employerLogoUrl90 = vacancy.employerLogoUrl90.orDefaultVacancy(),
+            employerName = vacancy.employer.name,
+            employerLogoUrl90 = vacancy.employer.logoUrls?.url90.orDefaultVacancy(),
             area = mapToDomain(vacancy.area),
-            experience = vacancy.experience.orDefaultVacancy(),
-            employment = vacancy.employment.orDefaultVacancy(),
-            schedule = vacancy.schedule.orDefaultVacancy(),
-            salaryFrom = vacancy.salaryFrom.orDefaultVacancy(),
-            salaryTo = vacancy.salaryTo.orDefaultVacancy(),
-            currency = vacancy.currency.orDefaultVacancy(),
-            description = vacancy.description.orDefaultVacancy(),
-            keySkills = vacancy.keySkills?.map { it.name } ?: emptyList(),
-            street = vacancy.street.orDefaultVacancy(),
-            building = vacancy.building.orDefaultVacancy()
+            salaryFrom = vacancy.salary?.from.orDefaultVacancy(),
+            salaryTo = vacancy.salary?.to.orDefaultVacancy(),
+            currency = vacancy.salary?.currency.orDefaultVacancy()
         )
     }
 
