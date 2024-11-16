@@ -7,7 +7,7 @@ import ru.practicum.android.diploma.data.db.converter.AreaTypeConverter
 import ru.practicum.android.diploma.data.db.dao.FavoriteVacancyDao
 import ru.practicum.android.diploma.data.db.entity.FavoriteVacancyEntity
 
-@Database(version = 1, entities = [FavoriteVacancyEntity::class], exportSchema = false)
+@Database(version = 2, entities = [FavoriteVacancyEntity::class], exportSchema = false)
 @TypeConverters(AreaTypeConverter::class)
 abstract class AppDataBase : RoomDatabase() {
 

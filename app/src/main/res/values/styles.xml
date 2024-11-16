@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="fragment_team_style">
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
@@ -19,6 +20,7 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
+
     <style name="TextStyleBold">
         <item name="android:fontFamily">@font/ys_display_bold</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
@@ -31,5 +33,10 @@
         <item name="android:layout_height">@dimen/size_48dp</item>
         <item name="android:padding">@dimen/size_12dp</item>
         <item name="android:layout_gravity">center_vertical</item>
+
+    <style name="RoundedImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+
     </style>
 </resources>
