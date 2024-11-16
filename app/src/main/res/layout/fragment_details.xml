@@ -82,7 +82,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/size_16dp"
                 android:layout_gravity="center_horizontal"
-                tools:text="Server error"/>
+                android:gravity="center"
+                android:text="@string/vacancy_error"/>
 
         </LinearLayout>
 
@@ -98,7 +99,8 @@
         <ScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="visible">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
