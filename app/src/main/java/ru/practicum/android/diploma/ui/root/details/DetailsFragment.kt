@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import ru.practicum.android.diploma.R
 
-
 class DetailsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -16,5 +15,4 @@ class DetailsFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_details, container, false)
     }
-
 }

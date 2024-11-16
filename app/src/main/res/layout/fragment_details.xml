@@ -60,6 +60,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/size_24dp"
+            android:indeterminateTint="@color/blue"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
         <!--Плейсхолдер ошибка вакансии-->
         <LinearLayout
             android:id="@+id/vacancy_error"
@@ -86,15 +95,6 @@
                 tools:text="@string/vacancy_error"/>
 
         </LinearLayout>
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/size_24dp"
-            android:indeterminateTint="@color/blue"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
 
         <ScrollView
             android:id="@+id/scroll_view"
