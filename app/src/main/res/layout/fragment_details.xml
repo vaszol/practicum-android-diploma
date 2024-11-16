@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/size_224dp"
                 android:layout_marginHorizontal="@dimen/size_16dp"
-                android:src="@drawable/placeholder_vacancy_error"/>
+                android:src="@drawable/placeholder_vacancy_empty_or_not"/>
 
             <TextView
                 android:id="@+id/vacancy_error_txt"
@@ -83,7 +83,7 @@
                 android:layout_marginVertical="@dimen/size_16dp"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:text="@string/vacancy_error"/>
+                tools:text="@string/vacancy_error"/>
 
         </LinearLayout>
 
@@ -109,15 +109,15 @@
 
                 <!--Заголовок вакансии-->
                 <TextView
-                    android:id="@+id/vacancy_name"
+                    android:id="@+id/vacancy_name_title"
                     style="@style/TextStyleBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Android developer"
-                    android:maxLines="1"
                     android:ellipsize="end"
+                    android:maxLines="1"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    tools:text="Android developer" />
 
                 <!--Заботная плата-->
                 <TextView
@@ -126,9 +126,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/size_4dp"
-                    tools:text="от 100000 \u20bd"
-                    app:layout_constraintTop_toBottomOf="@id/vacancy_name"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/vacancy_name_title"
+                    tools:text="от 150000 \u20bd" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout"
@@ -146,8 +146,8 @@
                         android:id="@+id/vacancy_logo"
                         android:layout_width="@dimen/size_48dp"
                         android:layout_height="@dimen/size_48dp"
-                        android:src="@drawable/ic_logotype_vacancy"
                         android:background="@drawable/background_icon"
+                        android:src="@drawable/ic_logotype_vacancy"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -156,15 +156,15 @@
                     <TextView
                         android:id="@+id/employer_name"
                         style="@style/TextStyleMedium"
-                        android:layout_marginStart="@dimen/size_8dp"
-                        android:textColor="@color/black"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="2"
+                        android:layout_marginStart="@dimen/size_8dp"
                         android:ellipsize="end"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:maxLines="2"
+                        android:textColor="@color/black"
                         app:layout_constraintBottom_toTopOf="@id/area_name"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/vacancy_logo"
                         app:layout_constraintTop_toTopOf="@+id/vacancy_logo"
                         tools:text="Еда" />
@@ -176,8 +176,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/size_8dp"
-                        android:maxLines="2"
                         android:ellipsize="end"
+                        android:maxLines="2"
                         android:textColor="@color/black"
                         app:layout_constraintBottom_toBottomOf="@+id/vacancy_logo"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -196,8 +196,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/size_24dp"
                     android:fontWeight="500"
-                    android:textStyle="bold"
                     android:text="@string/required_xp"
+                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
@@ -209,17 +209,17 @@
                     android:layout_marginTop="@dimen/size_4dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/requred_xp_title"
-                    tools:text="От 1 года to 2 лет" />
+                    tools:text="От 1 года до 2 лет" />
 
                 <!--Занятость-->
                 <TextView
                     android:id="@+id/busyness_txt"
                     style="@style/TextStyleRegular"
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:maxLines="1"
-                    android:ellipsize="end"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/size_4dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/required_xp"
@@ -231,8 +231,8 @@
                     style="@style/TextStyleMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/vacancy_description"
                     android:layout_marginTop="@dimen/size_32sp"
+                    android:text="@string/vacancy_description"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/busyness_txt" />
 
@@ -240,8 +240,8 @@
                 <TextView
                     android:id="@+id/description_txt"
                     style="@style/TextStyleRegular"
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/size_16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -263,17 +263,14 @@
                 <TextView
                     android:id="@+id/key_skills_txt"
                     style="@style/TextStyleRegular"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/size_16dp"
-                    android:layout_width="match_parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/key_skills_title"
                     tools:text="Ключевые навыки" />
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </ScrollView>
     </FrameLayout>
 </LinearLayout>
