@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?attr/colorPrimary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!--Кнопка Назад-->
+        <ImageView
+            android:id="@+id/back_img"
+            style="@style/VacancyIconsStyle"
+            android:layout_marginStart="@dimen/size_2dp"
+            android:src="@drawable/ic_arrow_back"/>
+
+        <!--Заголовок-->
+            <TextView
+                android:id="@+id/head_vacancy"
+                style="@style/TextStyleMedium"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="10"
+                android:layout_gravity="center_vertical"
+                android:text="@string/vacancy"/>
+
+        <!--Кнопка Поделиться-->
+            <ImageView
+                android:id="@+id/share_img"
+                style="@style/VacancyIconsStyle"
+                android:layout_marginStart="@dimen/size_4dp"
+                android:src="@drawable/ic_sharing"/>
+
+        <!--Кнопка Избранное активная и не активная-->
+            <ImageView
+                android:id="@+id/favorite_off"
+                style="@style/VacancyIconsStyle"
+                android:src="@drawable/ic_favorites_not_active"
+                android:layout_marginHorizontal="@dimen/size_4dp"
+                android:visibility="visible"
+                />
+
+            <ImageView
+                android:id="@+id/favorite_on"
+                style="@style/VacancyIconsStyle"
+                android:src="@drawable/ic_favorites_active"
+                android:layout_marginHorizontal="@dimen/size_4dp"
+                android:visibility="gone"
+                />
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--Плейсхолдер ошибка вакансии-->
+        <LinearLayout
+            android:id="@+id/vacancy_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/size_224dp"
+                android:layout_marginHorizontal="@dimen/size_16dp"
+                android:src="@drawable/placeholder_vacancy_error"/>
+
+            <TextView
+                android:id="@+id/vacancy_error_txt"
+                style="@style/TextStyleMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/size_16dp"
+                android:layout_gravity="center_horizontal"
+                tools:text="Server error"/>
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/size_24dp"
+            android:indeterminateTint="@color/blue"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/size_16dp">
+
+                <!--Заголовок вакансии-->
+                <TextView
+                    android:id="@+id/vacancy_name"
+                    style="@style/TextStyleBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Android developer"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <!--Заботная плата-->
+                <TextView
+                    android:id="@+id/salary_txt"
+                    style="@style/TextStyleMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size_4dp"
+                    tools:text="от 100000 \u20bd"
+                    app:layout_constraintTop_toBottomOf="@id/vacancy_name"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size_24dp"
+                    android:background="@drawable/background_grey_light_vacancy"
+                    android:padding="@dimen/size_16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/salary_txt">
+
+                    <!--Логотип вакансии-->
+                    <ImageView
+                        android:id="@+id/vacancy_logo"
+                        android:layout_width="@dimen/size_48dp"
+                        android:layout_height="@dimen/size_48dp"
+                        android:src="@drawable/ic_logotype_vacancy"
+                        android:background="@drawable/background_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!--Имя вакансии-->
+                    <TextView
+                        android:id="@+id/employer_name"
+                        style="@style/TextStyleMedium"
+                        android:layout_marginStart="@dimen/size_8dp"
+                        android:textColor="@color/black"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/area_name"
+                        app:layout_constraintStart_toEndOf="@+id/vacancy_logo"
+                        app:layout_constraintTop_toTopOf="@+id/vacancy_logo"
+                        tools:text="Еда" />
+
+                    <!--Город вакансии-->
+                    <TextView
+                        android:id="@+id/area_name"
+                        style="@style/TextStyleRegular"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/size_8dp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:textColor="@color/black"
+                        app:layout_constraintBottom_toBottomOf="@+id/vacancy_logo"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/vacancy_logo"
+                        app:layout_constraintTop_toBottomOf="@id/employer_name"
+                        tools:text="Москва" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!--Требуемый опыт-->
+                <TextView
+                    android:id="@+id/requred_xp_title"
+                    style="@style/TextStyleRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size_24dp"
+                    android:fontWeight="500"
+                    android:textStyle="bold"
+                    android:text="@string/required_xp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+                <TextView
+                    android:id="@+id/required_xp"
+                    style="@style/TextStyleRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size_4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/requred_xp_title"
+                    tools:text="От 1 года to 2 лет" />
+
+                <!--Занятость-->
+                <TextView
+                    android:id="@+id/busyness_txt"
+                    style="@style/TextStyleRegular"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginTop="@dimen/size_4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/required_xp"
+                    tools:text="Полная занятость, Удаленная работа" />
+
+                <!--Заголовок описание вакансии-->
+                <TextView
+                    android:id="@+id/description_title"
+                    style="@style/TextStyleMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vacancy_description"
+                    android:layout_marginTop="@dimen/size_32sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/busyness_txt" />
+
+                <!--Описание вакансии-->
+                <TextView
+                    android:id="@+id/description_txt"
+                    style="@style/TextStyleRegular"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/size_16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/description_title"
+                    tools:text="Описание" />
+
+                <!--Заголовок ключевые навыки-->
+                <TextView
+                    android:id="@+id/key_skills_title"
+                    style="@style/TextStyleMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size_24dp"
+                    android:text="@string/key_skills"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/description_txt" />
+
+                <!--Ключевые навыки-->
+                <TextView
+                    android:id="@+id/key_skills_txt"
+                    style="@style/TextStyleRegular"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size_16dp"
+                    android:layout_width="match_parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/key_skills_title"
+                    tools:text="Ключевые навыки" />
+
+                <!--Заголовок контакты-->
+                <TextView
+                    android:id="@+id/contacts_title"
+                    style="@style/TextStyleMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contacts"
+                    android:layout_marginTop="@dimen/size_24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/key_skills_txt" />
+
+                <!--Контакты-->
+                <TextView
+                    android:id="@+id/contact_face"
+                    style="@style/TextStyleRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontWeight="500"
+                    android:textStyle="bold"
+                    android:text="@string/contact_face"
+                    android:layout_marginTop="@dimen/size_16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/contacts_title" />
+
+                <!--Имя контактного лица-->
+                <TextView
+                    android:id="@+id/name_contact_face"
+                    style="@style/TextStyleRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size_4dp"
+                    tools:text="Ирина"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/contact_face" />
+
+                <!--Заголовок E-mail-->
+                <TextView
+                    android:id="@+id/email_title"
+                    style="@style/TextStyleRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size_16dp"
+                    android:fontWeight="500"
+                    android:text="@string/email"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/name_contact_face" />
+
+                <!--E-mail-->
+                <TextView
+                    android:id="@+id/email_txt"
+                    style="@style/TextStyleRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size_4dp"
+                    android:textColor="@color/blue"
+                    tools:text="example@example.com"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/email_title" />
+
+                <!--Заголовок телефо-->
+                <TextView
+                    android:id="@+id/phone_title"
+                    style="@style/TextStyleRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size_16dp"
+                    android:fontWeight="500"
+                    android:text="@string/phone"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/email_txt" />
+
+                <!--Телефон-->
+                <TextView
+                    android:id="@+id/phone_txt"
+                    style="@style/TextStyleRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/blue"
+                    android:layout_marginTop="@dimen/size_4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/phone_title"
+                    tools:text="+7 (904) 329-27-71" />
+
+                <!--Заголовок комментарий-->
+                <TextView
+                    android:id="@+id/comment_title"
+                    style="@style/TextStyleRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontWeight="500"
+                    android:text="@string/comment"
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/size_16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/phone_txt" />
+
+                <!--Комментарий-->
+                <TextView
+                    android:id="@+id/comment_txt"
+                    style="@style/TextStyleRegular"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size_4dp"
+                    android:layout_width="match_parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/comment_title"
+                    tools:text="Заполнить анкету по форме можно на нашем сайте" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+    </FrameLayout>
+</LinearLayout>

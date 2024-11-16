@@ -2,6 +2,7 @@
 <resources>
     <dimen name="size_0dp">0dp</dimen>
     <dimen name="size_1dp">1dp</dimen>
+    <dimen name="size_2dp">2dp</dimen>
     <dimen name="size_4dp">4dp</dimen>
     <dimen name="size_8dp">8dp</dimen>
     <dimen name="size_10dp">10dp</dimen>
@@ -13,6 +14,7 @@
     <dimen name="size_64dp">64dp</dimen>
     <dimen name="size_92dp">92dp</dimen>
     <dimen name="size_164dp">164dp</dimen>
+    <dimen name="size_224dp">224dp</dimen>
 
     <dimen name="size_16sp">16sp</dimen>
     <dimen name="size_22sp">22sp</dimen>
