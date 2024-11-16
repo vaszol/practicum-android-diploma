@@ -35,4 +35,16 @@
     <string name="favorite">Избранное</string>
     <string name="favorite_empty">Список пуст</string>
     <string name="favorire_error">Не удалось получить список вакансий</string>
+
+    <!--Строки для экрана детали вакансий-->
+    <string name="vacancy">Вакансия</string>
+    <string name="required_xp">Требуемый опыт</string>
+    <string name="vacancy_description">Описание вакансии</string>
+    <string name="key_skills">Ключевые навыки</string>
+    <string name="contacts">Контакты</string>
+    <string name="contact_face">Контактное лицо</string>
+    <string name="email">E-mail</string>
+    <string name="phone">Телефон</string>
+    <string name="comment">Комментарий</string>
+    <string name="vacancy_error">Вакансия не найдена или\n удалена</string>
 </resources>
