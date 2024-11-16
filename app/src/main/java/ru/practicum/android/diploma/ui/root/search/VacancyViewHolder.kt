@@ -14,7 +14,7 @@ class VacancyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(model: Vacancy) {
         with(binding) {
-            vacancyTitle.text = "${model.name}, ${model.area?.name}"
+            vacancyTitle.text = "${model.name}, ${model.area.name}"
             employerName.text = model.employerName
             salary.text = model.formatSalary()
             if (model.employerLogoUrl90 != VACANCY_DEFAULT_STRING_VALUE) {
