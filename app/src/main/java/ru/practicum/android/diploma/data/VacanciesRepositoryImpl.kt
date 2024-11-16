@@ -32,8 +32,7 @@ class VacanciesRepositoryImpl(
         val response =
             networkClient.vacancies(VacanciesRequest(text = text, currency = currency, size = PAGES, page = page))
         if (response.resultCode == HttpsURLConnection.HTTP_OK) {
-            val vacancies = (response as VacanciesResponse).items.map { vacancyConverter.mapToDomain(it) }
-            emit(Resource.Success(vacancies))
+            emit(Resource.Success((response as VacanciesResponse).items.map { vacancyConverter.mapToDomain(it) }))
         } else {
             emit(Resource.Error(response.resultCode.toString()))
         }

@@ -26,8 +26,7 @@ class HHApiClient(
             try {
                 if (!isConnected()) {
                     Response().apply { resultCode = -1 }
-                }
-                if (dto is VacanciesRequest) {
+                } else if (dto is VacanciesRequest) {
                     hhApi.getVacancies(dto.text, dto.currency, dto.size, dto.page).apply {
                         resultCode = HttpsURLConnection.HTTP_OK
                     }
@@ -46,8 +45,7 @@ class HHApiClient(
             try {
                 if (!isConnected()) {
                     Response().apply { resultCode = -1 }
-                }
-                if (dto is VacancyRequest) {
+                } else if (dto is VacancyRequest) {
                     hhApi.getVacancy(dto.id, dto.locale, dto.host).body().let {
                         VacancyResponse(it!!).apply { resultCode = HttpsURLConnection.HTTP_OK }
                     }
@@ -65,9 +63,8 @@ class HHApiClient(
         return withContext(Dispatchers.IO) {
             try {
                 if (!isConnected()) {
-                    emptyList<LocaleDto>()
-                }
-                if (dto is LocaleRequest) {
+                    emptyList()
+                } else if (dto is LocaleRequest) {
                     hhApi.getLocales(dto.locale, dto.host)
                 } else {
                     emptyList()

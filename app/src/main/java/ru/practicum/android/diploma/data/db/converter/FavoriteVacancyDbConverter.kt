@@ -10,16 +10,9 @@ object FavoriteVacancyDbConverter {
         employerName = vacancy.employerName,
         employerLogoUrl90 = vacancy.employerLogoUrl90,
         areaString = AreaTypeConverter.fromArea(vacancy.area),
-        experience = vacancy.experience,
-        employment = vacancy.employment,
-        schedule = vacancy.schedule,
         salaryFrom = vacancy.salaryFrom,
         salaryTo = vacancy.salaryTo,
-        currency = vacancy.currency,
-        description = vacancy.description,
-        keySkills = vacancy.keySkills.joinToString(", "), // Преобразуем список ключевых навыков в строку
-        street = vacancy.street,
-        building = vacancy.building
+        currency = vacancy.currency
     )
 
     fun map(vacancy: FavoriteVacancyEntity) = Vacancy(
@@ -28,15 +21,8 @@ object FavoriteVacancyDbConverter {
         employerName = vacancy.employerName,
         employerLogoUrl90 = vacancy.employerLogoUrl90,
         area = AreaTypeConverter.toArea(vacancy.areaString),
-        experience = vacancy.experience,
-        employment = vacancy.employment,
-        schedule = vacancy.schedule,
         salaryFrom = vacancy.salaryFrom,
         salaryTo = vacancy.salaryTo,
-        currency = vacancy.currency,
-        description = vacancy.description,
-        keySkills = vacancy.keySkills.split(", "),
-        street = vacancy.street,
-        building = vacancy.building
+        currency = vacancy.currency
     )
 }
