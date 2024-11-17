@@ -219,7 +219,7 @@
         android:layout_marginTop="@dimen/size_24dp"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintTop_toBottomOf="@id/salary"
-        android:src="@drawable/ic_check_box"
+        android:src="@drawable/ic_check_box_unmark"
         android:background="@null"
         tools:ignore="ContentDescription" />
 
