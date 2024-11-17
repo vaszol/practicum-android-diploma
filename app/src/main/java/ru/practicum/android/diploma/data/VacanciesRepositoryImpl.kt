@@ -28,11 +28,14 @@ class VacanciesRepositoryImpl(
         page: Int,
         locale: String,
         host: Host
-    ): Flow<Resource<List<Vacancy>>> = flow {
+    ): Flow<Resource<Pair<List<Vacancy>, Int>>> = flow {
         val response =
             networkClient.vacancies(VacanciesRequest(text = text, currency = currency, size = PAGES, page = page))
         if (response.resultCode == HttpsURLConnection.HTTP_OK) {
-            emit(Resource.Success((response as VacanciesResponse).items.map { vacancyConverter.mapToDomain(it) }))
+            val vacanciesResponse = response as VacanciesResponse
+            val vacancies = vacanciesResponse.items.map { vacancyConverter.mapToDomain(it) }
+            val totalCount = vacanciesResponse.found
+            emit(Resource.Success(Pair(vacancies, totalCount))) // Возвращаем список и общее количество
         } else {
             emit(Resource.Error(response.resultCode.toString()))
         }

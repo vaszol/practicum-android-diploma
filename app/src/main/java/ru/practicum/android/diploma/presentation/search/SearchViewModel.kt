@@ -19,43 +19,99 @@ class SearchViewModel(
     private val _searchScreenState = MutableLiveData<SearchScreenState>()
     val searchScreenState: LiveData<SearchScreenState> = _searchScreenState
     private var latestSearchText: String? = null
+    private val currentVacancies = mutableListOf<Vacancy>()
+    private var isLoadingNextPage = false
+    private var isEndOfListReached = false
     private val debouncer = Debouncer(viewModelScope, SEARCH_DEBOUNCE_DELAY)
 
     fun searchDebounce(changedText: String) {
         if (latestSearchText == changedText) {
             return
         }
-        this.latestSearchText = changedText
+        latestSearchText = changedText
+        page = 0
+        isEndOfListReached = false
         debouncer.debounce {
-            searchRequest(changedText)
+            searchRequest()
         }
     }
 
-    private fun searchRequest(query: String) {
-        if (query.isNotEmpty()) {
-            _searchScreenState.postValue(SearchScreenState.Loading)
-
-            viewModelScope.launch(Dispatchers.IO) {
-                vacancyInteractor.searchVacancies(query, Vacancy.CURRENCY_DEFAULT_VALUE, page, "RU", Host.HH_RU)
-                    .collect { pair ->
-                        if (pair.second != null) {
-                            if (pair.second == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
-                                _searchScreenState.postValue(SearchScreenState.Error)
-                            } else {
-                                _searchScreenState.postValue(SearchScreenState.NoInternet)
-                            }
-                        } else if (pair.first.isNullOrEmpty()) {
-                            _searchScreenState.postValue(SearchScreenState.NothingFound)
-                        } else {
-                            _searchScreenState.postValue(SearchScreenState.Results(pair.first!!))
-                        }
-                    }
+    private fun searchRequest() {
+        if (!latestSearchText.isNullOrEmpty()) {
+            if (page == 0) {
+                _searchScreenState.postValue(SearchScreenState.LoadingFirstPage)
+                performSearchRequest()
+            } else {
+                _searchScreenState.postValue(SearchScreenState.LoadingNextPage)
+                performSearchRequest()
             }
+        }
+    }
+
+    private fun performSearchRequest() {
+        viewModelScope.launch(Dispatchers.IO) {
+            vacancyInteractor.searchVacancies(
+                latestSearchText!!,
+                Vacancy.CURRENCY_DEFAULT_VALUE,
+                page,
+                "RU",
+                Host.HH_RU
+            ).collect { result ->
+                val (vacancies, errorMessage, totalCount) = result
+
+                if (errorMessage != null) {
+                    handleSearchError(page == 0, errorMessage)
+                } else if (vacancies.isNullOrEmpty()) {
+                    isEndOfListReached = true
+                    if (page > 0) _searchScreenState.postValue(SearchScreenState.EndOfListReached)
+                } else {
+                    if (page == 0) {
+                        currentVacancies.clear()
+                    }
+
+                    val newVacancies = vacancies.filterNot { vacancy ->
+                        currentVacancies.any { it.id == vacancy.id }
+                    }
+
+                    currentVacancies.addAll(newVacancies)
+                    _searchScreenState.postValue(SearchScreenState.Results(currentVacancies, totalCount!!))
+                }
+
+                isLoadingNextPage = false
+            }
+        }
+    }
+
+    private fun handleSearchError(isFirstPage: Boolean, errorMessage: String) {
+        if (isFirstPage) {
+            _searchScreenState.postValue(
+                if (errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
+                    SearchScreenState.ErrorFirstPage
+                } else {
+                    SearchScreenState.NoInternetFirstPage
+                }
+            )
+        } else {
+            _searchScreenState.postValue(
+                if (errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
+                    SearchScreenState.ErrorNextPage
+                } else {
+                    SearchScreenState.NoInternetNextPage
+                }
+            )
+        }
+        isLoadingNextPage = false
+    }
+
+    fun getNextPage() {
+        if (!isEndOfListReached && !isLoadingNextPage) {
+            isLoadingNextPage = true
+            page++
+            searchRequest()
         }
     }
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2_000L
     }
-
 }
