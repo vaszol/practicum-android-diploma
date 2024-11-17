@@ -58,4 +58,15 @@
     <string name="phone">Телефон</string>
     <string name="comment">Комментарий</string>
     <string name="vacancy_error">Вакансия не найдена или\n удалена</string>
+
+    <!--Строки для экрана фильтрации-->
+    <string name="filter_settings">Настройки фильтрации</string>
+    <string name="workplace">Место работы</string>
+    <string name="industry">Отрасль</string>
+    <string name="expected_salary">Ожидаемая зарплата</string>
+    <string name="enter_amount">Введите сумму</string>
+    <string name="dont_show_without_salary">Не показывать без зарплаты</string>
+    <string name="apply">Применить</string>
+    <string name="reset">Сбросить</string>
+
 </resources>

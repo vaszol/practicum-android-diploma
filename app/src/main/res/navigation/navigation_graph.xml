@@ -9,20 +9,34 @@
         android:id="@+id/mainFragment"
         android:name="ru.practicum.android.diploma.ui.root.search.SearchFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+
+        <action
+            android:id="@+id/action_mainFragment_to_filterFragment"
+            app:destination="@+id/filterFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="ru.practicum.android.diploma.ui.root.favorite.FavoritesFragment"
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites" />
+
     <fragment
         android:id="@+id/teamFragment"
         android:name="ru.practicum.android.diploma.ui.root.team.TeamFragment"
         android:label="fragment_team"
         tools:layout="@layout/fragment_team" />
+
     <fragment
         android:id="@+id/detailsFragment"
         android:name="ru.practicum.android.diploma.ui.root.details.DetailsFragment"
         android:label="fragment_details"
         tools:layout="@layout/fragment_details" />
+
+    <fragment
+        android:id="@+id/filterFragment"
+        android:name="ru.practicum.android.diploma.ui.root.filter.FilterFragment"
+        android:label="fragment_filter"
+        tools:layout="@layout/fragment_filter" />
 </navigation>

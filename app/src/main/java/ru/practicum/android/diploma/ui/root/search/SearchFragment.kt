@@ -11,6 +11,7 @@ import android.content.Context
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
@@ -126,6 +127,11 @@ class SearchFragment : Fragment() {
                     duration = Toast.LENGTH_SHORT
                 }
                 .show()
+        }
+
+        binding.searchFilterNotActvie.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_mainFragment_to_filterFragment)
         }
     }
 

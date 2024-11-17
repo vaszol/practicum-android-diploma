@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
@@ -55,4 +57,8 @@ val dataModule = module {
     }
 
     single { get<AppDataBase>().getFavoriteVacancyDao() }
+
+    single<SharedPreferences> {
+        get<Context>().getSharedPreferences("practicum_android_diploma_preferences", Context.MODE_PRIVATE)
+    }
 }
