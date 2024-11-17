@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.content.Context
+import android.util.Log
+import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
@@ -15,6 +18,7 @@ import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.presentation.search.SearchScreenState
 import ru.practicum.android.diploma.presentation.search.SearchViewModel
 import ru.practicum.android.diploma.domain.models.Vacancy
+import java.text.DecimalFormat
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
@@ -35,11 +39,15 @@ class SearchFragment : Fragment() {
 
         viewModel.searchScreenState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                SearchScreenState.Loading -> showLoading()
-                SearchScreenState.NoInternet -> showNoInternet()
+                SearchScreenState.LoadingFirstPage -> showLoading()
+                SearchScreenState.NoInternetFirstPage -> showNoInternet()
                 SearchScreenState.NothingFound -> showNothingFound()
-                SearchScreenState.Error -> showError()
-                is SearchScreenState.Results -> showResults(state.resultsList)
+                SearchScreenState.ErrorFirstPage -> showError()
+                is SearchScreenState.Results -> showResults(state.resultsList, state.totalCount)
+                SearchScreenState.LoadingNextPage -> showLoadingNextPage()
+                SearchScreenState.NoInternetNextPage -> showProblemNextPage(NO_INTERNET)
+                SearchScreenState.ErrorNextPage -> showProblemNextPage(ERROR)
+                SearchScreenState.EndOfListReached -> showProblemNextPage(END_OF_LIST)
             }
         }
 
@@ -65,28 +73,90 @@ class SearchFragment : Fragment() {
                 searchEditText.setText(EMPTY_TEXT)
                 setKeyboardVisibility(searchEditText, false)
             }
+
+            searchRecyclerView.addOnScrollListener(
+                object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+                        val layoutManager =
+                            recyclerView.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager
+                                ?: return
+
+                        val totalItemCount = layoutManager.itemCount
+                        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                        if (lastVisibleItemPosition == totalItemCount - 1 && dy > 0) {
+                            onEndOfListReached()
+                        }
+                    }
+                })
+
+            binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    viewModel.searchDebounce(searchEditText.text.toString())
+                    setKeyboardVisibility(searchEditText, false)
+                    true
+                } else {
+                    false
+                }
+            }
+        }
+    }
+
+    private fun onEndOfListReached() {
+        Log.d("DTest", "onEndOfListReached")
+        viewModel.getNextPage()
+
+    }
+
+    private fun showLoadingNextPage() {
+        Log.d("DTest", "showLoadingNextPage")
+        with(binding) {
+            searchProgressBarBottom.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showProblemNextPage(type: String) {
+        Log.d("DTest", "showProblemNextPage")
+        with(binding) {
+            searchProgressBarBottom.visibility = View.GONE
+            val toastMessage = when(type){
+                NO_INTERNET -> getString(R.string.check_internet)
+                END_OF_LIST -> getString(R.string.end_of_list)
+                else -> getString(R.string.error_occupied)
+            }
+            Toast(requireContext())
+                .apply {
+                    setText(toastMessage)
+                    duration = Toast.LENGTH_SHORT
+                }
+                .show()
         }
     }
 
     private fun showError() {
+        Log.d("DTest", "showError")
         with(binding) {
             searchImgPlaceholder.setImageResource(R.drawable.placeholder_error)
             searchError.setText(R.string.error)
             searchProgressBar.visibility = View.GONE
             searchRecyclerView.visibility = View.GONE
             searchVacancyCount.visibility = View.GONE
+            searchProgressBarBottom.visibility = View.GONE
             searchImgPlaceholder.visibility = View.VISIBLE
             searchError.visibility = View.VISIBLE
         }
     }
 
-    private fun showResults(vacancies: List<Vacancy>) {
+    private fun showResults(vacancies: List<Vacancy>, totalCount: Int) {
+        Log.d("DTest", "showResults")
         with(binding) {
             searchImgPlaceholder.visibility = View.GONE
             searchError.visibility = View.GONE
             searchProgressBar.visibility = View.GONE
-            searchVacancyCount.text =
-                resources.getQuantityString(R.plurals.vacancy_postfix, vacancies.size, vacancies.size)
+            searchProgressBarBottom.visibility = View.GONE
+            val formattedCount = DecimalFormat("#,###").format(totalCount)
+            searchVacancyCount.text = "${resources.getQuantityString(R.plurals.count_postfix_found, totalCount)} " +
+                "$formattedCount ${resources.getQuantityString(R.plurals.count_postfix_vacancy, totalCount)}"
             searchVacancyCount.visibility = View.VISIBLE
             searchRecyclerView.visibility = View.VISIBLE
         }
@@ -94,24 +164,28 @@ class SearchFragment : Fragment() {
     }
 
     private fun showNoInternet() {
+        Log.d("DTest", "showNoInternet")
         with(binding) {
             searchImgPlaceholder.setImageResource(R.drawable.placeholder_no_internet)
             searchError.setText(R.string.no_internet)
             searchProgressBar.visibility = View.GONE
             searchRecyclerView.visibility = View.GONE
             searchVacancyCount.visibility = View.GONE
+            searchProgressBarBottom.visibility = View.GONE
             searchImgPlaceholder.visibility = View.VISIBLE
             searchError.visibility = View.VISIBLE
         }
     }
 
     private fun showNothingFound() {
+        Log.d("DTest", "showNothingFound")
         with(binding) {
             searchImgPlaceholder.setImageResource(R.drawable.placeholder_no_vacancy)
             searchError.setText(R.string.nothing_found)
             searchVacancyCount.setText(R.string.no_vacancies)
             searchProgressBar.visibility = View.GONE
             searchRecyclerView.visibility = View.GONE
+            searchProgressBarBottom.visibility = View.GONE
             searchImgPlaceholder.visibility = View.VISIBLE
             searchError.visibility = View.VISIBLE
             searchVacancyCount.visibility = View.VISIBLE
@@ -119,11 +193,13 @@ class SearchFragment : Fragment() {
     }
 
     private fun showLoading() {
+        Log.d("DTest", "showLoading")
         with(binding) {
             searchRecyclerView.visibility = View.GONE
             searchImgPlaceholder.visibility = View.GONE
             searchError.visibility = View.GONE
             searchVacancyCount.visibility = View.GONE
+            searchProgressBarBottom.visibility = View.GONE
             searchProgressBar.visibility = View.VISIBLE
             setKeyboardVisibility(searchEditText, false)
         }
@@ -150,5 +226,8 @@ class SearchFragment : Fragment() {
 
     companion object {
         const val EMPTY_TEXT = ""
+        const val NO_INTERNET = "NO_INTERNET"
+        const val ERROR = "NO_INTERNET"
+        const val END_OF_LIST = "END_OF_LIST"
     }
 }

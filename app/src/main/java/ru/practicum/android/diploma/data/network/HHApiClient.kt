@@ -29,6 +29,7 @@ class HHApiClient(
                 } else if (dto is VacanciesRequest) {
                     hhApi.getVacancies(dto.text, dto.currency, dto.size, dto.page).apply {
                         resultCode = HttpsURLConnection.HTTP_OK
+                        
                     }
                 } else {
                     Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }

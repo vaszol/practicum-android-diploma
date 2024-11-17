@@ -13,7 +13,7 @@ interface VacancyInteractor {
         page: Int,
         locale: String,
         host: Host
-    ): Flow<Pair<List<Vacancy>?, String?>>
+    ): Flow<Triple<List<Vacancy>?, String?, Int?>>
 
     fun searchVacancy(id: String, locale: String, host: Host): Flow<Pair<VacancyDetail?, String?>>
     fun searchLocales(locale: String, host: Host): Flow<List<LocaleDto>>

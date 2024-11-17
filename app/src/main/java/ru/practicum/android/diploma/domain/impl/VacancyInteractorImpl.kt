@@ -17,11 +17,11 @@ class VacancyInteractorImpl(private val repository: VacancyRepository) : Vacancy
         page: Int,
         locale: String,
         host: Host
-    ): Flow<Pair<List<Vacancy>?, String?>> {
+    ): Flow<Triple<List<Vacancy>?, String?, Int?>> {
         return repository.searchVacancies(text, currency, page, locale, host).map { result ->
             when (result) {
-                is Resource.Success -> Pair(result.data, null)
-                is Resource.Error -> Pair(null, result.message)
+                is Resource.Success -> Triple(result.data?.first, null, result.data?.second)
+                is Resource.Error ->  Triple(null, result.message, null)
             }
         }
     }
