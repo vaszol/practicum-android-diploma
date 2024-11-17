@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.content.Context
-import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -88,7 +87,8 @@ class SearchFragment : Fragment() {
                             onEndOfListReached()
                         }
                     }
-                })
+                }
+            )
 
             binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -103,23 +103,19 @@ class SearchFragment : Fragment() {
     }
 
     private fun onEndOfListReached() {
-        Log.d("DTest", "onEndOfListReached")
         viewModel.getNextPage()
-
     }
 
     private fun showLoadingNextPage() {
-        Log.d("DTest", "showLoadingNextPage")
         with(binding) {
             searchProgressBarBottom.visibility = View.VISIBLE
         }
     }
 
     private fun showProblemNextPage(type: String) {
-        Log.d("DTest", "showProblemNextPage")
         with(binding) {
             searchProgressBarBottom.visibility = View.GONE
-            val toastMessage = when(type){
+            val toastMessage = when (type) {
                 NO_INTERNET -> getString(R.string.check_internet)
                 END_OF_LIST -> getString(R.string.end_of_list)
                 else -> getString(R.string.error_occupied)
@@ -134,7 +130,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun showError() {
-        Log.d("DTest", "showError")
         with(binding) {
             searchImgPlaceholder.setImageResource(R.drawable.placeholder_error)
             searchError.setText(R.string.error)
@@ -148,7 +143,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun showResults(vacancies: List<Vacancy>, totalCount: Int) {
-        Log.d("DTest", "showResults")
         with(binding) {
             searchImgPlaceholder.visibility = View.GONE
             searchError.visibility = View.GONE
@@ -164,7 +158,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun showNoInternet() {
-        Log.d("DTest", "showNoInternet")
         with(binding) {
             searchImgPlaceholder.setImageResource(R.drawable.placeholder_no_internet)
             searchError.setText(R.string.no_internet)
@@ -178,7 +171,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun showNothingFound() {
-        Log.d("DTest", "showNothingFound")
         with(binding) {
             searchImgPlaceholder.setImageResource(R.drawable.placeholder_no_vacancy)
             searchError.setText(R.string.nothing_found)
@@ -193,7 +185,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun showLoading() {
-        Log.d("DTest", "showLoading")
         with(binding) {
             searchRecyclerView.visibility = View.GONE
             searchImgPlaceholder.visibility = View.GONE

@@ -21,7 +21,7 @@ class VacancyInteractorImpl(private val repository: VacancyRepository) : Vacancy
         return repository.searchVacancies(text, currency, page, locale, host).map { result ->
             when (result) {
                 is Resource.Success -> Triple(result.data?.first, null, result.data?.second)
-                is Resource.Error ->  Triple(null, result.message, null)
+                is Resource.Error -> Triple(null, result.message, null)
             }
         }
     }

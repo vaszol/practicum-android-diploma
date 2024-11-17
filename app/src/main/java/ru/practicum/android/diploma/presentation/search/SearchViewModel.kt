@@ -103,7 +103,6 @@ class SearchViewModel(
         isLoadingNextPage = false
     }
 
-
     fun getNextPage() {
         if (!isEndOfListReached && !isLoadingNextPage) {
             isLoadingNextPage = true
