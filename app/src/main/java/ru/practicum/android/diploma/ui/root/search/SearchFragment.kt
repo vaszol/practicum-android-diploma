@@ -9,17 +9,21 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.content.Context
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.presentation.search.SearchScreenState
 import ru.practicum.android.diploma.presentation.search.SearchViewModel
 import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.ui.root.details.DetailsFragment
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
-    private val adapter by lazy { VacancyAdapter(mutableListOf()) }
+    private val adapter = VacancyAdapter {vacancy ->
+        findNavController().navigate(R.id.action_mainFragment_to_detailsFragment, DetailsFragment.createArgs(vacancy.id))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -9,7 +9,11 @@
         android:id="@+id/mainFragment"
         android:name="ru.practicum.android.diploma.ui.root.search.SearchFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_mainFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="ru.practicum.android.diploma.ui.root.favorite.FavoritesFragment"
