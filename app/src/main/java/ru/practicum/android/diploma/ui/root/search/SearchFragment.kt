@@ -19,11 +19,14 @@ import ru.practicum.android.diploma.presentation.search.SearchScreenState
 import ru.practicum.android.diploma.presentation.search.SearchViewModel
 import ru.practicum.android.diploma.domain.models.Vacancy
 import java.text.DecimalFormat
+import ru.practicum.android.diploma.ui.root.details.DetailsFragment
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
-    private val adapter by lazy { VacancyAdapter(mutableListOf()) }
+    private val adapter = VacancyAdapter {vacancy ->
+        findNavController().navigate(R.id.action_mainFragment_to_detailsFragment, DetailsFragment.createArgs(vacancy.id))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

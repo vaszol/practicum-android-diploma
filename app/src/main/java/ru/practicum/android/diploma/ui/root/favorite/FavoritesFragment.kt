@@ -16,7 +16,7 @@ import ru.practicum.android.diploma.ui.root.search.VacancyAdapter
 class FavoritesFragment : Fragment() {
     private val viewModel: FavoriteViewModel by viewModel()
     private val binding by lazy { FragmentFavoritesBinding.inflate(layoutInflater) }
-    private val adapter by lazy { VacancyAdapter(mutableListOf()) }
+    private val adapter = VacancyAdapter{}
 
     override fun onCreateView(
         inflater: LayoutInflater,
