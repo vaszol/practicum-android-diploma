@@ -3,13 +3,13 @@ package ru.practicum.android.diploma.domain.impl
 import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.domain.favorite.FavoriteInteractor
 import ru.practicum.android.diploma.domain.favorite.FavoriteRepository
-import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.domain.models.VacancyDetail
 
 class FavoriteInteractorImpl(
     private val repository: FavoriteRepository
 ) : FavoriteInteractor {
 
-    override suspend fun addFavoriteVacancy(vacancy: Vacancy) {
+    override suspend fun addFavoriteVacancy(vacancy: VacancyDetail) {
         repository.addFavoriteVacancy(vacancy)
     }
 
@@ -21,7 +21,7 @@ class FavoriteInteractorImpl(
         return repository.isVacancyFavorite(id)
     }
 
-    override fun getAllFavoriteVacancies(): Flow<List<Vacancy>> {
+    override fun getAllFavoriteVacancies(): Flow<List<VacancyDetail>> {
         return repository.getAllFavoriteVacancies()
     }
 
@@ -29,7 +29,7 @@ class FavoriteInteractorImpl(
         return repository.getFavoriteVacancyIds()
     }
 
-    override fun getFavoriteVacancyById(id: String): Flow<Vacancy?> {
+    override fun getFavoriteVacancyById(id: String): Flow<VacancyDetail?> {
         return repository.getFavoriteVacancyById(id)
     }
 }

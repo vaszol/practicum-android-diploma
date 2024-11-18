@@ -11,9 +11,6 @@ val interactorModule = module {
     factory<VacancyInteractor> {
         VacancyInteractorImpl(get())
     }
-    scope<RootActivity> {
-        scoped { VacancyInteractorImpl(get()) }
-    }
     factory<FavoriteInteractor> {
         FavoriteInteractorImpl(get())
     }
