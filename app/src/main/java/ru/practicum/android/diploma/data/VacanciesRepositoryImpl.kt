@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.data
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.converter.VacancyConverter
 import ru.practicum.android.diploma.data.dto.LocaleDto
@@ -10,6 +11,7 @@ import ru.practicum.android.diploma.data.dto.VacanciesResponse
 import ru.practicum.android.diploma.data.dto.VacancyRequest
 import ru.practicum.android.diploma.data.dto.VacancyResponse
 import ru.practicum.android.diploma.domain.api.VacancyRepository
+import ru.practicum.android.diploma.domain.favorite.FavoriteRepository
 import ru.practicum.android.diploma.domain.models.DetailsVacancyRequest
 import ru.practicum.android.diploma.domain.models.Host
 import ru.practicum.android.diploma.domain.models.Resource
@@ -22,6 +24,7 @@ private const val PAGES = 20
 class VacanciesRepositoryImpl(
     private val networkClient: NetworkClient,
     private val vacancyConverter: VacancyConverter,
+    private val repository: FavoriteRepository
 ) : VacancyRepository {
     override fun searchVacancies(
         text: String,
@@ -42,11 +45,15 @@ class VacanciesRepositoryImpl(
         }
     }
 
-    override fun searchVacancy(request: DetailsVacancyRequest): Flow<Resource<VacancyDetail>> = flow {
+    override fun searchVacancy(request: DetailsVacancyRequest): Flow<Resource<VacancyDetail?>> = flow {
         val response =
             networkClient.vacancy(VacancyRequest(id = request.id, locale = request.locale, host = request.host))
+        val isFavorite = repository.isVacancyFavorite(request.id)
         if (response.resultCode == HttpsURLConnection.HTTP_OK) {
-            val vacancy = (response as VacancyResponse).result.let { vacancyConverter.mapToDomain(it) }
+            val vacancy = (response as VacancyResponse).result.let { vacancyConverter.mapToDomain(it, isFavorite) }
+            emit(Resource.Success(vacancy))
+        } else if (isFavorite) {
+            val vacancy = repository.getFavoriteVacancyById(request.id).firstOrNull()
             emit(Resource.Success(vacancy))
         } else {
             emit(Resource.Error(response.resultCode.toString()))

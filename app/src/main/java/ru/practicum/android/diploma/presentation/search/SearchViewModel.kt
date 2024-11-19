@@ -30,6 +30,7 @@ class SearchViewModel(
         }
         latestSearchText = changedText
         page = 0
+        currentVacancies.clear()
         isEndOfListReached = false
         debouncer.debounce {
             searchRequest()
@@ -56,13 +57,10 @@ class SearchViewModel(
                 page,
                 "RU",
                 Host.HH_RU
-            ).collect { result ->
-                val (vacancies, errorMessage, totalCount) = result
-
-                if (errorMessage != null) {
-                    handleSearchError(page == 0, errorMessage)
-                    if (page > 0) page--
-                } else if (vacancies.isNullOrEmpty()) {
+            ).collect { triple ->
+                if (triple.second != null) {
+                    handleSearchError(triple.second!!)
+                } else if (triple.first.isNullOrEmpty()) {
                     isEndOfListReached = true
                     if (page > 0) {
                         _searchScreenState.postValue(SearchScreenState.EndOfListReached)
@@ -70,16 +68,9 @@ class SearchViewModel(
                         _searchScreenState.postValue(SearchScreenState.NothingFound)
                     }
                 } else {
-                    if (page == 0) {
-                        currentVacancies.clear()
-                    }
-
-                    val newVacancies = vacancies.filterNot { vacancy ->
-                        currentVacancies.any { it.id == vacancy.id }
-                    }
-
-                    currentVacancies.addAll(newVacancies)
-                    _searchScreenState.postValue(SearchScreenState.Results(currentVacancies, totalCount!!))
+                    page++
+                    currentVacancies.addAll(triple.first!!)
+                    _searchScreenState.postValue(SearchScreenState.Results(currentVacancies.distinct(), triple.third!!))
                 }
 
                 isLoadingNextPage = false
@@ -87,8 +78,8 @@ class SearchViewModel(
         }
     }
 
-    private fun handleSearchError(isFirstPage: Boolean, errorMessage: String) {
-        if (isFirstPage) {
+    private fun handleSearchError(errorMessage: String) {
+        if (page == 0) {
             _searchScreenState.postValue(
                 if (errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
                     SearchScreenState.ErrorFirstPage
@@ -111,7 +102,6 @@ class SearchViewModel(
     fun getNextPage() {
         if (!isEndOfListReached && !isLoadingNextPage) {
             isLoadingNextPage = true
-            page++
             searchRequest()
         }
     }
