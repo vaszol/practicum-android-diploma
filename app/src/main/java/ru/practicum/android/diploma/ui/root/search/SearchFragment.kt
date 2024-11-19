@@ -25,18 +25,17 @@ import java.text.DecimalFormat
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
-    private val adapter by lazy { VacancyAdapter(mutableListOf()) {selectVacancy(it)} }
+    private val adapter by lazy { VacancyAdapter(mutableListOf()) { selectVacancy(it) } }
 
     private fun selectVacancy(vacancy: Vacancy) {
-        findNavController().navigate(R.id.action_mainFragment_to_detailsFragment,
+        findNavController().navigate(
+            R.id.action_mainFragment_to_detailsFragment,
             bundleOf(VACANCY_ID to vacancy.id)
         )
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         return binding.root
     }
@@ -82,22 +81,20 @@ class SearchFragment : Fragment() {
                 setKeyboardVisibility(searchEditText, false)
             }
 
-            searchRecyclerView.addOnScrollListener(
-                object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-                    override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
-                        super.onScrolled(recyclerView, dx, dy)
-                        val layoutManager =
-                            recyclerView.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager
-                                ?: return
+            searchRecyclerView.addOnScrollListener(object :
+                androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val layoutManager =
+                        recyclerView.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager ?: return
 
-                        val totalItemCount = layoutManager.itemCount
-                        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-                        if (lastVisibleItemPosition == totalItemCount - 1 && dy > 0) {
-                            onEndOfListReached()
-                        }
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                    if (lastVisibleItemPosition == totalItemCount - 1 && dy > 0) {
+                        onEndOfListReached()
                     }
                 }
-            )
+            })
 
             binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -129,12 +126,10 @@ class SearchFragment : Fragment() {
                 END_OF_LIST -> getString(R.string.end_of_list)
                 else -> getString(R.string.error_occupied)
             }
-            Toast(requireContext())
-                .apply {
-                    setText(toastMessage)
-                    duration = Toast.LENGTH_SHORT
-                }
-                .show()
+            Toast(requireContext()).apply {
+                setText(toastMessage)
+                duration = Toast.LENGTH_SHORT
+            }.show()
         }
     }
 
@@ -158,8 +153,17 @@ class SearchFragment : Fragment() {
             searchProgressBar.visibility = View.GONE
             searchProgressBarBottom.visibility = View.GONE
             val formattedCount = DecimalFormat("#,###").format(totalCount)
-            searchVacancyCount.text = "${resources.getQuantityString(R.plurals.count_postfix_found, totalCount, totalCount)} " +
-                "$formattedCount ${resources.getQuantityString(R.plurals.count_postfix_vacancy, totalCount, totalCount)}"
+            searchVacancyCount.text = "${
+                resources.getQuantityString(
+                    R.plurals.count_postfix_found,
+                    totalCount,
+                    totalCount
+                )
+            } " + "$formattedCount ${
+                resources.getQuantityString(
+                    R.plurals.count_postfix_vacancy, totalCount, totalCount
+                )
+            }"
             searchVacancyCount.visibility = View.VISIBLE
             searchRecyclerView.visibility = View.VISIBLE
         }
@@ -206,8 +210,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setKeyboardVisibility(view: View, isVisible: Boolean) {
-        val inputMethodManager =
-            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         if (isVisible) {
             inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)

@@ -110,7 +110,6 @@ class DetailsFragment : Fragment() {
         }
     }
 
-
     private fun showLoading() {
         with(binding) {
             progressBar.visibility = View.VISIBLE
