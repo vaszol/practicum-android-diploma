@@ -224,7 +224,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun showToast(message: String){
+    private fun showToast(message: String) {
         Toast(requireContext()).apply {
             setText(message)
             duration = Toast.LENGTH_SHORT
