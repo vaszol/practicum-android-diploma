@@ -69,6 +69,9 @@ class DetailsFragment : Fragment() {
         currentVacancy = vacancy
         with(binding) {
             progressBar.visibility = View.GONE
+            vacancyError.visibility = View.GONE
+            scrollView.visibility = View.VISIBLE
+            shareImg.visibility = View.VISIBLE
             vacancyNameTitle.text = vacancy.name
             salaryTxt.text = getFormattedSalary(vacancy.salaryFrom, vacancy.salaryTo, vacancy.currency)
             employerName.text = vacancy.employerName
@@ -113,11 +116,14 @@ class DetailsFragment : Fragment() {
 
     private fun showLoading() {
         with(binding) {
+            scrollView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
+            shareImg.visibility = View.GONE
+            favoriteOff.visibility = View.GONE
         }
     }
 
-    private fun showError(isServerError: Boolean) {
+private fun showError(isServerError: Boolean) {
         with(binding) {
             progressBar.visibility = View.GONE
             if (isServerError) {
@@ -137,7 +143,7 @@ class DetailsFragment : Fragment() {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, currentVacancy!!.url)
         }
-        startActivity(Intent.createChooser(shareIntent, "Share Vacancy"))
+        startActivity(Intent.createChooser(shareIntent, ""))
     }
 
     override fun onDestroyView() {

@@ -128,10 +128,7 @@ class SearchFragment : Fragment() {
                 END_OF_LIST -> getString(R.string.end_of_list)
                 else -> getString(R.string.error_occupied)
             }
-            Toast(requireContext()).apply {
-                setText(toastMessage)
-                duration = Toast.LENGTH_SHORT
-            }.show()
+            showToast(toastMessage)
         }
     }
 
@@ -145,6 +142,8 @@ class SearchFragment : Fragment() {
             searchProgressBarBottom.visibility = View.GONE
             searchImgPlaceholder.visibility = View.VISIBLE
             searchError.visibility = View.VISIBLE
+
+            showToast(searchError.text.toString())
         }
     }
 
@@ -182,6 +181,8 @@ class SearchFragment : Fragment() {
             searchProgressBarBottom.visibility = View.GONE
             searchImgPlaceholder.visibility = View.VISIBLE
             searchError.visibility = View.VISIBLE
+
+            showToast(searchError.text.toString())
         }
     }
 
@@ -196,6 +197,8 @@ class SearchFragment : Fragment() {
             searchImgPlaceholder.visibility = View.VISIBLE
             searchError.visibility = View.VISIBLE
             searchVacancyCount.visibility = View.VISIBLE
+
+            showToast(searchError.text.toString())
         }
     }
 
@@ -221,6 +224,13 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun showToast(message: String) {
+        Toast(requireContext()).apply {
+            setText(message)
+            duration = Toast.LENGTH_SHORT
+        }.show()
+    }
+
     override fun onResume() {
         super.onResume()
         with(binding) {
@@ -232,7 +242,7 @@ class SearchFragment : Fragment() {
     companion object {
         const val EMPTY_TEXT = ""
         const val NO_INTERNET = "NO_INTERNET"
-        const val ERROR = "NO_INTERNET"
+        const val ERROR = "ERROR"
         const val END_OF_LIST = "END_OF_LIST"
     }
 }
