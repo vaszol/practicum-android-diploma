@@ -61,9 +61,14 @@ class SearchViewModel(
 
                 if (errorMessage != null) {
                     handleSearchError(page == 0, errorMessage)
+                    if (page > 0) page--
                 } else if (vacancies.isNullOrEmpty()) {
                     isEndOfListReached = true
-                    if (page > 0) _searchScreenState.postValue(SearchScreenState.EndOfListReached)
+                    if (page > 0) {
+                        _searchScreenState.postValue(SearchScreenState.EndOfListReached)
+                    } else {
+                        _searchScreenState.postValue(SearchScreenState.NothingFound)
+                    }
                 } else {
                     if (page == 0) {
                         currentVacancies.clear()
