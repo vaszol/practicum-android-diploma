@@ -41,7 +41,7 @@ class DetailsFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        viewModel.detailsScreenState.observe(viewLifecycleOwner, ::render)
+        viewModel.getVacancyState().observe(viewLifecycleOwner, ::render)
     }
 
     private fun render(state: StateVacancyDetails) {

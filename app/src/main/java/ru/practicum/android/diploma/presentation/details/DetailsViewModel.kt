@@ -16,8 +16,8 @@ class DetailsViewModel(
     private val vacancyInteractor: VacancyInteractor
 ) : ViewModel() {
 
-    val _detailsScreenState: MutableLiveData<StateVacancyDetails> = MutableLiveData()
-    val detailsScreenState: LiveData<StateVacancyDetails> = _detailsScreenState
+    val stateVacancyDetails: MutableLiveData<StateVacancyDetails> = MutableLiveData()
+    fun getVacancyState(): LiveData<StateVacancyDetails> = stateVacancyDetails
 
     init {
         getDetails(id)
@@ -25,18 +25,18 @@ class DetailsViewModel(
 
     private fun getDetails(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _detailsScreenState.postValue(StateVacancyDetails.Loading)
+            stateVacancyDetails.postValue(StateVacancyDetails.Loading)
             vacancyInteractor.searchVacancy(
                 DetailsVacancyRequest(id = id)
             ).collect { pair ->
                 if (pair.second != null) {
                     if (pair.second == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
-                        _detailsScreenState.postValue(StateVacancyDetails.ErrorServer)
+                        stateVacancyDetails.postValue(StateVacancyDetails.ErrorServer)
                     } else {
-                        _detailsScreenState.postValue(StateVacancyDetails.NoInternet)
+                        stateVacancyDetails.postValue(StateVacancyDetails.NoInternet)
                     }
                 } else {
-                    _detailsScreenState.postValue(pair.first?.let { StateVacancyDetails.Content(it) })
+                    stateVacancyDetails.postValue(pair.first?.let { StateVacancyDetails.Content(it) })
                 }
             }
         }
