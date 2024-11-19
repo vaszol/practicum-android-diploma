@@ -92,7 +92,7 @@
                 android:layout_marginVertical="@dimen/size_16dp"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                tools:text="@string/vacancy_error"/>
+                android:text="@string/vacancy_error"/>
 
         </LinearLayout>
 
@@ -114,7 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLines="1"
+                    android:maxLines="3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Android developer" />
@@ -142,12 +142,13 @@
                     app:layout_constraintTop_toBottomOf="@id/salary_txt">
 
                     <!--Логотип вакансии-->
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/vacancy_logo"
                         android:layout_width="@dimen/size_48dp"
                         android:layout_height="@dimen/size_48dp"
                         android:background="@drawable/background_icon"
                         android:src="@drawable/ic_logotype_vacancy"
+                        app:shapeAppearanceOverlay="@style/RoundedImage"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -254,7 +255,6 @@
                     style="@style/TextStyleMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/size_24dp"
                     android:text="@string/key_skills"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/description_txt" />

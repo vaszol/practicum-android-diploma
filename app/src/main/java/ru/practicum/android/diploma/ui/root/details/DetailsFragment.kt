@@ -1,83 +1,146 @@
 package ru.practicum.android.diploma.ui.root.details
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentDetailsBinding
+import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.domain.models.VacancyDetail
+import ru.practicum.android.diploma.presentation.details.DetailsScreenState
 import ru.practicum.android.diploma.presentation.details.DetailsViewModel
-import ru.practicum.android.diploma.ui.root.details.models.StateVacancyDetails
+import ru.practicum.android.diploma.ui.root.RootActivity
+import ru.practicum.android.diploma.util.extentions.getFormattedSalary
 
 class DetailsFragment : Fragment() {
-
-    open val viewModel: DetailsViewModel by viewModel {
-        parametersOf(vacancyId)
-    }
-    private var _binding: FragmentDetailsBinding? = null
-    private val binding get() = _binding!!
-    private var vacancyId: String? = null
-
-
+    private val viewModel: DetailsViewModel by viewModel()
+    private val binding by lazy { FragmentDetailsBinding.inflate(layoutInflater) }
+    private var currentVacancy: VacancyDetail? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vacancyId = requireArguments().getString(ARG_VACANCY)
+        (activity as RootActivity).findViewById<BottomNavigationView>(R.id.bottom_navigation_view).visibility =
+            View.GONE
+        val vacancyId = arguments?.getString(VACANCY_ID) ?: return
+        viewModel.loadVacancyDetails(vacancyId)
 
-        binding.backImg.setOnClickListener {
-            findNavController().popBackStack()
+        viewModel.screenState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is DetailsScreenState.Loading -> showLoading()
+                is DetailsScreenState.Error -> showError()
+                is DetailsScreenState.Content -> showVacancyDetails(state.vacancy, state.isFavorite)
+            }
+
+            with(binding) {
+                favoriteOff.setOnClickListener {
+                    viewModel.addToFavorite(currentVacancy!!)
+                    binding.favoriteOff.visibility = View.GONE
+                    binding.favoriteOn.visibility = View.VISIBLE
+                }
+                favoriteOn.setOnClickListener {
+                    viewModel.removeFromFavorite(currentVacancy!!)
+                    binding.favoriteOff.visibility = View.VISIBLE
+                    binding.favoriteOn.visibility = View.GONE
+                }
+                shareImg.setOnClickListener {
+                    shareVacancyDetails()
+                }
+                binding.backImg.setOnClickListener { findNavController().popBackStack() }
+            }
         }
-
-        viewModel.getVacancyState().observe(viewLifecycleOwner, ::render)
     }
 
-    private fun render(state: StateVacancyDetails) {
-        when (state) {
-            is StateVacancyDetails.Content -> {
-                Details(requireContext(), binding).getContent(state.vacancy)
+    private fun showVacancyDetails(vacancy: VacancyDetail, isFavorite: Boolean) {
+        currentVacancy = vacancy
+        with(binding) {
+            progressBar.visibility = View.GONE
+            vacancyNameTitle.text = vacancy.name
+            salaryTxt.text = getFormattedSalary(vacancy.salaryFrom, vacancy.salaryTo, vacancy.currency)
+            employerName.text = vacancy.employerName
+            requiredXp.text = vacancy.experience
+            val address = if (vacancy.street != Vacancy.VACANCY_DEFAULT_STRING_VALUE) {
+                if (vacancy.building != Vacancy.VACANCY_DEFAULT_STRING_VALUE) {
+                    "${vacancy.area.name}, ${vacancy.street}, ${vacancy.building}"
+                } else {
+                    "${vacancy.area.name}, ${vacancy.street}"
+                }
+            } else {
+                vacancy.area.name
             }
-
-            is StateVacancyDetails.Loading -> {
-                showLoading()
+            areaName.text = address
+            busynessTxt.text = vacancy.employment
+            keySkillsTxt.text = vacancy.keySkills.joinToString(separator = "") {
+                "&#8226; $it<br>"
+            }.let { HtmlCompat.fromHtml(it, HtmlCompat.FROM_HTML_MODE_LEGACY) }
+            if (keySkillsTxt.text.isEmpty()) {
+                keySkillsTitle.visibility = View.GONE
+            } else {
+                keySkillsTitle.visibility = View.VISIBLE
             }
+            descriptionTxt.text = HtmlCompat.fromHtml(vacancy.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            Glide.with(vacancyLogo.context)
+                .load(vacancy.employerLogoUrl90)
+                .placeholder(R.drawable.employer_logo_placeholder)
+                .into(vacancyLogo)
+        }
+        renderIfFavorite(isFavorite)
+    }
 
-            else -> showError()
-
+    private fun renderIfFavorite(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.favoriteOff.visibility = View.GONE
+            binding.favoriteOn.visibility = View.VISIBLE
+        } else {
+            binding.favoriteOff.visibility = View.VISIBLE
+            binding.favoriteOn.visibility = View.GONE
         }
     }
 
     private fun showLoading() {
-        binding.apply {
-            progressBar.isVisible = true
-            vacancyError.isVisible = false
-            scrollView.isVisible = false
+        with(binding) {
+            progressBar.visibility = View.VISIBLE
         }
     }
 
     private fun showError() {
         with(binding) {
-            progressBar.isVisible = false
-            vacancyError.isVisible = true
-            scrollView.isVisible = false
-
+            progressBar.visibility = View.GONE
+            vacancyError.visibility = View.VISIBLE
+            vacancyErrorTxt.visibility = View.VISIBLE
         }
     }
 
+    private fun shareVacancyDetails() {
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, currentVacancy!!.url)
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share Vacancy"))
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (activity as RootActivity)
+            .findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
+            .visibility = View.VISIBLE
+    }
+
     companion object {
-        const val ARG_VACANCY = "vacancyId"
-        fun createArgs(vacancyId: String): Bundle = bundleOf(ARG_VACANCY to vacancyId)
+        const val VACANCY_ID = "VACANCY_ID"
     }
 }

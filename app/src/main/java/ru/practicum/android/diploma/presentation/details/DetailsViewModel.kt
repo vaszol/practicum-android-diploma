@@ -4,41 +4,51 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.VacancyInteractor
+import ru.practicum.android.diploma.domain.favorite.FavoriteInteractor
 import ru.practicum.android.diploma.domain.models.DetailsVacancyRequest
-import ru.practicum.android.diploma.ui.root.details.models.StateVacancyDetails
-import javax.net.ssl.HttpsURLConnection
+import ru.practicum.android.diploma.domain.models.VacancyDetail
 
 class DetailsViewModel(
-    id: String,
-    private val vacancyInteractor: VacancyInteractor
+    private val vacancyInteractor: VacancyInteractor,
+    private val favoriteInteractor: FavoriteInteractor
 ) : ViewModel() {
+    private val _screenState = MutableLiveData<DetailsScreenState>()
+    val screenState: LiveData<DetailsScreenState> get() = _screenState
 
-    val stateVacancyDetails: MutableLiveData<StateVacancyDetails> = MutableLiveData()
-    fun getVacancyState(): LiveData<StateVacancyDetails> = stateVacancyDetails
-
-    init {
-        getDetails(id)
-    }
-
-    private fun getDetails(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            stateVacancyDetails.postValue(StateVacancyDetails.Loading)
-            vacancyInteractor.searchVacancy(
-                DetailsVacancyRequest(id = id)
-            ).collect { pair ->
-                if (pair.second != null) {
-                    if (pair.second == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
-                        stateVacancyDetails.postValue(StateVacancyDetails.ErrorServer)
+    fun loadVacancyDetails(vacancyId: String) {
+        _screenState.value = DetailsScreenState.Loading
+        viewModelScope.launch {
+            vacancyInteractor.searchVacancy(DetailsVacancyRequest(id = vacancyId)).collect { result ->
+                val (vacancy, errorMessage) = result
+                val isFavorite: Boolean
+                if (vacancy != null) {
+                    isFavorite = favoriteInteractor.isVacancyFavorite(vacancy.id)
+                    _screenState.value = DetailsScreenState.Content(vacancy, isFavorite)
+                } else if (errorMessage != null) {
+                    val localVacancy = favoriteInteractor.getFavoriteVacancyById(vacancyId).firstOrNull()
+                    if (localVacancy != null) {
+                        isFavorite = favoriteInteractor.isVacancyFavorite(localVacancy.id)
+                        _screenState.value = DetailsScreenState.Content(localVacancy, isFavorite)
                     } else {
-                        stateVacancyDetails.postValue(StateVacancyDetails.NoInternet)
+                        _screenState.value = DetailsScreenState.Error
                     }
-                } else {
-                    stateVacancyDetails.postValue(pair.first?.let { StateVacancyDetails.Content(it) })
                 }
             }
+        }
+    }
+
+    fun addToFavorite(vacancy: VacancyDetail) {
+        viewModelScope.launch {
+            favoriteInteractor.addFavoriteVacancy(vacancy)
+        }
+    }
+
+    fun removeFromFavorite(vacancy: VacancyDetail) {
+        viewModelScope.launch {
+            favoriteInteractor.deleteFavoriteVacancyById(vacancy.id)
         }
     }
 }

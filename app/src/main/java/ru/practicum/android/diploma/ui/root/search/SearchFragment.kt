@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.content.Context
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -18,14 +19,19 @@ import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.presentation.search.SearchScreenState
 import ru.practicum.android.diploma.presentation.search.SearchViewModel
 import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.ui.root.details.DetailsFragment.Companion.VACANCY_ID
 import java.text.DecimalFormat
-import ru.practicum.android.diploma.ui.root.details.DetailsFragment
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
-    private val adapter = VacancyAdapter {vacancy ->
-        findNavController().navigate(R.id.action_mainFragment_to_detailsFragment, DetailsFragment.createArgs(vacancy.id))
+    private val adapter by lazy { VacancyAdapter(mutableListOf()) { selectVacancy(it) } }
+
+    private fun selectVacancy(vacancy: Vacancy) {
+        findNavController().navigate(
+            R.id.action_mainFragment_to_detailsFragment,
+            bundleOf(VACANCY_ID to vacancy.id)
+        )
     }
 
     override fun onCreateView(
@@ -77,22 +83,20 @@ class SearchFragment : Fragment() {
                 setKeyboardVisibility(searchEditText, false)
             }
 
-            searchRecyclerView.addOnScrollListener(
-                object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-                    override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
-                        super.onScrolled(recyclerView, dx, dy)
-                        val layoutManager =
-                            recyclerView.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager
-                                ?: return
+            searchRecyclerView.addOnScrollListener(object :
+                androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val layoutManager =
+                        recyclerView.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager ?: return
 
-                        val totalItemCount = layoutManager.itemCount
-                        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-                        if (lastVisibleItemPosition == totalItemCount - 1 && dy > 0) {
-                            onEndOfListReached()
-                        }
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                    if (lastVisibleItemPosition == totalItemCount - 1 && dy > 0) {
+                        onEndOfListReached()
                     }
                 }
-            )
+            })
 
             binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -124,17 +128,10 @@ class SearchFragment : Fragment() {
                 END_OF_LIST -> getString(R.string.end_of_list)
                 else -> getString(R.string.error_occupied)
             }
-            Toast(requireContext())
-                .apply {
-                    setText(toastMessage)
-                    duration = Toast.LENGTH_SHORT
-                }
-                .show()
-        }
-
-        binding.searchFilterNotActvie.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_mainFragment_to_filterFragment)
+            Toast(requireContext()).apply {
+                setText(toastMessage)
+                duration = Toast.LENGTH_SHORT
+            }.show()
         }
     }
 
@@ -158,8 +155,17 @@ class SearchFragment : Fragment() {
             searchProgressBar.visibility = View.GONE
             searchProgressBarBottom.visibility = View.GONE
             val formattedCount = DecimalFormat("#,###").format(totalCount)
-            searchVacancyCount.text = "${resources.getQuantityString(R.plurals.count_postfix_found, totalCount)} " +
-                "$formattedCount ${resources.getQuantityString(R.plurals.count_postfix_vacancy, totalCount)}"
+            searchVacancyCount.text = "${
+                resources.getQuantityString(
+                    R.plurals.count_postfix_found,
+                    totalCount,
+                    totalCount
+                )
+            } " + "$formattedCount ${
+                resources.getQuantityString(
+                    R.plurals.count_postfix_vacancy, totalCount, totalCount
+                )
+            }"
             searchVacancyCount.visibility = View.VISIBLE
             searchRecyclerView.visibility = View.VISIBLE
         }
@@ -206,8 +212,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setKeyboardVisibility(view: View, isVisible: Boolean) {
-        val inputMethodManager =
-            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         if (isVisible) {
             inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)

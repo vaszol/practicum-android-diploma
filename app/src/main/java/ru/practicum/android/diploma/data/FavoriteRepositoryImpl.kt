@@ -2,14 +2,14 @@ package ru.practicum.android.diploma.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import ru.practicum.android.diploma.data.db.converter.FavoriteVacancyDbConverter
+import ru.practicum.android.diploma.data.db.converter.FavoriteVacancyConverter
 import ru.practicum.android.diploma.data.db.dao.FavoriteVacancyDao
 import ru.practicum.android.diploma.domain.favorite.FavoriteRepository
-import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.domain.models.VacancyDetail
 
 class FavoriteRepositoryImpl(private val dao: FavoriteVacancyDao) : FavoriteRepository {
-    override suspend fun addFavoriteVacancy(vacancy: Vacancy) {
-        dao.addFavoriteVacancy(FavoriteVacancyDbConverter.map(vacancy))
+    override suspend fun addFavoriteVacancy(vacancy: VacancyDetail) {
+        dao.addFavoriteVacancy(FavoriteVacancyConverter.map(vacancy))
     }
 
     override suspend fun deleteFavoriteVacancyById(id: String) {
@@ -24,15 +24,15 @@ class FavoriteRepositoryImpl(private val dao: FavoriteVacancyDao) : FavoriteRepo
         return dao.getFavoriteVacancyIds()
     }
 
-    override fun getAllFavoriteVacancies(): Flow<List<Vacancy>> {
+    override fun getAllFavoriteVacancies(): Flow<List<VacancyDetail>> {
         return dao.getAllFavoriteVacancies().map { list ->
-            list.map { FavoriteVacancyDbConverter.map(it) }
+            list.map { FavoriteVacancyConverter.map(it) }
         }
     }
 
-    override fun getFavoriteVacancyById(id: String): Flow<Vacancy?> {
+    override fun getFavoriteVacancyById(id: String): Flow<VacancyDetail?> {
         return dao.getFavoriteVacancyById(id).map { entity ->
-            entity?.let { FavoriteVacancyDbConverter.map(it) }
+            entity?.let { FavoriteVacancyConverter.map(it) }
         }
     }
 }
