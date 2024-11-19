@@ -123,7 +123,7 @@ class DetailsFragment : Fragment() {
         }
     }
 
-private fun showError(isServerError: Boolean) {
+    private fun showError(isServerError: Boolean) {
         with(binding) {
             progressBar.visibility = View.GONE
             if (isServerError) {
