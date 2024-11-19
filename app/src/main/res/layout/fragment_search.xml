@@ -1,202 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary">
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/left_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.05" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorPrimary">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/right_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.95" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/left_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.05" />
 
-    <!--Заголовок - "Поиск вакансий"-->
-    <TextView
-        android:id="@+id/search_vacancy"
-        style="@style/TextStyleMedium"
-        android:layout_width="@dimen/size_0dp"
-        android:layout_height="@dimen/size_64dp"
-        android:layout_marginEnd="@dimen/size_8dp"
-        android:text="@string/search_vacancy"
-        app:layout_constraintEnd_toStartOf="@id/search_filter_not_actvie"
-        app:layout_constraintStart_toStartOf="@+id/left_guideline"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/right_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
 
-    <!--Кнопка "Фильтр" не активная-->
-    <ImageButton
-        android:id="@+id/search_filter_not_actvie"
-        android:layout_width="@dimen/size_48dp"
-        android:layout_height="@dimen/size_48dp"
-        android:layout_margin="@dimen/size_4dp"
-        android:padding="@dimen/size_4dp"
-        android:background="?attr/colorPrimary"
-        android:scaleType="center"
-        android:src="@drawable/ic_filter_not_active"
-        app:layout_constraintBottom_toBottomOf="@+id/search_vacancy"
-        app:layout_constraintEnd_toEndOf="@id/right_guideline"
-        app:layout_constraintTop_toTopOf="@+id/search_vacancy"
-        android:contentDescription="@string/filter_description"/>
+        <!--Заголовок - "Поиск вакансий"-->
+        <TextView
+            android:id="@+id/search_vacancy"
+            style="@style/TextStyleMedium"
+            android:layout_width="@dimen/size_0dp"
+            android:layout_height="@dimen/size_64dp"
+            android:layout_marginEnd="@dimen/size_8dp"
+            android:text="@string/search_vacancy"
+            app:layout_constraintEnd_toStartOf="@id/search_filter_not_actvie"
+            app:layout_constraintStart_toStartOf="@+id/left_guideline"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!--Кнопка "Фильтр" активная-->
-    <ImageButton
-        android:id="@+id/search_filter_active"
-        android:layout_width="@dimen/size_48dp"
-        android:layout_height="@dimen/size_48dp"
-        android:layout_margin="@dimen/size_4dp"
-        android:padding="@dimen/size_4dp"
-        android:scaleType="center"
-        android:src="@drawable/ic_filter_active"
-        app:layout_constraintBottom_toBottomOf="@+id/search_vacancy"
-        app:layout_constraintEnd_toEndOf="@id/right_guideline"
-        app:layout_constraintTop_toTopOf="@+id/search_vacancy"
-        android:visibility="invisible"
-        android:contentDescription="@string/filter_description"/>
+        <!--Кнопка "Фильтр" не активная-->
+        <ImageButton
+            android:id="@+id/search_filter_not_actvie"
+            android:layout_width="@dimen/size_48dp"
+            android:layout_height="@dimen/size_48dp"
+            android:layout_margin="@dimen/size_4dp"
+            android:background="?attr/colorPrimary"
+            android:contentDescription="@string/filter_description"
+            android:padding="@dimen/size_4dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_filter_not_active"
+            app:layout_constraintBottom_toBottomOf="@+id/search_vacancy"
+            app:layout_constraintEnd_toEndOf="@id/right_guideline"
+            app:layout_constraintTop_toTopOf="@+id/search_vacancy" />
 
-    <!--Поисковый запрос-->
-    <View
-        android:id="@+id/search_view"
-        android:layout_width="@dimen/size_0dp"
-        android:layout_height="@dimen/size_48dp"
-        android:background="@drawable/background_edit_text_search"
-        android:backgroundTint="?attr/colorSurfaceContainer"
-        android:layout_marginVertical="@dimen/size_4dp"
-        app:layout_constraintEnd_toStartOf="@id/right_guideline"
-        app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/search_vacancy" />
+        <!--Кнопка "Фильтр" активная-->
+        <ImageButton
+            android:id="@+id/search_filter_active"
+            android:layout_width="@dimen/size_48dp"
+            android:layout_height="@dimen/size_48dp"
+            android:layout_margin="@dimen/size_4dp"
+            android:contentDescription="@string/filter_description"
+            android:padding="@dimen/size_4dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_filter_active"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/search_vacancy"
+            app:layout_constraintEnd_toEndOf="@id/right_guideline"
+            app:layout_constraintTop_toTopOf="@+id/search_vacancy" />
 
-    <!--Ввод запроса-->
-    <EditText
-        android:id="@+id/search_edit_text"
-        style="@style/TextStyleRegular"
-        android:layout_width="@dimen/size_0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/size_8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/search_view"
-        app:layout_constraintEnd_toStartOf="@+id/search_magnifier"
-        app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintTop_toTopOf="@id/search_view"
-        android:autofillHints="name"
-        android:background="@android:color/transparent"
-        android:ellipsize="end"
-        android:hint="@string/search_request"
-        android:inputType="text"
-        android:maxLines="1"
-        android:minHeight="@dimen/size_48dp"
-        android:singleLine="true"
-        android:textAppearance="@style/TextStyleRegular"
-        android:textColor="@color/black"
-        android:textColorHint="?attr/colorOnSecondary" />
+        <!--Поисковый запрос-->
+        <View
+            android:id="@+id/search_view"
+            android:layout_width="@dimen/size_0dp"
+            android:layout_height="@dimen/size_48dp"
+            android:layout_marginVertical="@dimen/size_4dp"
+            android:background="@drawable/background_edit_text_search"
+            android:backgroundTint="?attr/colorSurfaceContainer"
+            app:layout_constraintEnd_toStartOf="@id/right_guideline"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/search_vacancy" />
 
-    <!--Изменяемый значoк "очистить поиск" и "лупа"-->
-    <ImageView
-        android:id="@+id/search_magnifier"
-        android:layout_width="@dimen/size_48dp"
-        android:layout_height="@dimen/size_48dp"
-        app:layout_constraintBottom_toBottomOf="@+id/search_edit_text"
-        app:layout_constraintEnd_toEndOf="@id/right_guideline"
-        app:layout_constraintTop_toTopOf="@+id/search_edit_text"
-        android:scaleType="center"
-        android:src="@drawable/ic_search"
-        android:visibility="visible"
-        android:contentDescription="@string/clear_description"/>
+        <!--Ввод запроса-->
+        <EditText
+            android:id="@+id/search_edit_text"
+            style="@style/TextStyleRegular"
+            android:layout_width="@dimen/size_0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/size_8dp"
+            android:autofillHints="name"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:hint="@string/search_request"
+            android:inputType="text"
+            android:maxLines="1"
+            android:minHeight="@dimen/size_48dp"
+            android:singleLine="true"
+            android:textAppearance="@style/TextStyleRegular"
+            android:textColor="@color/black"
+            android:textColorHint="?attr/colorOnSecondary"
+            app:layout_constraintBottom_toBottomOf="@+id/search_view"
+            app:layout_constraintEnd_toStartOf="@+id/search_magnifier"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toTopOf="@id/search_view" />
 
-    <!--Надпись с количеством найденных вакансий или "Таких вакансий нет"-->
-    <TextView
-        android:id="@+id/search_vacancy_count"
-        style="@style/TextStyleRegular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@id/right_guideline"
-        app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintTop_toBottomOf="@id/search_view"
-        android:layout_margin="@dimen/size_16dp"
-        android:background="@drawable/background_edit_text_search"
-        android:backgroundTint="@color/blue"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="4dp"
-        android:text="@string/no_vacancies"
-        android:textColor="@color/white"
-        android:visibility="gone"/>
+        <!--Изменяемый значoк "очистить поиск" и "лупа"-->
+        <ImageView
+            android:id="@+id/search_magnifier"
+            android:layout_width="@dimen/size_48dp"
+            android:layout_height="@dimen/size_48dp"
+            android:contentDescription="@string/clear_description"
+            android:scaleType="center"
+            android:src="@drawable/ic_search"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/search_edit_text"
+            app:layout_constraintEnd_toEndOf="@id/right_guideline"
+            app:layout_constraintTop_toTopOf="@+id/search_edit_text" />
 
-    <!-- Изображение экрана поиск. В случае ошибки заменить на картинку ошибки-->
-    <ImageView
-        android:id="@+id/search_img_placeholder"
-        android:layout_width="@dimen/size_0dp"
-        android:layout_height="@dimen/size_0dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/placeholder_search"
-        app:layout_constraintBottom_toTopOf="@id/search_error"
-        app:layout_constraintDimensionRatio="h,1.47:1"
-        app:layout_constraintEnd_toEndOf="@id/right_guideline"
-        app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/search_view"
-        app:layout_constraintVertical_chainStyle="packed"
-        android:contentDescription="@null"
-        tools:visibility="visible" />
+        <FrameLayout
+            android:id="@+id/huynia"
+            android:layout_width="@dimen/size_0dp"
+            android:layout_height="@dimen/size_0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/right_guideline"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@id/search_view"
+            app:layout_constraintVertical_bias="0">
 
-    <!-- Сообщение об ошибке! Текст заменится в зависимости от ошибки -->
-    <TextView
-        android:id="@+id/search_error"
-        android:layout_width="@dimen/size_0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/right_guideline"
-        app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/search_img_placeholder"
-        android:layout_marginTop="@dimen/size_16dp"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextStyleMedium"
-        android:visibility="gone" />
+            <!-- Список -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/size_56dp"
+                app:layoutManager="LinearLayoutManager"
+                app:reverseLayout="false"
+                tools:listitem="@layout/item_vacancy"
+                tools:visibility="gone" />
 
-    <!--Список и progressBar-->
+            <!-- Надпись с количеством найденных вакансий или "Таких вакансий нет" -->
+            <TextView
+                android:id="@+id/search_vacancy_count"
+                style="@style/TextStyleRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/size_16dp"
+                android:background="@drawable/background_edit_text_search"
+                android:backgroundTint="@color/blue"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="@string/no_vacancies"
+                android:textColor="@color/white"
+                android:visibility="gone" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_recycler_view"
-        android:layout_width="@dimen/size_0dp"
-        android:layout_height="@dimen/size_0dp"
-        app:layoutManager="LinearLayoutManager"
-        app:layout_constraintEnd_toStartOf="@id/right_guideline"
-        app:layout_constraintStart_toEndOf="@id/left_guideline"
-        app:layout_constraintBottom_toTopOf="@+id/search_progress_bar_bottom"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="@dimen/size_164dp"
-        android:orientation="vertical"
-        app:reverseLayout="false"
-        tools:visibility="gone"
-        tools:listitem="@layout/item_vacancy"/>
+            <ProgressBar
+                android:id="@+id/search_progress_bar_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_80dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:background="@drawable/background_grey_light_vacancy"
+                android:backgroundTint="@color/white"
+                android:padding="@dimen/size_16dp"
+                android:visibility="gone" />
+        </FrameLayout>
 
-    <ProgressBar
-        android:id="@+id/search_progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/right_guideline"
-        app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/search_edit_text"
-        android:layout_marginBottom="@dimen/size_24dp"
-        android:indeterminateTint="@color/blue"
-        android:visibility="gone" />
+        <!-- Изображение экрана поиск. В случае ошибки заменить на картинку ошибки-->
+        <ImageView
+            android:id="@+id/search_img_placeholder"
+            android:layout_width="@dimen/size_0dp"
+            android:layout_height="@dimen/size_0dp"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/placeholder_search"
+            app:layout_constraintBottom_toTopOf="@id/search_error"
+            app:layout_constraintDimensionRatio="h,1.47:1"
+            app:layout_constraintEnd_toEndOf="@id/right_guideline"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@id/search_view"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:visibility="visible" />
 
-    <ProgressBar
-        android:id="@+id/search_progress_bar_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="80dp"
-        app:layout_constraintTop_toBottomOf="@id/search_recycler_view"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/left_guideline"
-        app:layout_constraintEnd_toStartOf="@id/right_guideline"
-        android:visibility="gone"/>
+        <!-- Сообщение об ошибке! Текст заменится в зависимости от ошибки -->
+        <TextView
+            android:id="@+id/search_error"
+            android:layout_width="@dimen/size_0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_16dp"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextStyleMedium"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/right_guideline"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@id/search_img_placeholder" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ProgressBar
+            android:id="@+id/search_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/size_24dp"
+            android:indeterminateTint="@color/blue"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/right_guideline"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/search_edit_text" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
