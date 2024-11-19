@@ -130,7 +130,7 @@ class DetailsFragment : Fragment() {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, currentVacancy!!.url)
         }
-        startActivity(Intent.createChooser(shareIntent, "Share Vacancy"))
+        startActivity(Intent.createChooser(shareIntent, ""))
     }
 
     override fun onDestroyView() {
