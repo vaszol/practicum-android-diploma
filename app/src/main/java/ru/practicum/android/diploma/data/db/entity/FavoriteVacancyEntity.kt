@@ -24,5 +24,4 @@ data class FavoriteVacancyEntity(
     val url: String?,
     val contactsEmail: String?,
     val contactsName: String?,
-    val test: String = "yes"
 )
