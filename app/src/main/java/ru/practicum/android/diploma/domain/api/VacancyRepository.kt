@@ -17,6 +17,6 @@ interface VacancyRepository {
         host: Host
     ): Flow<Resource<Pair<List<Vacancy>, Int>>>
 
-    fun searchVacancy(request: DetailsVacancyRequest): Flow<Resource<VacancyDetail>>
+    fun searchVacancy(request: DetailsVacancyRequest): Flow<Resource<VacancyDetail?>>
     fun searchLocales(locale: String, host: Host): Flow<List<LocaleDto>>
 }

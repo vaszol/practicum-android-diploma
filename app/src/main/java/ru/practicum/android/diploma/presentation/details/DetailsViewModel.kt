@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.VacancyInteractor
 import ru.practicum.android.diploma.domain.favorite.FavoriteInteractor
@@ -20,23 +20,16 @@ class DetailsViewModel(
 
     fun loadVacancyDetails(vacancyId: String) {
         _screenState.value = DetailsScreenState.Loading
-        viewModelScope.launch {
-            vacancyInteractor.searchVacancy(DetailsVacancyRequest(id = vacancyId)).collect { result ->
-                val (vacancy, errorMessage) = result
-                val isFavorite = favoriteInteractor.isVacancyFavorite(vacancyId)
-                if (vacancy != null) {
-                    _screenState.value = DetailsScreenState.Content(vacancy, isFavorite)
-                } else if (errorMessage != null) {
-                    if (!isFavorite) {
-                        _screenState.value = DetailsScreenState.Error(true)
-                    } else {
-                        val localVacancy = favoriteInteractor.getFavoriteVacancyById(vacancyId).firstOrNull()
-                        if (localVacancy != null) {
-                            _screenState.value = DetailsScreenState.Content(localVacancy, isFavorite)
-                        } else {
-                            _screenState.value = DetailsScreenState.Error(false)
-                        }
-                    }
+        viewModelScope.launch(Dispatchers.IO) {
+            vacancyInteractor.searchVacancy(
+                DetailsVacancyRequest(id = vacancyId)
+            ).collect { pair ->
+                if (pair.second != null) {
+                    _screenState.postValue(DetailsScreenState.Error(true))
+                } else if (pair.first == null) {
+                    _screenState.postValue(DetailsScreenState.Error(false))
+                } else {
+                    _screenState.postValue(DetailsScreenState.Content(pair.first!!, pair.first!!.isFavorite))
                 }
             }
         }

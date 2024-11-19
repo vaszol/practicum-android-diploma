@@ -23,7 +23,7 @@ class VacancyConverter {
         )
     }
 
-    fun mapToDomain(vacancy: VacancyDetailDto): VacancyDetail {
+    fun mapToDomain(vacancy: VacancyDetailDto, isFavorite: Boolean): VacancyDetail {
         return VacancyDetail(
             id = vacancy.id,
             name = vacancy.name.orDefaultVacancy(),
@@ -42,7 +42,8 @@ class VacancyConverter {
             building = vacancy.address?.building.orDefaultVacancy(),
             url = vacancy.url.orDefaultVacancy(),
             contactsEmail = vacancy.contacts?.email.orDefaultVacancy(),
-            contactsName = vacancy.contacts?.name.orDefaultVacancy()
+            contactsName = vacancy.contacts?.name.orDefaultVacancy(),
+            isFavorite = isFavorite
         )
     }
 

@@ -44,7 +44,8 @@ object FavoriteVacancyConverter {
         building = entity.building,
         url = entity.url,
         contactsEmail = entity.contactsEmail,
-        contactsName = entity.contactsName
+        contactsName = entity.contactsName,
+        isFavorite = true
     )
 
     fun vacancyDetailToVacancy(vacancy: VacancyDetail) = Vacancy(
