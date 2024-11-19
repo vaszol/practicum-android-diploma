@@ -45,8 +45,10 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun onFavoriteVacancyClick(it: Vacancy) {
-        findNavController().navigate(R.id.action_favoritesFragment_to_detailsFragment,
-            bundleOf(VACANCY_ID to it.id))
+        findNavController().navigate(
+            R.id.action_favoritesFragment_to_detailsFragment,
+            bundleOf(VACANCY_ID to it.id)
+        )
     }
 
     private fun showFavorite(favoriteVacancies: List<VacancyDetail>) {

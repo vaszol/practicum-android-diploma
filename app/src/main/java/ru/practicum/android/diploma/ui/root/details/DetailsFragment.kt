@@ -34,7 +34,8 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as RootActivity).findViewById<BottomNavigationView>(R.id.bottom_navigation_view).visibility = View.GONE
+        (activity as RootActivity).findViewById<BottomNavigationView>(R.id.bottom_navigation_view).visibility =
+            View.GONE
         val vacancyId = arguments?.getString(VACANCY_ID) ?: return
         viewModel.loadVacancyDetails(vacancyId)
 
@@ -134,7 +135,9 @@ class DetailsFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        (activity as RootActivity).findViewById<BottomNavigationView>(R.id.bottom_navigation_view).visibility = View.VISIBLE
+        (activity as RootActivity)
+            .findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
+            .visibility = View.VISIBLE
     }
 
     companion object {

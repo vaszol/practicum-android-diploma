@@ -47,7 +47,7 @@ object FavoriteVacancyConverter {
         contactsName = entity.contactsName
     )
 
-    fun vacancyDetailToVacancy (vacancy: VacancyDetail) = Vacancy(
+    fun vacancyDetailToVacancy(vacancy: VacancyDetail) = Vacancy(
         id = vacancy.id,
         name = vacancy.name,
         employerName = vacancy.employerName,
