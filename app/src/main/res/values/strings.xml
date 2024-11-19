@@ -52,12 +52,9 @@
     <string name="required_xp">Требуемый опыт</string>
     <string name="vacancy_description">Описание вакансии</string>
     <string name="key_skills">Ключевые навыки</string>
-    <string name="contacts">Контакты</string>
-    <string name="contact_face">Контактное лицо</string>
-    <string name="email">E-mail</string>
-    <string name="phone">Телефон</string>
-    <string name="comment">Комментарий</string>
     <string name="vacancy_error">Вакансия не найдена или\n удалена</string>
+    <string name="vacancy_error_server">Ошибка сервера</string>
+
 
     <!--Строки для экрана фильтрации-->
     <string name="filter_settings">Настройки фильтрации</string>

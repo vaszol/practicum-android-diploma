@@ -23,17 +23,19 @@ class DetailsViewModel(
         viewModelScope.launch {
             vacancyInteractor.searchVacancy(DetailsVacancyRequest(id = vacancyId)).collect { result ->
                 val (vacancy, errorMessage) = result
-                val isFavorite: Boolean
+                val isFavorite = favoriteInteractor.isVacancyFavorite(vacancyId)
                 if (vacancy != null) {
-                    isFavorite = favoriteInteractor.isVacancyFavorite(vacancy.id)
                     _screenState.value = DetailsScreenState.Content(vacancy, isFavorite)
                 } else if (errorMessage != null) {
-                    val localVacancy = favoriteInteractor.getFavoriteVacancyById(vacancyId).firstOrNull()
-                    if (localVacancy != null) {
-                        isFavorite = favoriteInteractor.isVacancyFavorite(localVacancy.id)
-                        _screenState.value = DetailsScreenState.Content(localVacancy, isFavorite)
+                    if (!isFavorite) {
+                        _screenState.value = DetailsScreenState.Error(true)
                     } else {
-                        _screenState.value = DetailsScreenState.Error
+                        val localVacancy = favoriteInteractor.getFavoriteVacancyById(vacancyId).firstOrNull()
+                        if (localVacancy != null) {
+                            _screenState.value = DetailsScreenState.Content(localVacancy, isFavorite)
+                        } else {
+                            _screenState.value = DetailsScreenState.Error(false)
+                        }
                     }
                 }
             }

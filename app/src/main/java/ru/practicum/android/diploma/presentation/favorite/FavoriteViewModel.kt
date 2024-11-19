@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.favorite.FavoriteInteractor
 
@@ -15,13 +16,25 @@ class FavoriteViewModel(
 
     fun getFavoriteVacancies() {
         viewModelScope.launch {
-            favoriteInteractor.getAllFavoriteVacancies().collect { vacancies ->
-                if (vacancies.isEmpty()) {
-                    _favoriteScreenState.postValue(FavoriteScreenState.NothingInFav)
-                } else {
-                    _favoriteScreenState.postValue(FavoriteScreenState.FavoriteVacancies(vacancies))
-                }
+            val vacancies = safeDbCall {
+                favoriteInteractor.getAllFavoriteVacancies().firstOrNull()
             }
+            if (vacancies == null) {
+                _favoriteScreenState.value = FavoriteScreenState.Error
+            } else if (vacancies.isEmpty()) {
+                _favoriteScreenState.value = FavoriteScreenState.NothingInFav
+            } else {
+                _favoriteScreenState.value = FavoriteScreenState.FavoriteVacancies(vacancies)
+            }
+        }
+    }
+
+    private inline fun <T> safeDbCall(action: () -> T): T? {
+        return try {
+            action()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 }
