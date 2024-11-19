@@ -41,17 +41,15 @@ class DetailsFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        viewModel.getVacancyState().observe(viewLifecycleOwner){ state->
-            render(state)
-        }
+        viewModel.detailsScreenState.observe(viewLifecycleOwner, ::render)
     }
 
     private fun render(state: StateVacancyDetails) {
         when (state) {
             is StateVacancyDetails.Content -> {
                 Details(requireContext(), binding).getContent(state.vacancy)
-
             }
+
             is StateVacancyDetails.Loading -> {
                 showLoading()
             }
@@ -68,6 +66,7 @@ class DetailsFragment : Fragment() {
             scrollView.isVisible = false
         }
     }
+
     private fun showError() {
         with(binding) {
             progressBar.isVisible = false

@@ -32,9 +32,10 @@ open class Details(private val context: Context, private val binding: FragmentDe
         Glide.with(context)
             .load(url)
             .placeholder(R.drawable.ic_logotype_vacancy)
-            .transform(RoundedCorners(12))
+            .transform(RoundedCorners(R.dimen.size_12dp))
             .into(imageView)
     }
+
     private fun getKeySkills(details: VacancyDetail) {
         binding.apply {
             if (details.keySkills.isNotEmpty()) {
