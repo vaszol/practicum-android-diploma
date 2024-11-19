@@ -10,6 +10,7 @@ import ru.practicum.android.diploma.data.dto.VacanciesResponse
 import ru.practicum.android.diploma.data.dto.VacancyRequest
 import ru.practicum.android.diploma.data.dto.VacancyResponse
 import ru.practicum.android.diploma.domain.api.VacancyRepository
+import ru.practicum.android.diploma.domain.models.DetailsVacancyRequest
 import ru.practicum.android.diploma.domain.models.Host
 import ru.practicum.android.diploma.domain.models.Resource
 import ru.practicum.android.diploma.domain.models.Vacancy
@@ -41,9 +42,9 @@ class VacanciesRepositoryImpl(
         }
     }
 
-    override fun searchVacancy(id: String, locale: String, host: Host): Flow<Resource<VacancyDetail>> = flow {
+    override fun searchVacancy(request: DetailsVacancyRequest): Flow<Resource<VacancyDetail>> = flow {
         val response =
-            networkClient.vacancy(VacancyRequest(id = id, locale = locale, host = host.text))
+            networkClient.vacancy(VacancyRequest(id = request.id, locale = request.locale, host = request.host))
         if (response.resultCode == HttpsURLConnection.HTTP_OK) {
             val vacancy = (response as VacancyResponse).result.let { vacancyConverter.mapToDomain(it) }
             emit(Resource.Success(vacancy))

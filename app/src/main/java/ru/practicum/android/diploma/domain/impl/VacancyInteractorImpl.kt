@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.map
 import ru.practicum.android.diploma.data.dto.LocaleDto
 import ru.practicum.android.diploma.domain.api.VacancyInteractor
 import ru.practicum.android.diploma.domain.api.VacancyRepository
+import ru.practicum.android.diploma.domain.models.DetailsVacancyRequest
 import ru.practicum.android.diploma.domain.models.Host
 import ru.practicum.android.diploma.domain.models.Resource
 import ru.practicum.android.diploma.domain.models.Vacancy
@@ -26,8 +27,8 @@ class VacancyInteractorImpl(private val repository: VacancyRepository) : Vacancy
         }
     }
 
-    override fun searchVacancy(id: String, locale: String, host: Host): Flow<Pair<VacancyDetail?, String?>> {
-        return repository.searchVacancy(id, locale, host).map { result ->
+    override fun searchVacancy(request: DetailsVacancyRequest): Flow<Pair<VacancyDetail?, String?>> {
+        return repository.searchVacancy(request).map { result ->
             when (result) {
                 is Resource.Success -> Pair(result.data, null)
                 is Resource.Error -> Pair(null, result.message)
