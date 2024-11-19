@@ -42,7 +42,7 @@ class DetailsFragment : Fragment() {
         viewModel.screenState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is DetailsScreenState.Loading -> showLoading()
-                is DetailsScreenState.Error -> showError()
+                is DetailsScreenState.Error -> showError(state.isServerError)
                 is DetailsScreenState.Content -> showVacancyDetails(state.vacancy, state.isFavorite)
             }
 
@@ -123,13 +123,18 @@ class DetailsFragment : Fragment() {
         }
     }
 
-    private fun showError() {
+    private fun showError(isServerError: Boolean) {
         with(binding) {
             progressBar.visibility = View.GONE
-            scrollView.visibility = View.GONE
+            if (isServerError) {
+                vacancyErrorImage.setImageResource(R.drawable.placeholder_vacancy_error)
+                vacancyErrorTxt.setText(R.string.vacancy_error_server)
+            } else {
+                vacancyErrorImage.setImageResource(R.drawable.placeholder_vacancy_empty_or_not)
+                vacancyErrorTxt.setText(R.string.vacancy_error)
+            }
             vacancyError.visibility = View.VISIBLE
-            shareImg.visibility = View.GONE
-            favoriteOff.visibility = View.GONE
+            vacancyErrorTxt.visibility = View.VISIBLE
         }
     }
 

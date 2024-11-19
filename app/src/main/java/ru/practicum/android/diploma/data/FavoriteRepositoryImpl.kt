@@ -1,6 +1,9 @@
 package ru.practicum.android.diploma.data
 
+import android.database.sqlite.SQLiteException
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import ru.practicum.android.diploma.data.db.converter.FavoriteVacancyConverter
 import ru.practicum.android.diploma.data.db.dao.FavoriteVacancyDao
@@ -25,8 +28,16 @@ class FavoriteRepositoryImpl(private val dao: FavoriteVacancyDao) : FavoriteRepo
     }
 
     override fun getAllFavoriteVacancies(): Flow<List<VacancyDetail>> {
-        return dao.getAllFavoriteVacancies().map { list ->
-            list.map { FavoriteVacancyConverter.map(it) }
+        return try {
+            dao.getAllFavoriteVacancies().map { list ->
+                list.map { FavoriteVacancyConverter.map(it) }
+            }
+        } catch (e: SQLiteException) {
+            Log.e("Exception caught in FavoriteRepositoryImpl", "Database error occurred: ${e.localizedMessage}", e)
+            flowOf(emptyList())
+        } catch (e: IllegalStateException) {
+            Log.e("Exception caught in FavoriteRepositoryImpl", "Database state error: ${e.localizedMessage}", e)
+            flowOf(emptyList())
         }
     }
 

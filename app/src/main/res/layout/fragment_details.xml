@@ -79,6 +79,7 @@
             android:visibility="gone">
 
             <ImageView
+                android:id="@+id/vacancy_error_image"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/size_224dp"
                 android:layout_marginHorizontal="@dimen/size_16dp"
