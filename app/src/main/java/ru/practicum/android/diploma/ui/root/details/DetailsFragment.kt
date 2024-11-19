@@ -69,6 +69,9 @@ class DetailsFragment : Fragment() {
         currentVacancy = vacancy
         with(binding) {
             progressBar.visibility = View.GONE
+            vacancyError.visibility = View.GONE
+            scrollView.visibility = View.VISIBLE
+            shareImg.visibility = View.VISIBLE
             vacancyNameTitle.text = vacancy.name
             salaryTxt.text = getFormattedSalary(vacancy.salaryFrom, vacancy.salaryTo, vacancy.currency)
             employerName.text = vacancy.employerName
@@ -113,15 +116,20 @@ class DetailsFragment : Fragment() {
 
     private fun showLoading() {
         with(binding) {
+            scrollView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
+            shareImg.visibility = View.GONE
+            favoriteOff.visibility = View.GONE
         }
     }
 
     private fun showError() {
         with(binding) {
             progressBar.visibility = View.GONE
+            scrollView.visibility = View.GONE
             vacancyError.visibility = View.VISIBLE
-            vacancyErrorTxt.visibility = View.VISIBLE
+            shareImg.visibility = View.GONE
+            favoriteOff.visibility = View.GONE
         }
     }
 
