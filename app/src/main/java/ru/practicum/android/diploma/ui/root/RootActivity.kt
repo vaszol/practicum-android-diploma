@@ -1,14 +1,10 @@
 package ru.practicum.android.diploma.ui.root
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.content.res.Resources
-import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -21,7 +17,8 @@ class RootActivity : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setAppLocaleRu(this)
+
+        setAppLocaleRu()
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
@@ -34,8 +31,7 @@ class RootActivity : AppCompatActivity() {
         binding.bottomNavigationView.setupWithNavController(navController)
     }
 
-    private fun setAppLocaleRu(context: Context) {
-        val resources: Resources = context.resources
+    private fun setAppLocaleRu() {
         val dm: DisplayMetrics = resources.displayMetrics
         val config: Configuration = resources.configuration
 
