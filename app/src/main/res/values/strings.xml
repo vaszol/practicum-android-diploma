@@ -7,13 +7,63 @@
     <string name="text_developers_worked">Над приложением\nработали</string>
     <string name="developers">Юлия Басалыгина\n\nМихаил Баландин\n\nПавел Давыдов\n\nВасилий Золотарев\n\nРуслан Коротнев</string>
 
-    <plurals name="vacancy_postfix">
-        <item quantity="zero">%d вакансий</item>
-        <item quantity="one">%d вакансия</item>
-        <item quantity="few">%d вакансии</item>
-        <item quantity="many">%d вакансий</item>
-        <item quantity="other">%d вакансий</item>
+    <plurals name="count_postfix_found">
+        <item quantity="zero">Найдено</item>
+        <item quantity="one">Найдена</item>
+        <item quantity="few">Найдено</item>
+        <item quantity="many">Найдено</item>
+        <item quantity="other">Найдено</item>
+    </plurals>
+    <plurals name="count_postfix_vacancy">
+        <item quantity="zero">вакансий</item>
+        <item quantity="one">вакансия</item>
+        <item quantity="few">вакансии</item>
+        <item quantity="many">вакансий</item>
+        <item quantity="other">вакансий</item>
     </plurals>
     <!--Пример использования:
-    vacancyField.text = context.resources.getQuantityString(R.plurals.vacancy_postfix, vacancyCount, vacancyCount)-->
+   vacancyField.text = context.resources.getQuantityString(R.plurals.vacancy_postfix, vacancyCount, vacancyCount)-->
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--Строки для экрана поиска-->
+    <string name="search_vacancy">Поиск вакансий</string>
+    <string name="search_request">Введите запрос</string>
+    <string name="no_vacancies">Таких вакансий нет</string>
+    <string name="no_internet">Нет интернета</string>
+    <string name="nothing_found">Не удалось получить список вакансий</string>
+    <string name="error">Ошибка сервера</string>
+    <string name="company_logo_description">Логотип компании</string>
+    <string name="filter_description">Добавить фильтр</string>
+    <string name="clear_description">Очистить окно ввода</string>
+    <string name="check_internet">Проверьте подключение к интернету</string>
+    <string name="error_occupied">Произошла ошибка</string>
+    <string name="end_of_list">Достигнут конец списка</string>
+    <string name="unknown_currency">Неизвестная валюта</string>
+
+    <!--Строки для экрана избранного-->
+    <string name="favorite">Избранное</string>
+    <string name="favorite_empty">Список пуст</string>
+    <string name="favorire_error">Не удалось получить список вакансий</string>
+
+    <!--Строки для экрана детали вакансий-->
+    <string name="vacancy">Вакансия</string>
+    <string name="required_xp">Требуемый опыт</string>
+    <string name="vacancy_description">Описание вакансии</string>
+    <string name="key_skills">Ключевые навыки</string>
+    <string name="vacancy_error">Вакансия не найдена или\n удалена</string>
+    <string name="vacancy_error_server">Ошибка сервера</string>
+
+
+    <!--Строки для экрана фильтрации-->
+    <string name="filter_settings">Настройки фильтрации</string>
+    <string name="workplace">Место работы</string>
+    <string name="industry">Отрасль</string>
+    <string name="expected_salary">Ожидаемая зарплата</string>
+    <string name="enter_amount">Введите сумму</string>
+    <string name="dont_show_without_salary">Не показывать без зарплаты</string>
+    <string name="apply">Применить</string>
+    <string name="reset">Сбросить</string>
+
 </resources>
