@@ -22,26 +22,24 @@ class HHApiClient(
     private val context: Context
 ) : NetworkClient {
 
-    override suspend fun vacancies(dto: Any): Response {
+    override suspend fun getVacancies(dto: Any): Response {
         return withContext(Dispatchers.IO) {
             try {
-                if (!isConnected()) {
-                    Response().apply { resultCode = -1 }
-                } else if (dto is VacanciesRequest) {
-                    hhApi.getVacancies(dto.text, dto.currency, dto.size, dto.page).apply {
+                when {
+                    !isConnected() -> Response().apply { resultCode = -1 }
+                    dto is VacanciesRequest -> hhApi.getVacancies(dto.text, dto.currency, dto.size, dto.page).apply {
                         resultCode = HttpsURLConnection.HTTP_OK
                     }
-                } else {
-                    Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
+                    else -> Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
                 }
             } catch (exception: HttpException) {
-                Log.d("Exception caught in HHApiClient: $exception", exception.message())
+                Log.d("Exception caught in HHApiClient", exception.message())
                 Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
             }
         }
     }
 
-    override suspend fun vacancy(dto: Any): Response {
+    override suspend fun getVacancy(dto: Any): Response {
         return withContext(Dispatchers.IO) {
             try {
                 if (!isConnected()) {
@@ -60,7 +58,7 @@ class HHApiClient(
         }
     }
 
-    override suspend fun locales(dto: Any): List<LocaleDto> {
+    override suspend fun getLocales(dto: Any): List<LocaleDto> {
         return withContext(Dispatchers.IO) {
             try {
                 if (!isConnected()) {
@@ -77,7 +75,7 @@ class HHApiClient(
         }
     }
 
-    override suspend fun dictionaries(dto: Any): Response {
+    override suspend fun getDictionaries(dto: Any): Response {
         return withContext(Dispatchers.IO) {
             try {
                 if (!isConnected()) {

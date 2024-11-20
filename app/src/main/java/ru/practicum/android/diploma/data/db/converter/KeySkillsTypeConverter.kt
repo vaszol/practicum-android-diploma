@@ -4,8 +4,8 @@ object KeySkillsTypeConverter {
     private const val DELIMITER = ";"
 
     fun fromKeySkills(keySkills: List<String>?): String =
-        keySkills?.joinToString(DELIMITER) ?: ""
+        keySkills?.joinToString(DELIMITER).orEmpty()
 
     fun toKeySkills(keySkillsString: String?): List<String> =
-        keySkillsString?.split(DELIMITER)?.filter { it.isNotEmpty() } ?: emptyList()
+        keySkillsString?.split(DELIMITER)?.filter { it.isNotEmpty() }.orEmpty()
 }

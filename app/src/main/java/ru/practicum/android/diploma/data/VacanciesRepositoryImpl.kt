@@ -39,7 +39,7 @@ class VacanciesRepositoryImpl(
         host: Host
     ): Flow<Resource<Pair<List<Vacancy>, Int>>> = flow {
         val response =
-            networkClient.vacancies(VacanciesRequest(text = text, currency = currency, size = PAGES, page = page))
+            networkClient.getVacancies(VacanciesRequest(text = text, currency = currency, size = PAGES, page = page))
         if (response.resultCode == HttpsURLConnection.HTTP_OK) {
             val vacanciesResponse = response as VacanciesResponse
             val vacancies = vacanciesResponse.items.map { vacancyConverter.mapToDomain(it) }
@@ -52,28 +52,32 @@ class VacanciesRepositoryImpl(
 
     override fun searchVacancy(request: DetailsVacancyRequest): Flow<Resource<VacancyDetail?>> = flow {
         val response =
-            networkClient.vacancy(VacancyRequest(id = request.id, locale = request.locale, host = request.host))
+            networkClient.getVacancy(VacancyRequest(id = request.id, locale = request.locale, host = request.host))
         val isFavorite = repository.isVacancyFavorite(request.id)
-        if (response.resultCode == HttpsURLConnection.HTTP_OK) {
-            val vacancy = (response as VacancyResponse).result.let { vacancyConverter.mapToDomain(it, isFavorite) }
-            emit(Resource.Success(vacancy))
-        } else if (isFavorite) {
-            val vacancy = repository.getFavoriteVacancyById(request.id).firstOrNull()
-            emit(Resource.Success(vacancy))
-        } else {
-            emit(Resource.Error(response.resultCode.toString()))
+        when {
+            response.resultCode == HttpsURLConnection.HTTP_OK -> {
+                val vacancy = (response as VacancyResponse).result.let { vacancyConverter.mapToDomain(it, isFavorite) }
+                emit(Resource.Success(vacancy))
+            }
+            isFavorite -> {
+                val vacancy = repository.getFavoriteVacancyById(request.id).firstOrNull()
+                emit(Resource.Success(vacancy))
+            }
+            else -> {
+                emit(Resource.Error(response.resultCode.toString()))
+            }
         }
     }
 
     override fun searchLocales(locale: String, host: Host): Flow<List<LocaleDto>> = flow {
         val response =
-            networkClient.locales(LocaleRequest(locale = locale, host = host.text))
+            networkClient.getLocales(LocaleRequest(locale = locale, host = host.text))
         emit(response)
     }
 
     override fun searchDictionaries(request: DictionaryRequest): Flow<Resource<Dictionaries?>> = flow {
         val response =
-            networkClient.dictionaries(DictionariesRequest(locale = request.locale, host = request.host))
+            networkClient.getDictionaries(DictionariesRequest(locale = request.locale, host = request.host))
         if (response.resultCode == HttpsURLConnection.HTTP_OK) {
             val vacancy = (response as DictionariesResponse).result.let { vacancyConverter.mapToDomain(it) }
             emit(Resource.Success(vacancy))

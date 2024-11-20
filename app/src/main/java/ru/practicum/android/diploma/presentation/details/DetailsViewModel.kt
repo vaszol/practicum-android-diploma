@@ -25,9 +25,9 @@ class DetailsViewModel(
                 DetailsVacancyRequest(id = vacancyId)
             ).collect { pair ->
                 if (pair.second != null) {
-                    _screenState.postValue(DetailsScreenState.Error(true))
+                    _screenState.postValue(DetailsScreenState.Error(isServerError = true))
                 } else if (pair.first == null) {
-                    _screenState.postValue(DetailsScreenState.Error(false))
+                    _screenState.postValue(DetailsScreenState.Error(isServerError = false))
                 } else {
                     _screenState.postValue(DetailsScreenState.Content(pair.first!!, pair.first!!.isFavorite))
                 }
