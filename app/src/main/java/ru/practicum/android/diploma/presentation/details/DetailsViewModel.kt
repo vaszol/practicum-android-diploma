@@ -24,12 +24,11 @@ class DetailsViewModel(
             vacancyInteractor.searchVacancy(
                 DetailsVacancyRequest(id = vacancyId)
             ).collect { pair ->
-                if (pair.second != null) {
-                    _screenState.postValue(DetailsScreenState.Error(isServerError = true))
-                } else if (pair.first == null) {
-                    _screenState.postValue(DetailsScreenState.Error(isServerError = false))
-                } else {
-                    _screenState.postValue(DetailsScreenState.Content(pair.first!!, pair.first!!.isFavorite))
+                when {
+                    pair.second == NO_INTERNET_CODE -> _screenState.postValue(DetailsScreenState.NoInternet)
+                    pair.second != null -> _screenState.postValue(DetailsScreenState.Error(isServerError = true))
+                    pair.first == null -> _screenState.postValue(DetailsScreenState.Error(isServerError = false))
+                    else -> _screenState.postValue(DetailsScreenState.Content(pair.first!!, pair.first!!.isFavorite))
                 }
             }
         }
@@ -45,5 +44,9 @@ class DetailsViewModel(
         viewModelScope.launch {
             favoriteInteractor.deleteFavoriteVacancyById(vacancy.id)
         }
+    }
+
+    companion object {
+        private const val NO_INTERNET_CODE = "-1"
     }
 }
