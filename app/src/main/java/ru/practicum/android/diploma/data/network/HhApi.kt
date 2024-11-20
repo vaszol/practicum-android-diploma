@@ -4,6 +4,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import ru.practicum.android.diploma.data.dto.DictionariesDto
 import ru.practicum.android.diploma.data.dto.LocaleDto
 import ru.practicum.android.diploma.data.dto.VacanciesResponse
 import ru.practicum.android.diploma.data.dto.VacancyDetailDto
@@ -30,4 +31,10 @@ interface HhApi {
         @Query("locale") locale: String,
         @Query("host") host: String
     ): List<LocaleDto>
+
+    @GET("/dictionaries")
+    suspend fun getDictionaries(
+        @Query("locale") locale: String,
+        @Query("host") host: String
+    ): Response<DictionariesDto>
 }

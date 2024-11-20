@@ -6,6 +6,8 @@ import ru.practicum.android.diploma.data.dto.LocaleDto
 import ru.practicum.android.diploma.domain.api.VacancyInteractor
 import ru.practicum.android.diploma.domain.api.VacancyRepository
 import ru.practicum.android.diploma.domain.models.DetailsVacancyRequest
+import ru.practicum.android.diploma.domain.models.Dictionaries
+import ru.practicum.android.diploma.domain.models.DictionaryRequest
 import ru.practicum.android.diploma.domain.models.Host
 import ru.practicum.android.diploma.domain.models.Resource
 import ru.practicum.android.diploma.domain.models.Vacancy
@@ -38,5 +40,14 @@ class VacancyInteractorImpl(private val repository: VacancyRepository) : Vacancy
 
     override fun searchLocales(locale: String, host: Host): Flow<List<LocaleDto>> {
         return repository.searchLocales(locale, host)
+    }
+
+    override fun searchDictionaries(request: DictionaryRequest): Flow<Pair<Dictionaries?, String?>> {
+        return repository.searchDictionaries(request).map { result ->
+            when (result) {
+                is Resource.Success -> Pair(result.data, null)
+                is Resource.Error -> Pair(null, result.message)
+            }
+        }
     }
 }

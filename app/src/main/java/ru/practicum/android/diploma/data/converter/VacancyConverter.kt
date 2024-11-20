@@ -1,10 +1,12 @@
 package ru.practicum.android.diploma.data.converter
 
 import ru.practicum.android.diploma.data.dto.AreaDto
+import ru.practicum.android.diploma.data.dto.DictionariesDto
 import ru.practicum.android.diploma.data.dto.VacancyDetailDto
 import ru.practicum.android.diploma.data.dto.VacancyDto
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Area.Companion.AREA_DEFAULT_VALUE
+import ru.practicum.android.diploma.domain.models.Dictionaries
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyDetail
 
@@ -57,6 +59,12 @@ class VacancyConverter {
             } else {
                 area?.areas?.map { mapToDomain(it) }
             }
+        )
+    }
+
+    fun mapToDomain(dictionaries: DictionariesDto): Dictionaries {
+        return Dictionaries(
+            currency = dictionaries.currency?.map { it.name } ?: emptyList(),
         )
     }
 
