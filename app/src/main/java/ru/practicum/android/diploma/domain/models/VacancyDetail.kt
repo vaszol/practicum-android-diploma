@@ -17,7 +17,5 @@ data class VacancyDetail(
     val street: String, // Адрес (улица)
     val building: String, // Адрес (номер дома)
     val url: String?, // ссылка на вакансию
-    val contactsEmail: String?, // контакты email
-    val contactsName: String?, // контакты name
     val isFavorite: Boolean, // Вакансия в избранном
 )

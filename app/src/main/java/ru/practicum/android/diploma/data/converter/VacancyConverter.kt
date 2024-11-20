@@ -41,8 +41,6 @@ class VacancyConverter {
             street = vacancy.address?.street.orDefaultVacancy(),
             building = vacancy.address?.building.orDefaultVacancy(),
             url = vacancy.url.orDefaultVacancy(),
-            contactsEmail = vacancy.contacts?.email.orDefaultVacancy(),
-            contactsName = vacancy.contacts?.name.orDefaultVacancy(),
             isFavorite = isFavorite
         )
     }

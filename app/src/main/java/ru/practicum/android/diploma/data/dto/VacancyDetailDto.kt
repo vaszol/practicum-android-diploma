@@ -17,7 +17,6 @@ data class VacancyDetailDto(
     val address: Street?, // Адрес
     @SerializedName("alternate_url")
     val url: String, // ссылка на вакансию
-    val contacts: Contacts?, // контакты
 ) {
 
     data class Employer(
@@ -42,10 +41,5 @@ data class VacancyDetailDto(
     data class Street(
         @SerializedName("street") val street: String?,
         @SerializedName("building") val building: String?,
-    )
-
-    data class Contacts(
-        @SerializedName("email") val email: String?,
-        @SerializedName("name") val name: String?,
     )
 }
