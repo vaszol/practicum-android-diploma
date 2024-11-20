@@ -142,8 +142,6 @@ class SearchFragment : Fragment() {
             searchProgressBarBottom.visibility = View.GONE
             searchImgPlaceholder.visibility = View.VISIBLE
             searchError.visibility = View.VISIBLE
-
-            showToast(searchError.text.toString())
         }
     }
 
@@ -181,8 +179,6 @@ class SearchFragment : Fragment() {
             searchProgressBarBottom.visibility = View.GONE
             searchImgPlaceholder.visibility = View.VISIBLE
             searchError.visibility = View.VISIBLE
-
-            showToast(searchError.text.toString())
         }
     }
 
@@ -197,8 +193,6 @@ class SearchFragment : Fragment() {
             searchImgPlaceholder.visibility = View.VISIBLE
             searchError.visibility = View.VISIBLE
             searchVacancyCount.visibility = View.VISIBLE
-
-            showToast(searchError.text.toString())
         }
     }
 
