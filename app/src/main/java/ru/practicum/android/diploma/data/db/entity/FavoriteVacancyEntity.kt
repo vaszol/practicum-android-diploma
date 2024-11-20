@@ -22,6 +22,4 @@ data class FavoriteVacancyEntity(
     val street: String,
     val building: String,
     val url: String?,
-    val contactsEmail: String?,
-    val contactsName: String?,
 )
