@@ -7,4 +7,5 @@ interface NetworkClient {
     suspend fun vacancies(dto: Any): Response
     suspend fun vacancy(dto: Any): Response
     suspend fun locales(dto: Any): List<LocaleDto>
+    suspend fun dictionaries(dto: Any): Response
 }

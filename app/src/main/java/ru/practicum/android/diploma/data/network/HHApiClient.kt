@@ -8,8 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.practicum.android.diploma.data.NetworkClient
-import ru.practicum.android.diploma.data.dto.LocaleRequest
+import ru.practicum.android.diploma.data.dto.DictionariesResponse
 import ru.practicum.android.diploma.data.dto.LocaleDto
+import ru.practicum.android.diploma.data.dto.LocaleRequest
 import ru.practicum.android.diploma.data.dto.Response
 import ru.practicum.android.diploma.data.dto.VacanciesRequest
 import ru.practicum.android.diploma.data.dto.VacancyRequest
@@ -72,6 +73,25 @@ class HHApiClient(
             } catch (exception: HttpException) {
                 Log.d("Exception caught in HHApiClient: $exception", exception.message())
                 emptyList()
+            }
+        }
+    }
+
+    override suspend fun dictionaries(dto: Any): Response {
+        return withContext(Dispatchers.IO) {
+            try {
+                if (!isConnected()) {
+                    Response().apply { resultCode = -1 }
+                } else if (dto is VacancyRequest) {
+                    hhApi.getDictionaries(dto.locale, dto.host).body().let {
+                        DictionariesResponse(it!!).apply { resultCode = HttpsURLConnection.HTTP_OK }
+                    }
+                } else {
+                    Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
+                }
+            } catch (exception: HttpException) {
+                Log.d("Exception caught in HHApiClient: $exception", exception.message())
+                Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
             }
         }
     }
