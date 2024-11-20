@@ -24,11 +24,6 @@
     <string name="search_vacancy">Поиск вакансий</string>
     <string name="search_request">Введите запрос</string>
     <string name="no_vacancies">Таких вакансий нет</string>
-
-    <string name="select_place_work">Выбор места работы</string>
-    <string name="country">Страна</string>
-    <string name="region">Регион</string>
-
     <string name="no_internet">Нет интернета</string>
     <string name="nothing_found">Не удалось получить список вакансий</string>
     <string name="error">Ошибка сервера</string>
@@ -41,4 +36,8 @@
     <string name="favorite_empty">Список пуст</string>
     <string name="favorire_error">Не удалось получить список вакансий</string>
 
+    <!--Строки для экрана фильтра-->
+    <string name="select_place_work">Выбор места работы</string>
+    <string name="country">Страна</string>
+    <string name="region">Регион</string>
 </resources>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="?attr/colorPrimary"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="ui.root.selectplace.SelectPlaceFragment">
+    tools:context="ui.root.place.SelectPlaceFragment">
 
     <ImageView
         android:id="@+id/back_arrow"
@@ -38,6 +38,7 @@
         app:icon = "@drawable/arrow_forward_24"
         app:iconGravity = "end"
         app:iconSize = "@dimen/size_24dp"
+        android:fontFamily="@font/ys_display_medium"
         />
 
     <Button
@@ -49,6 +50,7 @@
         app:icon = "@drawable/arrow_forward_24"
         app:iconGravity = "end"
         app:iconSize = "@dimen/size_24dp"
+        android:fontFamily="@font/ys_display_medium"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
