@@ -3,7 +3,6 @@ package ru.practicum.android.diploma.data
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-//import ru.practicum.android.diploma.data.converter.DictionaryConverter
 import ru.practicum.android.diploma.data.converter.VacancyConverter
 import ru.practicum.android.diploma.data.dto.DictionariesRequest
 import ru.practicum.android.diploma.data.dto.LocaleDto
