@@ -24,9 +24,6 @@
     <!--Пример использования:
    vacancyField.text = context.resources.getQuantityString(R.plurals.vacancy_postfix, vacancyCount, vacancyCount)-->
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!--Строки для экрана поиска-->
     <string name="search_vacancy">Поиск вакансий</string>
     <string name="search_request">Введите запрос</string>
@@ -55,7 +52,6 @@
     <string name="vacancy_error">Вакансия не найдена или\n удалена</string>
     <string name="vacancy_error_server">Ошибка сервера</string>
 
-
     <!--Строки для экрана фильтрации-->
     <string name="filter_settings">Настройки фильтрации</string>
     <string name="workplace">Место работы</string>
@@ -66,4 +62,8 @@
     <string name="apply">Применить</string>
     <string name="reset">Сбросить</string>
 
+    <!--Строки для экрана фильтра-->
+    <string name="select_place_work">Выбор места работы</string>
+    <string name="country">Страна</string>
+    <string name="region">Регион</string>
 </resources>
