@@ -57,6 +57,7 @@ class SearchFragment : Fragment() {
                 SearchScreenState.NoInternetNextPage -> showProblemNextPage(NO_INTERNET)
                 SearchScreenState.ErrorNextPage -> showProblemNextPage(ERROR)
                 SearchScreenState.EndOfListReached -> showProblemNextPage(END_OF_LIST)
+                SearchScreenState.DefaultPage -> showDefaultPage()
             }
         }
 
@@ -81,6 +82,7 @@ class SearchFragment : Fragment() {
             searchMagnifier.setOnClickListener {
                 searchEditText.setText(EMPTY_TEXT)
                 setKeyboardVisibility(searchEditText, false)
+                viewModel.setDefaultState()
             }
 
             searchRecyclerView.addOnScrollListener(object :
@@ -107,6 +109,14 @@ class SearchFragment : Fragment() {
                     false
                 }
             }
+        }
+    }
+    private fun showDefaultPage(){
+        with(binding){
+            searchImgPlaceholder.setImageResource(R.drawable.placeholder_search)
+            searchImgPlaceholder.visibility = View.VISIBLE
+            searchRecyclerView.visibility = View.GONE
+            searchVacancyCount.visibility = View.GONE
         }
     }
 
