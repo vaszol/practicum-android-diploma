@@ -237,6 +237,7 @@ class SearchFragment : Fragment() {
             searchEditText.requestFocus()
             setKeyboardVisibility(searchEditText, true)
         }
+        isToast = true
     }
 
     override fun onStop() {
