@@ -37,6 +37,10 @@ class SearchViewModel(
         }
     }
 
+    fun setDefaultState() {
+        _searchScreenState.postValue(SearchScreenState.DefaultPage)
+    }
+
     private fun searchRequest() {
         if (!latestSearchText.isNullOrEmpty()) {
             if (page == 0) {
