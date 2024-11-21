@@ -65,6 +65,7 @@ class SearchViewModel(
                 } else if (triple.first.isNullOrEmpty()) {
                     isEndOfListReached = true
                     if (page > 0) {
+                        _searchScreenState.postValue(SearchScreenState.EndOfListReached)
                         event.postValue(SearchEventState.EndOfListReached)
                     } else {
                         _searchScreenState.postValue(SearchScreenState.NothingFound)
@@ -90,8 +91,10 @@ class SearchViewModel(
             )
         } else {
                 if (errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
+                    _searchScreenState.postValue(SearchScreenState.ErrorNextPage)
                     event.postValue(SearchEventState.ErrorNextPage)
                 } else {
+                    _searchScreenState.postValue(SearchScreenState.NoInternetNextPage)
                     event.postValue(SearchEventState.NoInternetNextPage)
                 }
         }

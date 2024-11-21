@@ -56,6 +56,10 @@ class SearchFragment : Fragment() {
                 SearchScreenState.ErrorFirstPage -> showError()
                 is SearchScreenState.Results -> showResults(state.resultsList, state.totalCount)
                 SearchScreenState.LoadingNextPage -> showLoadingNextPage()
+                SearchScreenState.ErrorNextPage -> hideProgressBar()
+                SearchScreenState.EndOfListReached -> hideProgressBar()
+                SearchScreenState.NoInternetNextPage -> hideProgressBar()
+
             }
         }
 
@@ -125,6 +129,10 @@ class SearchFragment : Fragment() {
         with(binding) {
             searchProgressBarBottom.visibility = View.VISIBLE
         }
+    }
+
+    private fun hideProgressBar(){
+        binding.searchProgressBarBottom.visibility = View.GONE
     }
 
     private fun showProblemNextPage(type: String) {
