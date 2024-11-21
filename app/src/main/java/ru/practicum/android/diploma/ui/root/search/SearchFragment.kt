@@ -27,7 +27,7 @@ class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
     private val adapter by lazy { VacancyAdapter(mutableListOf()) { selectVacancy(it) } }
-    private var isToast = false
+    private var isCheckedToast = false
 
     private fun selectVacancy(vacancy: Vacancy) {
         findNavController().navigate(
@@ -148,7 +148,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun showResults(vacancies: List<Vacancy>, totalCount: Int) {
-        isToast = true
         with(binding) {
             searchImgPlaceholder.visibility = View.GONE
             searchError.visibility = View.GONE
@@ -222,7 +221,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun showToast(message: String) {
-        if (isToast){
+        if (isCheckedToast){
             val toast = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
             toast.show()
             val handler: Handler = Handler()
@@ -237,12 +236,12 @@ class SearchFragment : Fragment() {
             searchEditText.requestFocus()
             setKeyboardVisibility(searchEditText, true)
         }
-        isToast = true
+        isCheckedToast = true
     }
 
     override fun onStop() {
         super.onStop()
-        isToast = false
+        isCheckedToast = false
     }
 
     companion object {
