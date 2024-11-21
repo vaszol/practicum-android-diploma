@@ -9,10 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
@@ -22,10 +24,12 @@ import ru.practicum.android.diploma.presentation.search.SearchViewModel
 import ru.practicum.android.diploma.ui.root.details.DetailsFragment.Companion.VACANCY_ID
 import java.text.DecimalFormat
 
+
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
     private val adapter by lazy { VacancyAdapter(mutableListOf()) { selectVacancy(it) } }
+    private lateinit var toast: Toast
 
     private fun selectVacancy(vacancy: Vacancy) {
         findNavController().navigate(
@@ -219,11 +223,15 @@ class SearchFragment : Fragment() {
     }
 
     private fun showToast(message: String) {
-        Toast(requireContext()).apply {
-            setText(message)
-            duration = Toast.LENGTH_SHORT
-        }.show()
+        val snackBar = Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
+        snackBar.setTextColor(requireContext().getColor(R.color.black))
+        val backgroundSnackBar = snackBar.view.apply { setBackgroundResource(R.drawable.background_snack_bar) }
+        val textSnackBar: TextView = backgroundSnackBar.findViewById(com.google.android.material.R.id.snackbar_text)
+        textSnackBar.textAlignment = View.TEXT_ALIGNMENT_CENTER
+        snackBar.show()
+
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -232,6 +240,8 @@ class SearchFragment : Fragment() {
             setKeyboardVisibility(searchEditText, true)
         }
     }
+
+
 
     companion object {
         const val EMPTY_TEXT = ""
