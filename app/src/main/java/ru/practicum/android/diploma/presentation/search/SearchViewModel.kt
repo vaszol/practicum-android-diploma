@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.domain.api.VacancyInteractor
+import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.models.Host
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.util.debouncer.Debouncer
 import javax.net.ssl.HttpsURLConnection
 
 class SearchViewModel(
-    private val vacancyInteractor: VacancyInteractor,
+    private val hhInteractor: HhInteractor,
 ) : ViewModel() {
     private var page: Int = 0
     private val _searchScreenState = MutableLiveData<SearchScreenState>()
@@ -51,7 +51,7 @@ class SearchViewModel(
 
     private fun performSearchRequest() {
         viewModelScope.launch(Dispatchers.IO) {
-            vacancyInteractor.searchVacancies(
+            hhInteractor.searchVacancies(
                 latestSearchText!!,
                 Vacancy.CURRENCY_DEFAULT_VALUE,
                 page,
