@@ -44,7 +44,6 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.searchEditText.requestFocus()
 
         viewModel.searchScreenState.observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -234,14 +233,6 @@ class SearchFragment : Fragment() {
             setText(message)
             duration = Toast.LENGTH_SHORT
         }.show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        with(binding) {
-            searchEditText.requestFocus()
-            setKeyboardVisibility(searchEditText, true)
-        }
     }
 
     companion object {
