@@ -42,6 +42,7 @@ class DetailsFragment : Fragment() {
         viewModel.screenState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is DetailsScreenState.Loading -> showLoading()
+                DetailsScreenState.NoInternet -> showNoInternet()
                 is DetailsScreenState.Error -> showError(state.isServerError)
                 is DetailsScreenState.Content -> showVacancyDetails(state.vacancy, state.isFavorite)
             }
@@ -62,6 +63,16 @@ class DetailsFragment : Fragment() {
                 }
                 binding.backImg.setOnClickListener { findNavController().popBackStack() }
             }
+        }
+    }
+
+    private fun showNoInternet() {
+        with(binding) {
+            progressBar.visibility = View.GONE
+            vacancyErrorImage.setImageResource(R.drawable.placeholder_no_internet)
+            vacancyErrorTxt.setText(R.string.no_internet)
+            vacancyError.visibility = View.VISIBLE
+            vacancyErrorTxt.visibility = View.VISIBLE
         }
     }
 

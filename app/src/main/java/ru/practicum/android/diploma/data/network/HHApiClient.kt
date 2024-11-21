@@ -35,7 +35,7 @@ class HHApiClient(
                     else -> Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
                 }
             } catch (exception: HttpException) {
-                Log.d("Exception caught in HHApiClient: $exception", exception.message())
+                Log.d("Exception caught in HHApiClient", exception.message())
                 Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
             }
         }

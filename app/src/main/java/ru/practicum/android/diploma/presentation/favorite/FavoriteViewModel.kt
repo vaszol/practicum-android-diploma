@@ -24,7 +24,7 @@ class FavoriteViewModel(
             if (vacancies == null) {
                 _favoriteScreenState.value = FavoriteScreenState.Error
             } else if (vacancies.isEmpty()) {
-                _favoriteScreenState.value = FavoriteScreenState.NothingInFav
+                _favoriteScreenState.value = FavoriteScreenState.EmptyList
             } else {
                 _favoriteScreenState.value = FavoriteScreenState.FavoriteVacancies(vacancies)
             }
