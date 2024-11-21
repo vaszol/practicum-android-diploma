@@ -11,6 +11,6 @@ sealed class SearchScreenState {
     object ErrorFirstPage : SearchScreenState()
     object ErrorNextPage : SearchScreenState()
     object EndOfListReached : SearchScreenState()
-    object DefaultPage: SearchScreenState()
+    object DefaultPage : SearchScreenState()
     data class Results(val resultsList: List<Vacancy>, val totalCount: Int) : SearchScreenState()
 }
