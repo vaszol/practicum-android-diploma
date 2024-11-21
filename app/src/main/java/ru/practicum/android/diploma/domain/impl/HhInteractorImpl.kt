@@ -2,18 +2,17 @@ package ru.practicum.android.diploma.domain.impl
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import ru.practicum.android.diploma.data.dto.LocaleDto
-import ru.practicum.android.diploma.domain.api.VacancyInteractor
-import ru.practicum.android.diploma.domain.api.VacancyRepository
+import ru.practicum.android.diploma.domain.api.HhInteractor
+import ru.practicum.android.diploma.domain.api.HhRepository
+import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.DetailsVacancyRequest
-import ru.practicum.android.diploma.domain.models.Dictionaries
-import ru.practicum.android.diploma.domain.models.DictionaryRequest
 import ru.practicum.android.diploma.domain.models.Host
+import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.domain.models.Resource
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyDetail
 
-class VacancyInteractorImpl(private val repository: VacancyRepository) : VacancyInteractor {
+class HhInteractorImpl(private val repository: HhRepository) : HhInteractor {
     override fun searchVacancies(
         text: String,
         currency: String,
@@ -38,16 +37,11 @@ class VacancyInteractorImpl(private val repository: VacancyRepository) : Vacancy
         }
     }
 
-    override fun searchLocales(locale: String, host: Host): Flow<List<LocaleDto>> {
-        return repository.searchLocales(locale, host)
+    override fun getIndustries(): Flow<List<Industry>> {
+        return repository.getIndustries()
     }
 
-    override fun searchDictionaries(request: DictionaryRequest): Flow<Pair<Dictionaries?, String?>> {
-        return repository.searchDictionaries(request).map { result ->
-            when (result) {
-                is Resource.Success -> Pair(result.data, null)
-                is Resource.Error -> Pair(null, result.message)
-            }
-        }
+    override fun getAreas(): Flow<List<Area>> {
+        return repository.getAreas()
     }
 }

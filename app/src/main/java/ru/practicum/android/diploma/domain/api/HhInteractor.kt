@@ -1,15 +1,14 @@
 package ru.practicum.android.diploma.domain.api
 
 import kotlinx.coroutines.flow.Flow
-import ru.practicum.android.diploma.data.dto.LocaleDto
+import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.DetailsVacancyRequest
-import ru.practicum.android.diploma.domain.models.Dictionaries
-import ru.practicum.android.diploma.domain.models.DictionaryRequest
 import ru.practicum.android.diploma.domain.models.Host
+import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyDetail
 
-interface VacancyInteractor {
+interface HhInteractor {
     fun searchVacancies(
         text: String,
         currency: String,
@@ -19,6 +18,6 @@ interface VacancyInteractor {
     ): Flow<Triple<List<Vacancy>?, String?, Int?>>
 
     fun searchVacancy(request: DetailsVacancyRequest): Flow<Pair<VacancyDetail?, String?>>
-    fun searchLocales(locale: String, host: Host): Flow<List<LocaleDto>>
-    fun searchDictionaries(request: DictionaryRequest): Flow<Pair<Dictionaries?, String?>>
+    fun getIndustries(): Flow<List<Industry>>
+    fun getAreas(): Flow<List<Area>>
 }

@@ -8,8 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.practicum.android.diploma.data.NetworkClient
-import ru.practicum.android.diploma.data.dto.DictionariesResponse
-import ru.practicum.android.diploma.data.dto.LocaleDto
+import ru.practicum.android.diploma.data.dto.AreaDto
+import ru.practicum.android.diploma.data.dto.IndustryDto
 import ru.practicum.android.diploma.data.dto.LocaleRequest
 import ru.practicum.android.diploma.data.dto.Response
 import ru.practicum.android.diploma.data.dto.VacanciesRequest
@@ -22,17 +22,17 @@ class HHApiClient(
     private val context: Context
 ) : NetworkClient {
 
-    override suspend fun vacancies(dto: Any): Response {
+    override suspend fun getVacancies(dto: Any): Response {
         return withContext(Dispatchers.IO) {
             try {
-                if (!isConnected()) {
-                    Response().apply { resultCode = -1 }
-                } else if (dto is VacanciesRequest) {
-                    hhApi.getVacancies(dto.text, dto.currency, dto.size, dto.page).apply {
+                when {
+                    !isConnected() -> Response().apply { resultCode = -1 }
+
+                    dto is VacanciesRequest -> hhApi.getVacancies(dto.text, dto.currency, dto.size, dto.page).apply {
                         resultCode = HttpsURLConnection.HTTP_OK
                     }
-                } else {
-                    Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
+
+                    else -> Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
                 }
             } catch (exception: HttpException) {
                 Log.d("Exception caught in HHApiClient: $exception", exception.message())
@@ -41,17 +41,17 @@ class HHApiClient(
         }
     }
 
-    override suspend fun vacancy(dto: Any): Response {
+    override suspend fun getVacancy(dto: Any): Response {
         return withContext(Dispatchers.IO) {
             try {
-                if (!isConnected()) {
-                    Response().apply { resultCode = -1 }
-                } else if (dto is VacancyRequest) {
-                    hhApi.getVacancy(dto.id, dto.locale, dto.host).body().let {
-                        VacancyResponse(it!!).apply { resultCode = HttpsURLConnection.HTTP_OK }
+                when {
+                    !isConnected() -> Response().apply { resultCode = -1 }
+
+                    dto is VacancyRequest -> hhApi.getVacancy(dto.id, dto.locale, dto.host).body().let {
+                        VacancyResponse(it).apply { resultCode = HttpsURLConnection.HTTP_OK }
                     }
-                } else {
-                    Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
+
+                    else -> Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
                 }
             } catch (exception: HttpException) {
                 Log.d("Exception caught in HHApiClient: $exception", exception.message())
@@ -60,15 +60,15 @@ class HHApiClient(
         }
     }
 
-    override suspend fun locales(dto: Any): List<LocaleDto> {
+    override suspend fun getIndustries(dto: Any): List<IndustryDto> {
         return withContext(Dispatchers.IO) {
             try {
-                if (!isConnected()) {
-                    emptyList()
-                } else if (dto is LocaleRequest) {
-                    hhApi.getLocales(dto.locale, dto.host)
-                } else {
-                    emptyList()
+                when {
+                    !isConnected() -> emptyList()
+
+                    dto is LocaleRequest -> hhApi.getIndustries(dto.locale, dto.host)
+
+                    else -> emptyList()
                 }
             } catch (exception: HttpException) {
                 Log.d("Exception caught in HHApiClient: $exception", exception.message())
@@ -77,21 +77,19 @@ class HHApiClient(
         }
     }
 
-    override suspend fun dictionaries(dto: Any): Response {
+    override suspend fun getAreas(dto: Any): List<AreaDto> {
         return withContext(Dispatchers.IO) {
             try {
-                if (!isConnected()) {
-                    Response().apply { resultCode = -1 }
-                } else if (dto is VacancyRequest) {
-                    hhApi.getDictionaries(dto.locale, dto.host).body().let {
-                        DictionariesResponse(it!!).apply { resultCode = HttpsURLConnection.HTTP_OK }
-                    }
-                } else {
-                    Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
+                when {
+                    !isConnected() -> emptyList()
+
+                    dto is LocaleRequest -> hhApi.getAreas(dto.locale, dto.host)
+
+                    else -> emptyList()
                 }
             } catch (exception: HttpException) {
                 Log.d("Exception caught in HHApiClient: $exception", exception.message())
-                Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
+                emptyList()
             }
         }
     }

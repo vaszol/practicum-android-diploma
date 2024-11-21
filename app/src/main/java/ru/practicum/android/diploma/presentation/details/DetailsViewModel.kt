@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.domain.api.VacancyInteractor
+import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.favorite.FavoriteInteractor
 import ru.practicum.android.diploma.domain.models.DetailsVacancyRequest
 import ru.practicum.android.diploma.domain.models.VacancyDetail
 
 class DetailsViewModel(
-    private val vacancyInteractor: VacancyInteractor,
+    private val hhInteractor: HhInteractor,
     private val favoriteInteractor: FavoriteInteractor
 ) : ViewModel() {
     private val _screenState = MutableLiveData<DetailsScreenState>()
@@ -21,7 +21,7 @@ class DetailsViewModel(
     fun loadVacancyDetails(vacancyId: String) {
         _screenState.value = DetailsScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            vacancyInteractor.searchVacancy(
+            hhInteractor.searchVacancy(
                 DetailsVacancyRequest(id = vacancyId)
             ).collect { pair ->
                 if (pair.second != null) {

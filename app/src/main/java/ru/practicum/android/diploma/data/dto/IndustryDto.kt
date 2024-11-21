@@ -1,7 +1,7 @@
 package ru.practicum.android.diploma.data.dto
 
-data class LocaleDto(
+data class IndustryDto(
     val id: String,
     val name: String,
-    val current: Boolean,
+    val industries: List<IndustryDto>?,
 )
