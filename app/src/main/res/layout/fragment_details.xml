@@ -149,7 +149,7 @@
                         android:layout_height="@dimen/size_48dp"
                         android:background="@drawable/background_icon"
                         android:src="@drawable/ic_logotype_vacancy"
-                        android:scaleType="centerCrop"
+                        android:scaleType="fitCenter"
                         app:shapeAppearanceOverlay="@style/RoundedImage"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
