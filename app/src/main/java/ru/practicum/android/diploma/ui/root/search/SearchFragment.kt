@@ -24,12 +24,10 @@ import ru.practicum.android.diploma.presentation.search.SearchViewModel
 import ru.practicum.android.diploma.ui.root.details.DetailsFragment.Companion.VACANCY_ID
 import java.text.DecimalFormat
 
-
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
     private val adapter by lazy { VacancyAdapter(mutableListOf()) { selectVacancy(it) } }
-    private lateinit var toast: Toast
 
     private fun selectVacancy(vacancy: Vacancy) {
         findNavController().navigate(
@@ -229,9 +227,7 @@ class SearchFragment : Fragment() {
         val textSnackBar: TextView = backgroundSnackBar.findViewById(com.google.android.material.R.id.snackbar_text)
         textSnackBar.textAlignment = View.TEXT_ALIGNMENT_CENTER
         snackBar.show()
-
     }
-
 
     override fun onResume() {
         super.onResume()
@@ -240,8 +236,6 @@ class SearchFragment : Fragment() {
             setKeyboardVisibility(searchEditText, true)
         }
     }
-
-
 
     companion object {
         const val EMPTY_TEXT = ""
