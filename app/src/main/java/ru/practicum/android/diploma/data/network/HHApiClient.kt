@@ -26,19 +26,13 @@ class HHApiClient(
         return withContext(Dispatchers.IO) {
             try {
                 when {
-                    !isConnected() -> {
-                        Response().apply { resultCode = -1 }
+                    !isConnected() -> Response().apply { resultCode = -1 }
+
+                    dto is VacanciesRequest -> hhApi.getVacancies(dto.text, dto.currency, dto.size, dto.page).apply {
+                        resultCode = HttpsURLConnection.HTTP_OK
                     }
 
-                    dto is VacanciesRequest -> {
-                        hhApi.getVacancies(dto.text, dto.currency, dto.size, dto.page).apply {
-                            resultCode = HttpsURLConnection.HTTP_OK
-                        }
-                    }
-
-                    else -> {
-                        Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
-                    }
+                    else -> Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
                 }
             } catch (exception: HttpException) {
                 Log.d("Exception caught in HHApiClient: $exception", exception.message())
@@ -51,19 +45,13 @@ class HHApiClient(
         return withContext(Dispatchers.IO) {
             try {
                 when {
-                    !isConnected() -> {
-                        Response().apply { resultCode = -1 }
+                    !isConnected() -> Response().apply { resultCode = -1 }
+
+                    dto is VacancyRequest -> hhApi.getVacancy(dto.id, dto.locale, dto.host).body().let {
+                        VacancyResponse(it).apply { resultCode = HttpsURLConnection.HTTP_OK }
                     }
 
-                    dto is VacancyRequest -> {
-                        hhApi.getVacancy(dto.id, dto.locale, dto.host).body().let {
-                            VacancyResponse(it).apply { resultCode = HttpsURLConnection.HTTP_OK }
-                        }
-                    }
-
-                    else -> {
-                        Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
-                    }
+                    else -> Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
                 }
             } catch (exception: HttpException) {
                 Log.d("Exception caught in HHApiClient: $exception", exception.message())
@@ -76,17 +64,11 @@ class HHApiClient(
         return withContext(Dispatchers.IO) {
             try {
                 when {
-                    !isConnected() -> {
-                        emptyList()
-                    }
+                    !isConnected() -> emptyList()
 
-                    dto is LocaleRequest -> {
-                        hhApi.getIndustries(dto.locale, dto.host)
-                    }
+                    dto is LocaleRequest -> hhApi.getIndustries(dto.locale, dto.host)
 
-                    else -> {
-                        emptyList()
-                    }
+                    else -> emptyList()
                 }
             } catch (exception: HttpException) {
                 Log.d("Exception caught in HHApiClient: $exception", exception.message())
@@ -99,17 +81,11 @@ class HHApiClient(
         return withContext(Dispatchers.IO) {
             try {
                 when {
-                    !isConnected() -> {
-                        emptyList()
-                    }
+                    !isConnected() -> emptyList()
 
-                    dto is LocaleRequest -> {
-                        hhApi.getAreas(dto.locale, dto.host)
-                    }
+                    dto is LocaleRequest -> hhApi.getAreas(dto.locale, dto.host)
 
-                    else -> {
-                        emptyList()
-                    }
+                    else -> emptyList()
                 }
             } catch (exception: HttpException) {
                 Log.d("Exception caught in HHApiClient: $exception", exception.message())
