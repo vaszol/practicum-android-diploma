@@ -111,8 +111,9 @@ class SearchFragment : Fragment() {
             }
         }
     }
-    private fun showDefaultPage(){
-        with(binding){
+
+    private fun showDefaultPage() {
+        with(binding) {
             searchImgPlaceholder.setImageResource(R.drawable.placeholder_search)
             searchImgPlaceholder.visibility = View.VISIBLE
             searchRecyclerView.visibility = View.GONE

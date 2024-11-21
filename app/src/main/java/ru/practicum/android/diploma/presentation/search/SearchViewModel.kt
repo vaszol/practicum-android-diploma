@@ -37,7 +37,7 @@ class SearchViewModel(
         }
     }
 
-    fun setDefaultState(){
+    fun setDefaultState() {
         _searchScreenState.postValue(SearchScreenState.DefaultPage)
     }
 
