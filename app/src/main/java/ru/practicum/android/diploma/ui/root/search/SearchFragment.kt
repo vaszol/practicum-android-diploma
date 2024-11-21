@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.ui.root.search
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -10,14 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.presentation.search.SearchEventState
 import ru.practicum.android.diploma.presentation.search.SearchScreenState
 import ru.practicum.android.diploma.presentation.search.SearchViewModel
 import ru.practicum.android.diploma.ui.root.details.DetailsFragment.Companion.VACANCY_ID
@@ -27,7 +28,6 @@ class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
     private val adapter by lazy { VacancyAdapter(mutableListOf()) { selectVacancy(it) } }
-    private var isCheckedToast = false
 
     private fun selectVacancy(vacancy: Vacancy) {
         findNavController().navigate(
@@ -56,9 +56,14 @@ class SearchFragment : Fragment() {
                 SearchScreenState.ErrorFirstPage -> showError()
                 is SearchScreenState.Results -> showResults(state.resultsList, state.totalCount)
                 SearchScreenState.LoadingNextPage -> showLoadingNextPage()
-                SearchScreenState.NoInternetNextPage -> showProblemNextPage(NO_INTERNET)
-                SearchScreenState.ErrorNextPage -> showProblemNextPage(ERROR)
-                SearchScreenState.EndOfListReached -> showProblemNextPage(END_OF_LIST)
+            }
+        }
+
+        viewModel.event.observe(viewLifecycleOwner){
+            when(it){
+                SearchEventState.EndOfListReached -> showProblemNextPage(END_OF_LIST)
+                SearchEventState.ErrorNextPage -> showProblemNextPage(ERROR)
+                SearchEventState.NoInternetNextPage -> showProblemNextPage(NO_INTERNET)
             }
         }
 
@@ -221,13 +226,12 @@ class SearchFragment : Fragment() {
     }
 
     private fun showToast(message: String) {
-        if (isCheckedToast){
-            val toast = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
-            toast.show()
-            val handler: Handler = Handler()
-            handler.postDelayed(Runnable { toast.cancel() }, 2000)
-        }
-
+        val snackBar = Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
+        snackBar.setTextColor(requireContext().getColor(R.color.black))
+        val backgroundSnackbar = snackBar.view.apply { setBackgroundResource(R.drawable.background_snack_bar)}
+        val textSnackbar: TextView = backgroundSnackbar.findViewById(com.google.android.material.R.id.snackbar_text)
+        textSnackbar.textAlignment = View.TEXT_ALIGNMENT_CENTER
+        snackBar.show()
     }
 
     override fun onResume() {
@@ -236,12 +240,7 @@ class SearchFragment : Fragment() {
             searchEditText.requestFocus()
             setKeyboardVisibility(searchEditText, true)
         }
-        isCheckedToast = true
-    }
 
-    override fun onStop() {
-        super.onStop()
-        isCheckedToast = false
     }
 
     companion object {

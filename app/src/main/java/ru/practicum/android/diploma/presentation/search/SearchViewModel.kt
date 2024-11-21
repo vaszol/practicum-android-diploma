@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.VacancyInteractor
 import ru.practicum.android.diploma.domain.models.Host
 import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.ui.root.SingleLiveEvent
 import ru.practicum.android.diploma.util.debouncer.Debouncer
 import javax.net.ssl.HttpsURLConnection
 
@@ -18,6 +19,7 @@ class SearchViewModel(
     private var page: Int = 0
     private val _searchScreenState = MutableLiveData<SearchScreenState>()
     val searchScreenState: LiveData<SearchScreenState> = _searchScreenState
+    val event = SingleLiveEvent<SearchEventState>()
     private var latestSearchText: String? = null
     private val currentVacancies = mutableListOf<Vacancy>()
     private var isLoadingNextPage = false
@@ -63,7 +65,7 @@ class SearchViewModel(
                 } else if (triple.first.isNullOrEmpty()) {
                     isEndOfListReached = true
                     if (page > 0) {
-                        _searchScreenState.postValue(SearchScreenState.EndOfListReached)
+                        event.postValue(SearchEventState.EndOfListReached)
                     } else {
                         _searchScreenState.postValue(SearchScreenState.NothingFound)
                     }
@@ -72,7 +74,6 @@ class SearchViewModel(
                     currentVacancies.addAll(triple.first!!)
                     _searchScreenState.postValue(SearchScreenState.Results(currentVacancies.distinct(), triple.third!!))
                 }
-
                 isLoadingNextPage = false
             }
         }
@@ -88,13 +89,11 @@ class SearchViewModel(
                 }
             )
         } else {
-            _searchScreenState.postValue(
                 if (errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
-                    SearchScreenState.ErrorNextPage
+                    event.postValue(SearchEventState.ErrorNextPage)
                 } else {
-                    SearchScreenState.NoInternetNextPage
+                    event.postValue(SearchEventState.NoInternetNextPage)
                 }
-            )
         }
         isLoadingNextPage = false
     }
