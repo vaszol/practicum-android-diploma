@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.ui.root.search
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -9,12 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
@@ -28,6 +27,7 @@ class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
     private val adapter by lazy { VacancyAdapter(mutableListOf()) { selectVacancy(it) } }
+    private var isToast = false
 
     private fun selectVacancy(vacancy: Vacancy) {
         findNavController().navigate(
@@ -148,6 +148,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun showResults(vacancies: List<Vacancy>, totalCount: Int) {
+        isToast = true
         with(binding) {
             searchImgPlaceholder.visibility = View.GONE
             searchError.visibility = View.GONE
@@ -221,12 +222,13 @@ class SearchFragment : Fragment() {
     }
 
     private fun showToast(message: String) {
-        val snackBar = Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
-        snackBar.setTextColor(requireContext().getColor(R.color.black))
-        val backgroundSnackBar = snackBar.view.apply { setBackgroundResource(R.drawable.background_snack_bar) }
-        val textSnackBar: TextView = backgroundSnackBar.findViewById(com.google.android.material.R.id.snackbar_text)
-        textSnackBar.textAlignment = View.TEXT_ALIGNMENT_CENTER
-        snackBar.show()
+        if (isToast){
+            val toast = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
+            toast.show()
+            val handler: Handler = Handler()
+            handler.postDelayed(Runnable { toast.cancel() }, 2000)
+        }
+
     }
 
     override fun onResume() {
@@ -235,6 +237,11 @@ class SearchFragment : Fragment() {
             searchEditText.requestFocus()
             setKeyboardVisibility(searchEditText, true)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        isToast = false
     }
 
     companion object {

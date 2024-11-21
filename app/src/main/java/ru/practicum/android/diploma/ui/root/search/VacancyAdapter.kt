@@ -7,7 +7,7 @@ import ru.practicum.android.diploma.databinding.ItemVacancyBinding
 import ru.practicum.android.diploma.domain.models.Vacancy
 
 class VacancyAdapter(
-    private val vacancies: List<Vacancy>,
+    val vacancies: List<Vacancy>,
     private val clickListener: VacancyClickListener,
 ) : RecyclerView.Adapter<VacancyViewHolder>() {
 
