@@ -6,12 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.databinding.FragmentSelectPlaceBinding
+import ru.practicum.android.diploma.databinding.FragmentSelectCountryBinding
 
-class SelectPlaceFragment : Fragment() {
+class SelectCountryFragment : Fragment() {
 
-    private var _binding: FragmentSelectPlaceBinding? = null
+    private var _binding: FragmentSelectCountryBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -19,7 +18,7 @@ class SelectPlaceFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentSelectPlaceBinding.inflate(inflater, container, false)
+        _binding = FragmentSelectCountryBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -27,12 +26,6 @@ class SelectPlaceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-            selectCountryButton.setOnClickListener {
-                findNavController().navigate(R.id.action_selectPlaceFragment_to_selectCountryFragment)
-            }
-            selectRegionButton.setOnClickListener {
-                findNavController().navigate(R.id.action_selectPlaceFragment_to_selectRegionFragment)
-            }
             backArrow.setOnClickListener {
                 findNavController().popBackStack()
             }

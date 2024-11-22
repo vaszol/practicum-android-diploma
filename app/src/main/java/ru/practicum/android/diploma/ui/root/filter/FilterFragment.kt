@@ -57,6 +57,9 @@ class FilterFragment : Fragment() {
             }
             deleteSalary.setOnClickListener { salary.text.clear() }
         }
+        binding.workplace.setOnClickListener {
+            findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
+        }
     }
 
     private fun setupTextWatchers() {
