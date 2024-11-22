@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.models.Host
 import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.ui.root.SingleLiveEvent
 import ru.practicum.android.diploma.util.debouncer.Debouncer
 import javax.net.ssl.HttpsURLConnection
 
@@ -18,6 +19,7 @@ class SearchViewModel(
     private var page: Int = 0
     private val _searchScreenState = MutableLiveData<SearchScreenState>()
     val searchScreenState: LiveData<SearchScreenState> = _searchScreenState
+    val event = SingleLiveEvent<SearchEventState>()
     private var latestSearchText: String? = null
     private val currentVacancies = mutableListOf<Vacancy>()
     private var isLoadingNextPage = false
@@ -47,7 +49,7 @@ class SearchViewModel(
                 _searchScreenState.postValue(SearchScreenState.LoadingFirstPage)
                 performSearchRequest()
             } else {
-                _searchScreenState.postValue(SearchScreenState.LoadingNextPage)
+                event.postValue(SearchEventState.LoadingNextPage)
                 performSearchRequest()
             }
         }
@@ -65,40 +67,42 @@ class SearchViewModel(
                 if (triple.second != null) {
                     handleSearchError(triple.second!!)
                 } else if (triple.first.isNullOrEmpty()) {
-                    isEndOfListReached = true
-                    if (page > 0) {
-                        _searchScreenState.postValue(SearchScreenState.EndOfListReached)
-                    } else {
-                        _searchScreenState.postValue(SearchScreenState.NothingFound)
-                    }
+                    handleSearchEmpty()
                 } else {
                     page++
                     currentVacancies.addAll(triple.first!!)
                     _searchScreenState.postValue(SearchScreenState.Results(currentVacancies.distinct(), triple.third!!))
                 }
-
                 isLoadingNextPage = false
             }
         }
     }
 
+    private fun handleSearchEmpty() {
+        isEndOfListReached = true
+        when {
+            page > 0 -> event.postValue(SearchEventState.EndOfListReached)
+            else -> _searchScreenState.postValue(SearchScreenState.NothingFound)
+        }
+    }
+
     private fun handleSearchError(errorMessage: String) {
-        if (page == 0) {
-            _searchScreenState.postValue(
-                if (errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
-                    SearchScreenState.ErrorFirstPage
-                } else {
-                    SearchScreenState.NoInternetFirstPage
-                }
-            )
-        } else {
-            _searchScreenState.postValue(
-                if (errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
-                    SearchScreenState.ErrorNextPage
-                } else {
-                    SearchScreenState.NoInternetNextPage
-                }
-            )
+        when {
+            page == 0 && errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString() -> {
+                _searchScreenState.postValue(SearchScreenState.ErrorFirstPage)
+            }
+
+            page == 0 && errorMessage != HttpsURLConnection.HTTP_BAD_REQUEST.toString() -> {
+                _searchScreenState.postValue(SearchScreenState.NoInternetFirstPage)
+            }
+
+            page > 0 && errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString() -> {
+                event.postValue(SearchEventState.ErrorNextPage)
+            }
+
+            page > 0 && errorMessage != HttpsURLConnection.HTTP_BAD_REQUEST.toString() -> {
+                event.postValue(SearchEventState.NoInternetNextPage)
+            }
         }
         isLoadingNextPage = false
     }
