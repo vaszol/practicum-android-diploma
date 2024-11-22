@@ -67,4 +67,5 @@
     <string name="country">Страна</string>
     <string name="region">Регион</string>
     <string name="select_country">Выбор страны</string>
+    <string name="select_region">Выбор региона</string>
 </resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    tools:context="ui.root.place.SelectCountryFragment">
+    tools:context="ui.root.place.SelectRegionFragment">
 
     <ImageView
         android:id="@+id/back_arrow"
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ys_display_medium"
-        android:text="@string/select_country"
+        android:text="@string/select_region"
         android:textColor="?attr/colorOnPrimary"
         android:textSize="@dimen/size_22sp"
         app:layout_constraintBottom_toBottomOf="@+id/back_arrow"
