@@ -10,11 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
@@ -227,12 +226,10 @@ class SearchFragment : Fragment() {
 
     private fun showToast(message: String) {
         binding.searchProgressBarBottom.visibility = View.GONE
-        val snackBar = Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
-        snackBar.setTextColor(requireContext().getColor(R.color.black))
-        val backgroundSnackbar = snackBar.view.apply { setBackgroundResource(R.drawable.background_snack_bar)}
-        val textSnackbar: TextView = backgroundSnackbar.findViewById(com.google.android.material.R.id.snackbar_text)
-        textSnackbar.textAlignment = View.TEXT_ALIGNMENT_CENTER
-        snackBar.show()
+        Toast(requireContext()).apply {
+            setText(message)
+            duration = Toast.LENGTH_SHORT
+        }.show()
     }
 
     companion object {
