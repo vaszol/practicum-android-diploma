@@ -45,7 +45,7 @@ class SearchViewModel(
                 _searchScreenState.postValue(SearchScreenState.LoadingFirstPage)
                 performSearchRequest()
             } else {
-                _searchScreenState.postValue(SearchScreenState.LoadingNextPage)
+                event.postValue(SearchEventState.LoadingNextPage)
                 performSearchRequest()
             }
         }
@@ -63,13 +63,7 @@ class SearchViewModel(
                 if (triple.second != null) {
                     handleSearchError(triple.second!!)
                 } else if (triple.first.isNullOrEmpty()) {
-                    isEndOfListReached = true
-                    if (page > 0) {
-                        _searchScreenState.postValue(SearchScreenState.EndOfListReached)
-                        event.postValue(SearchEventState.EndOfListReached)
-                    } else {
-                        _searchScreenState.postValue(SearchScreenState.NothingFound)
-                    }
+                    handleSearchEmpty()
                 } else {
                     page++
                     currentVacancies.addAll(triple.first!!)
@@ -80,23 +74,31 @@ class SearchViewModel(
         }
     }
 
+    private fun handleSearchEmpty() {
+        isEndOfListReached = true
+        when {
+            page > 0 -> event.postValue(SearchEventState.EndOfListReached)
+            else -> _searchScreenState.postValue(SearchScreenState.NothingFound)
+        }
+    }
+
     private fun handleSearchError(errorMessage: String) {
-        if (page == 0) {
-            _searchScreenState.postValue(
-                if (errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
-                    SearchScreenState.ErrorFirstPage
-                } else {
-                    SearchScreenState.NoInternetFirstPage
-                }
-            )
-        } else {
-                if (errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString()) {
-                    _searchScreenState.postValue(SearchScreenState.ErrorNextPage)
-                    event.postValue(SearchEventState.ErrorNextPage)
-                } else {
-                    _searchScreenState.postValue(SearchScreenState.NoInternetNextPage)
-                    event.postValue(SearchEventState.NoInternetNextPage)
-                }
+        when {
+            page == 0 && errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString() -> {
+                _searchScreenState.postValue(SearchScreenState.ErrorFirstPage)
+            }
+
+            page == 0 && errorMessage != HttpsURLConnection.HTTP_BAD_REQUEST.toString() -> {
+                _searchScreenState.postValue(SearchScreenState.NoInternetFirstPage)
+            }
+
+            page > 0 && errorMessage == HttpsURLConnection.HTTP_BAD_REQUEST.toString() -> {
+                event.postValue(SearchEventState.ErrorNextPage)
+            }
+
+            page > 0 && errorMessage != HttpsURLConnection.HTTP_BAD_REQUEST.toString() -> {
+                event.postValue(SearchEventState.NoInternetNextPage)
+            }
         }
         isLoadingNextPage = false
     }

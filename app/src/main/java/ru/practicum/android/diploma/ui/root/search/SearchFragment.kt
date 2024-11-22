@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.root.search
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -55,19 +56,15 @@ class SearchFragment : Fragment() {
                 SearchScreenState.NothingFound -> showNothingFound()
                 SearchScreenState.ErrorFirstPage -> showError()
                 is SearchScreenState.Results -> showResults(state.resultsList, state.totalCount)
-                SearchScreenState.LoadingNextPage -> showLoadingNextPage()
-                SearchScreenState.ErrorNextPage -> hideProgressBar()
-                SearchScreenState.EndOfListReached -> hideProgressBar()
-                SearchScreenState.NoInternetNextPage -> hideProgressBar()
-
             }
         }
 
-        viewModel.event.observe(viewLifecycleOwner){
-            when(it){
-                SearchEventState.EndOfListReached -> showProblemNextPage(END_OF_LIST)
-                SearchEventState.ErrorNextPage -> showProblemNextPage(ERROR)
-                SearchEventState.NoInternetNextPage -> showProblemNextPage(NO_INTERNET)
+        viewModel.event.observe(viewLifecycleOwner) {
+            when (it) {
+                SearchEventState.LoadingNextPage -> showLoadingNextPage()
+                SearchEventState.EndOfListReached -> showToast(getString(R.string.end_of_list))
+                SearchEventState.ErrorNextPage -> showToast(getString(R.string.error_occupied))
+                SearchEventState.NoInternetNextPage -> showToast(getString(R.string.check_internet))
             }
         }
 
@@ -131,22 +128,6 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun hideProgressBar(){
-        binding.searchProgressBarBottom.visibility = View.GONE
-    }
-
-    private fun showProblemNextPage(type: String) {
-        with(binding) {
-            searchProgressBarBottom.visibility = View.GONE
-            val toastMessage = when (type) {
-                NO_INTERNET -> getString(R.string.check_internet)
-                END_OF_LIST -> getString(R.string.end_of_list)
-                else -> getString(R.string.error_occupied)
-            }
-            showToast(toastMessage)
-        }
-    }
-
     private fun showError() {
         with(binding) {
             searchImgPlaceholder.setImageResource(R.drawable.placeholder_error)
@@ -160,6 +141,7 @@ class SearchFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showResults(vacancies: List<Vacancy>, totalCount: Int) {
         with(binding) {
             searchImgPlaceholder.visibility = View.GONE
@@ -234,6 +216,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun showToast(message: String) {
+        binding.searchProgressBarBottom.visibility = View.GONE
         val snackBar = Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
         snackBar.setTextColor(requireContext().getColor(R.color.black))
         val backgroundSnackbar = snackBar.view.apply { setBackgroundResource(R.drawable.background_snack_bar)}
@@ -253,8 +236,5 @@ class SearchFragment : Fragment() {
 
     companion object {
         const val EMPTY_TEXT = ""
-        const val NO_INTERNET = "NO_INTERNET"
-        const val ERROR = "ERROR"
-        const val END_OF_LIST = "END_OF_LIST"
     }
 }
