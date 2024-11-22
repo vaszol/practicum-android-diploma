@@ -116,6 +116,10 @@ class SearchFragment : Fragment() {
                     false
                 }
             }
+
+            searchFilterNotActvie.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
+            }
         }
     }
 
