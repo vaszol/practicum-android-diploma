@@ -19,20 +19,20 @@
         <ImageView
             android:id="@+id/back_img"
             style="@style/VacancyIconsStyle"
-            android:layout_marginStart="@dimen/size_4dp"
             android:layout_marginVertical="@dimen/size_8dp"
-            android:src="@drawable/ic_arrow_back"/>
+            android:layout_marginStart="@dimen/size_4dp"
+            android:src="@drawable/ic_arrow_back" />
 
         <!--Заголовок-->
         <TextView
             android:id="@+id/head_vacancy"
             style="@style/TextStyleMedium"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginVertical="19dp"
             android:layout_marginStart="@dimen/size_4dp"
-            android:layout_gravity="center_vertical"
-            android:text="@string/choise_industry"/>
+            android:text="@string/choise_industry" />
     </LinearLayout>
 
     <!--Поиск-->
@@ -42,8 +42,8 @@
         android:layout_height="@dimen/size_56dp"
         android:layout_marginHorizontal="@dimen/size_16dp"
         android:layout_marginTop="@dimen/size_8dp"
-        android:backgroundTint="@color/grey_light"
         android:background="@drawable/background_edit_text_search"
+        android:backgroundTint="@color/grey_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/heading" />
@@ -54,14 +54,14 @@
         style="@style/TextStyleRegular"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/grey_light"
         android:layout_marginHorizontal="@dimen/size_8dp"
+        android:background="@color/grey_light"
+        android:ellipsize="end"
         android:hint="@string/industry_hint"
         android:inputType="text"
-        android:singleLine="true"
         android:maxLines="1"
-        android:ellipsize="end"
         android:minHeight="@dimen/size_50dp"
+        android:singleLine="true"
         android:textAppearance="@style/TextStyleRegular"
         android:textColorHint="?attr/colorOnSecondary"
         app:layout_constraintBottom_toBottomOf="@+id/search_industry"
@@ -76,10 +76,10 @@
         android:layout_height="@dimen/size_48dp"
         android:scaleType="center"
         android:src="@drawable/ic_close"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/search_industry"
         app:layout_constraintEnd_toEndOf="@+id/search_industry"
-        app:layout_constraintTop_toTopOf="@+id/search_industry"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="@+id/search_industry" />
 
     <!-- Иконка поиск -->
     <ImageView
@@ -88,10 +88,10 @@
         android:layout_height="@dimen/size_48dp"
         android:scaleType="center"
         android:src="@drawable/ic_search"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/search_industry"
         app:layout_constraintEnd_toEndOf="@+id/search_industry"
-        app:layout_constraintTop_toTopOf="@+id/search_industry"
-        android:visibility="visible"/>
+        app:layout_constraintTop_toTopOf="@+id/search_industry" />
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -99,16 +99,16 @@
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/size_8dp"
         app:layout_constraintBottom_toTopOf="@+id/button_industry"
-        app:layout_constraintTop_toBottomOf="@+id/search_industry"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_industry">
 
         <LinearLayout
             android:id="@+id/industry_error"
-            android:layout_gravity="center"
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
             android:visibility="gone">
 
             <!--Плейсхолдер ошибки-->
@@ -116,16 +116,16 @@
                 android:id="@+id/img_industry_error"
                 android:layout_width="328dp"
                 android:layout_height="223dp"
-                android:src="@drawable/placeholder_empty_industry_list"/>
+                android:src="@drawable/placeholder_empty_industry_list" />
 
             <!--Текст ошибки-->
             <TextView
                 android:id="@+id/txt_industry_error"
+                style="@style/TextStyleMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/TextStyleMedium"
                 android:gravity="center_horizontal"
-                tools:text="@string/error_industry"/>
+                tools:text="@string/error_industry" />
 
         </LinearLayout>
 
@@ -134,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <!--Список-->
         <androidx.recyclerview.widget.RecyclerView
@@ -144,8 +144,8 @@
             android:layout_marginStart="@dimen/size_16dp"
             android:layout_marginTop="@dimen/size_16dp"
             android:layout_marginEnd="@dimen/size_4dp"
-            tools:listitem="@layout/item_industry"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            tools:listitem="@layout/item_industry" />
     </FrameLayout>
 
     <!--Кнопка выбрать-->
@@ -155,13 +155,13 @@
         android:layout_height="59dp"
         android:layout_marginHorizontal="@dimen/size_16dp"
         android:layout_marginBottom="@dimen/size_24dp"
-        android:textAllCaps="false"
-        android:gravity="center"
-        android:textColor="@color/white"
         android:background="@drawable/background_button_industry"
+        android:gravity="center"
         android:text="@string/industry_button_text"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="visible"/>
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

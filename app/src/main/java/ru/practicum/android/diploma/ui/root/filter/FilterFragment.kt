@@ -39,51 +39,44 @@ class FilterFragment : Fragment() {
 
         setupListeners()
         setupTextWatchers()
-
-        binding.industry.setOnClickListener {
-            findNavController().navigate(R.id.action_filterFragment_to_filterIndustry)
-        }
     }
 
     private fun setupListeners() {
-        binding.backButton.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-        binding.apply.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-        binding.reset.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-        binding.checkBox.setOnClickListener {
-            isClickAllowed = !isClickAllowed
-            if (isClickAllowed) {
-                binding.checkBox.setImageResource(R.drawable.ic_check_box_mark)
-            } else {
-                binding.checkBox.setImageResource(R.drawable.ic_check_box_unmark)
+        binding.apply {
+            backButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+            apply.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+            reset.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+            industry.setOnClickListener { findNavController().navigate(R.id.action_filterFragment_to_filterIndustry) }
+            checkBox.setOnClickListener {
+                isClickAllowed = !isClickAllowed
+                if (isClickAllowed) {
+                    checkBox.setImageResource(R.drawable.ic_check_box_mark)
+                } else {
+                    checkBox.setImageResource(R.drawable.ic_check_box_unmark)
+                }
             }
-        }
-        binding.deleteSalary.setOnClickListener {
-            binding.salary.text.clear()
+            deleteSalary.setOnClickListener { salary.text.clear() }
         }
     }
 
     private fun setupTextWatchers() {
-        binding.salary.addTextChangedListener(
-            afterTextChanged = { s: Editable? ->
-                val context = binding.expectedSalary.context
-                val colorOnSecondary = context.getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
-                val colorAccent = context.getThemeColor(org.koin.android.R.attr.colorAccent)
+        binding.apply {
+            salary.addTextChangedListener(
+                afterTextChanged = { s: Editable? ->
+                    val context = expectedSalary.context
+                    val colorAccent = context.getThemeColor(org.koin.android.R.attr.colorAccent)
+                    val colorOnSecondary = context.getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
 
-                if (!s.isNullOrEmpty()) {
-                    binding.expectedSalary.setTextColor(colorAccent)
-                    binding.deleteSalary.isVisible = true
-                } else {
-                    binding.expectedSalary.setTextColor(colorOnSecondary)
-                    binding.deleteSalary.isVisible = false
+                    if (!s.isNullOrEmpty()) {
+                        expectedSalary.setTextColor(colorAccent)
+                        deleteSalary.isVisible = true
+                    } else {
+                        expectedSalary.setTextColor(colorOnSecondary)
+                        deleteSalary.isVisible = false
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 
     private fun Context.getThemeColor(attr: Int): Int {
