@@ -26,7 +26,7 @@ class SelectPlaceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding){
+        with(binding) {
             selectCountryButton.setOnClickListener {
                 findNavController().navigate(R.id.action_selectPlaceFragment_to_selectCountryFragment)
             }

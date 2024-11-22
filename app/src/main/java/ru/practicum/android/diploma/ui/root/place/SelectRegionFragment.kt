@@ -6,10 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import ru.practicum.android.diploma.databinding.FragmentSelectCountryBinding
 import ru.practicum.android.diploma.databinding.FragmentSelectRegionBinding
 
-class SelectRegionFragment: Fragment() {
+class SelectRegionFragment : Fragment() {
 
     private var _binding: FragmentSelectRegionBinding? = null
     private val binding get() = _binding!!
@@ -26,7 +25,7 @@ class SelectRegionFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding){
+        with(binding) {
             backArrow.setOnClickListener {
                 findNavController().popBackStack()
             }
