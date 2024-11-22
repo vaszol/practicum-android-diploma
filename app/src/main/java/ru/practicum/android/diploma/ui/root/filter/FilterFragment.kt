@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
@@ -60,6 +61,9 @@ class FilterFragment : Fragment() {
         }
         binding.deleteSalary.setOnClickListener {
             binding.salary.text.clear()
+        }
+        binding.workplace.setOnClickListener {
+            findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
         }
     }
 
