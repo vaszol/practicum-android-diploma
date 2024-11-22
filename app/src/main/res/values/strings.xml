@@ -66,4 +66,10 @@
     <string name="select_place_work">Выбор места работы</string>
     <string name="country">Страна</string>
     <string name="region">Регион</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="choise_industry">Выбор отрасли</string>
+    <string name="industry_hint">Введите отрасль</string>
+    <string name="error_industry">Не удалось получить\nсписок</string>
+    <string name="industry_button_text">Выбрать</string>
 </resources>

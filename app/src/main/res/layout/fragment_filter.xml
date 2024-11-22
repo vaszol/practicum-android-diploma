@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary">
@@ -25,11 +24,11 @@
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/size_64dp"
+        android:background="@null"
         android:importantForAccessibility="no"
+        android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="@+id/left_guideline"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_arrow_back"
-        android:background="@null"
         app:tint="?attr/colorOnPrimary" />
 
     <TextView
@@ -37,10 +36,10 @@
         style="@style/TextStyleMedium"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/size_64dp"
-        app:layout_constraintStart_toEndOf="@+id/back_button"
-        app:layout_constraintTop_toTopOf="parent"
         android:paddingStart="@dimen/size_16dp"
         android:text="@string/filter_settings"
+        app:layout_constraintStart_toEndOf="@+id/back_button"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlSymmetry" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,37 +48,37 @@
         android:layout_height="@dimen/size_60dp"
         android:layout_marginTop="@dimen/size_16dp"
         app:layout_constrainedWidth="true"
-        app:layout_constraintStart_toEndOf="@+id/left_guideline"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/text_filter">
 
         <TextView
             android:id="@+id/workplace"
             style="@style/InputValueStyle"
-            app:layout_constraintStart_toStartOf="@+id/workplaceLayout"
-            app:layout_constraintEnd_toEndOf="@+id/workplaceLayout"
-            app:layout_constraintTop_toTopOf="@+id/workplaceLayout"
+            android:text="@string/workplace"
             android:textColor="?attr/colorOnSecondary"
-            android:text="@string/workplace" />
+            app:layout_constraintEnd_toEndOf="@+id/workplaceLayout"
+            app:layout_constraintStart_toStartOf="@+id/workplaceLayout"
+            app:layout_constraintTop_toTopOf="@+id/workplaceLayout" />
 
         <TextView
             android:id="@+id/subtitleWorkplace"
             style="@style/TextStyleRegular"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/workplaceLayout"
-            app:layout_constraintTop_toTopOf="@id/workplaceLayout"
             android:layout_marginTop="@dimen/size_14dp"
+            android:text="@string/workplace"
             android:textSize="@dimen/size_12sp"
-            android:text="@string/workplace" />
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/workplaceLayout"
+            app:layout_constraintTop_toTopOf="@id/workplaceLayout" />
 
         <TextView
             android:id="@+id/inputWorkplace"
             style="@style/TextStyleRegular"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/workplaceLayout"
             app:layout_constraintTop_toBottomOf="@id/subtitleWorkplace"
             tools:text="Москва" />
@@ -88,13 +87,13 @@
             android:id="@+id/deleteWorkplace"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/size_60dp"
+            android:background="@null"
             android:importantForAccessibility="no"
+            android:src="@drawable/ic_close"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/workplaceLayout"
             app:layout_constraintTop_toTopOf="@+id/workplaceLayout"
-            android:src="@drawable/ic_close"
-            android:background="@null"
-            app:tint="?attr/colorOnPrimary"/>
+            app:tint="?attr/colorOnPrimary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -103,37 +102,38 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_60dp"
         app:layout_constrainedWidth="true"
-        app:layout_constraintStart_toEndOf="@+id/left_guideline"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/workplaceLayout">
 
         <TextView
             android:id="@+id/industry"
             style="@style/InputValueStyle"
-            app:layout_constraintStart_toStartOf="@+id/industryLayout"
-            app:layout_constraintEnd_toEndOf="@+id/industryLayout"
-            app:layout_constraintTop_toTopOf="@+id/industryLayout"
+            android:text="@string/industry"
             android:textColor="?attr/colorOnSecondary"
-            android:text="@string/industry" />
+            app:layout_constraintEnd_toEndOf="@+id/industryLayout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/industryLayout"
+            app:layout_constraintTop_toTopOf="@+id/industryLayout" />
 
         <TextView
             android:id="@+id/subtitleIndustry"
             style="@style/TextStyleRegular"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/industryLayout"
-            app:layout_constraintTop_toTopOf="@id/industryLayout"
             android:layout_marginTop="@dimen/size_14dp"
+            android:text="@string/industry"
             android:textSize="@dimen/size_12sp"
-            android:text="@string/industry" />
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/industryLayout"
+            app:layout_constraintTop_toTopOf="@id/industryLayout" />
 
         <TextView
             android:id="@+id/inputIndustry"
             style="@style/TextStyleRegular"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/industryLayout"
             app:layout_constraintTop_toBottomOf="@id/subtitleIndustry"
             tools:text="IT" />
@@ -141,14 +141,14 @@
         <ImageButton
             android:id="@+id/deleteIndustry"
             android:layout_width="wrap_content"
-            android:importantForAccessibility="no"
-            android:visibility="gone"
             android:layout_height="@dimen/size_60dp"
+            android:background="@null"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_close"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/industryLayout"
             app:layout_constraintTop_toTopOf="@+id/industryLayout"
-            android:src="@drawable/ic_close"
-            android:background="@null"
-            app:tint="?attr/colorOnPrimary"/>
+            app:tint="?attr/colorOnPrimary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -158,21 +158,21 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_50dp"
         android:layout_marginTop="@dimen/size_24dp"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintStart_toEndOf="@+id/left_guideline"
-        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
-        app:layout_constraintTop_toBottomOf="@id/industryLayout"
         android:background="@drawable/background_edit_text_search"
         android:backgroundTint="?attr/colorSurfaceContainer"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:inputType="number"
+        android:gravity="bottom"
         android:hint="@string/enter_amount"
-        android:textCursorDrawable="@drawable/ic_cursor"
-        android:textColorHint="?attr/colorOnSecondary"
+        android:inputType="number"
+        android:maxLines="1"
         android:paddingStart="@dimen/size_16dp"
         android:paddingBottom="@dimen/size_8dp"
-        android:gravity="bottom"
+        android:singleLine="true"
+        android:textColorHint="?attr/colorOnSecondary"
+        android:textCursorDrawable="@drawable/ic_cursor"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@id/industryLayout"
         tools:ignore="Autofill,RtlSymmetry" />
 
     <TextView
@@ -180,25 +180,25 @@
         style="@style/TextStyleRegular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/size_8dp"
         android:layout_marginStart="@dimen/size_16dp"
-        app:layout_constraintStart_toEndOf="@+id/left_guideline"
-        app:layout_constraintTop_toTopOf="@id/salary"
+        android:layout_marginTop="@dimen/size_8dp"
         android:background="@null"
-        android:textColor="?attr/colorOnSecondary"
         android:text="@string/expected_salary"
-        android:textSize="@dimen/size_12sp"/>
+        android:textColor="?attr/colorOnSecondary"
+        android:textSize="@dimen/size_12sp"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toTopOf="@id/salary" />
 
     <ImageButton
         android:id="@+id/deleteSalary"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/size_50dp"
-        android:visibility="gone"
         android:layout_marginEnd="@dimen/size_16dp"
+        android:background="@null"
+        android:src="@drawable/ic_close"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintTop_toTopOf="@+id/salary"
-        android:src="@drawable/ic_close"
-        android:background="@null"
         tools:ignore="ContentDescription" />
 
     <TextView
@@ -207,42 +207,42 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/size_60dp"
         android:layout_marginTop="@dimen/size_24dp"
-        app:layout_constraintStart_toEndOf="@+id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/salary"
         android:background="@null"
-        android:text="@string/dont_show_without_salary" />
+        android:text="@string/dont_show_without_salary"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@id/salary" />
 
     <ImageButton
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/size_60dp"
         android:layout_marginTop="@dimen/size_24dp"
+        android:background="@null"
+        android:src="@drawable/ic_check_box_unmark"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintTop_toBottomOf="@id/salary"
-        android:src="@drawable/ic_check_box_unmark"
-        android:background="@null"
         tools:ignore="ContentDescription" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/apply"
         style="@style/ButtonStyle"
-        android:visibility="visible"
         android:layout_marginBottom="@dimen/size_8dp"
-        app:layout_constraintStart_toEndOf="@+id/left_guideline"
-        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        android:text="@string/apply"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/reset"
-        android:text="@string/apply"/>
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/reset"
         style="@style/ButtonStyle"
-        android:visibility="visible"
         android:layout_marginBottom="@dimen/size_24dp"
-        app:layout_constraintStart_toEndOf="@+id/left_guideline"
-        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:backgroundTint="?attr/colorPrimary"
         android:text="@string/reset"
-        android:textColor="@color/red"/>
+        android:textColor="@color/red"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
