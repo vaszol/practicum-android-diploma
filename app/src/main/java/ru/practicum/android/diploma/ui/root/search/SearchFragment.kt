@@ -48,6 +48,10 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.searchFilterNotActvie.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
+        }
+
         viewModel.searchScreenState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 SearchScreenState.LoadingFirstPage -> showLoading()

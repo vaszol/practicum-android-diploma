@@ -19,15 +19,15 @@
             android:layout_marginStart="@dimen/size_2dp"
             android:src="@drawable/ic_arrow_back"/>
 
-        <!--Заголовок-->
-            <TextView
-                android:id="@+id/head_vacancy"
-                style="@style/TextStyleMedium"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="10"
-                android:layout_gravity="center_vertical"
-                android:text="@string/vacancy"/>
+            <!--Заголовок-->
+                <TextView
+                    android:id="@+id/head_vacancy"
+                    style="@style/TextStyleMedium"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/vacancy"/>
 
         <!--Кнопка Поделиться-->
             <ImageView

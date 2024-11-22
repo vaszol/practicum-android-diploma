@@ -110,11 +110,12 @@
         <TextView
             android:id="@+id/industry"
             style="@style/InputValueStyle"
-            app:layout_constraintStart_toStartOf="@+id/industryLayout"
-            app:layout_constraintEnd_toEndOf="@+id/industryLayout"
-            app:layout_constraintTop_toTopOf="@+id/industryLayout"
+            android:text="@string/industry"
             android:textColor="?attr/colorOnSecondary"
-            android:text="@string/industry" />
+            app:layout_constraintEnd_toEndOf="@+id/industryLayout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/industryLayout"
+            app:layout_constraintTop_toTopOf="@+id/industryLayout" />
 
         <TextView
             android:id="@+id/subtitleIndustry"
