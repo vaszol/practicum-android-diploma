@@ -33,17 +33,8 @@ class SharedPreferencesRepositoryImpl(
         }
     }
 
-    override fun addIndustry(industry: Industry) {
-        val list = getIndustries()
-        list.add(industry)
-        val json = sharedPreferencesConverter.convertListToJson(list)
-        sharedPreferences.edit { putString(INDUSTRY_KEY, json) }
-    }
-
-    override fun removeIndustry(industry: Industry) {
-        val list = getIndustries()
-        list.remove(industry)
-        val json = sharedPreferencesConverter.convertListToJson(list)
+    override fun setIndustry(industries: MutableList<Industry>) {
+        val json = sharedPreferencesConverter.convertListToJson(industries)
         sharedPreferences.edit { putString(INDUSTRY_KEY, json) }
     }
 

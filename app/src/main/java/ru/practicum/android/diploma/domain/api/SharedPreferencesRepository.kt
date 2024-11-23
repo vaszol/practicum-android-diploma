@@ -8,8 +8,7 @@ interface SharedPreferencesRepository {
     fun getCountry(): Area?
     fun setRegion(region: Area)
     fun getRegion(): Area?
-    fun addIndustry(industry: Industry)
-    fun removeIndustry(industry: Industry)
+    fun setIndustry(industries: MutableList<Industry>)
     fun getIndustries(): MutableList<Industry>
     fun setSalary(salary: Int)
     fun getSalary(): Int?
