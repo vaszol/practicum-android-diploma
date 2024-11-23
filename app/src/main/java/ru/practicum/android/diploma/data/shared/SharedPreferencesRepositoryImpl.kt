@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.data.sharedPreferences
+package ru.practicum.android.diploma.data.shared
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
@@ -51,10 +51,6 @@ class SharedPreferencesRepositoryImpl(
         return sharedPreferences.getString(INDUSTRY_KEY, null)?.let {
             sharedPreferencesConverter.convertJsonToList(it)
         }?.toMutableList() ?: mutableListOf()
-    }
-
-    override fun clearIndustries() {
-        sharedPreferences.edit { putString(INDUSTRY_KEY, null) }
     }
 
     override fun setSalary(salary: Int) {

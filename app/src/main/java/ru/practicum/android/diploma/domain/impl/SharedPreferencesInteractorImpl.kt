@@ -36,10 +36,6 @@ class SharedPreferencesInteractorImpl(
         return repo.getIndustries()
     }
 
-    override fun clearIndustries() {
-        repo.clearIndustries()
-    }
-
     override fun setSalary(salary: Int) {
         repo.setSalary(salary)
     }
