@@ -71,7 +71,7 @@ class FilterFragment : Fragment() {
         }
 
         // Установка локации
-        if (!currentState.locationString.isNullOrEmpty()) {
+        if (currentState.locationString.isNotEmpty()) {
             binding.inputWorkplace.text = currentState.locationString
             binding.inputWorkplace.isVisible = true
             binding.subtitleWorkplace.isVisible = true

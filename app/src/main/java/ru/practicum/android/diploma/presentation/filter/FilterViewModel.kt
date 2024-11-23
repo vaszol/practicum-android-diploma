@@ -134,6 +134,8 @@ class FilterViewModel(
 
         sharedPreferencesInteractor.setSalary(currentState.salary)
         sharedPreferencesInteractor.setIndustry(currentState.industries)
+        sharedPreferencesInteractor.setCountry(currentState.country)
+        sharedPreferencesInteractor.setRegion(currentState.region)
         currentState.country?.let { sharedPreferencesInteractor.setCountry(it) }
         currentState.region?.let { sharedPreferencesInteractor.setRegion(it) }
         sharedPreferencesInteractor.setShowOnlyWithSalary(currentState.showOnlyWithSalary)
