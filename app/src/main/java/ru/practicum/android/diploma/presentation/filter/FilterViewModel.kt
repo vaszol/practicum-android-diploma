@@ -1,12 +1,12 @@
 package ru.practicum.android.diploma.presentation.filter
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
+import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Industry
 
 class FilterViewModel(
@@ -28,15 +28,50 @@ class FilterViewModel(
     init {
         val savedSalary = sharedPreferencesInteractor.getSalary()
         val savedIndustries = sharedPreferencesInteractor.getIndustries()
+        val savedCountry = sharedPreferencesInteractor.getCountry()
+        val savedRegion = sharedPreferencesInteractor.getRegion()
         val savedShowOnlyWithSalary = sharedPreferencesInteractor.getShowOnlyWithSalary()
+
+        // Строковое представление локации
+        val locationString = createLocationString(savedCountry, savedRegion)
 
         initialFilterState = FilterState(
             salary = savedSalary,
             industries = savedIndustries,
-            showOnlyWithSalary = savedShowOnlyWithSalary
+            country = savedCountry,
+            region = savedRegion,
+            showOnlyWithSalary = savedShowOnlyWithSalary,
+            locationString = locationString
         )
 
         _filterState.value = initialFilterState.copy()
+        updateButtonStates()
+    }
+
+    private fun createLocationString(country: Area?, region: Area?): String {
+        val locationParts = mutableListOf<String>()
+
+        country?.name?.let { locationParts.add(it) }
+        region?.name?.let { locationParts.add(it) }
+
+        return locationParts.joinToString(", ")
+    }
+
+    fun updateLocation(country: Area?, region: Area?) {
+        val currentState = _filterState.value
+        val locationString = createLocationString(country, region)
+
+        val newState = currentState.copy(
+            country = country,
+            region = region,
+            locationString = locationString
+        )
+
+        _filterState.value = newState
+
+        country?.let { sharedPreferencesInteractor.setCountry(it) }
+        region?.let { sharedPreferencesInteractor.setRegion(it) }
+
         updateButtonStates()
     }
 
@@ -69,6 +104,8 @@ class FilterViewModel(
         _isResetButtonVisible.value =
             currentState.salary != null ||
                 currentState.industries.isNotEmpty() ||
+                currentState.country != null ||
+                currentState.region != null ||
                 currentState.showOnlyWithSalary
 
         _isApplyButtonEnabled.value =
@@ -78,6 +115,8 @@ class FilterViewModel(
     private fun isFilterChanged(): Boolean {
         return initialFilterState.salary != _filterState.value.salary ||
             initialFilterState.industries != _filterState.value.industries ||
+            initialFilterState.country != _filterState.value.country ||
+            initialFilterState.region != _filterState.value.region ||
             initialFilterState.showOnlyWithSalary != _filterState.value.showOnlyWithSalary
     }
 
@@ -85,6 +124,8 @@ class FilterViewModel(
         val currentState = _filterState.value
         return currentState.salary != null ||
             currentState.industries.isNotEmpty() ||
+            currentState.country != null ||
+            currentState.region != null ||
             currentState.showOnlyWithSalary
     }
 
@@ -93,6 +134,8 @@ class FilterViewModel(
 
         sharedPreferencesInteractor.setSalary(currentState.salary)
         sharedPreferencesInteractor.setIndustry(currentState.industries)
+        currentState.country?.let { sharedPreferencesInteractor.setCountry(it) }
+        currentState.region?.let { sharedPreferencesInteractor.setRegion(it) }
         sharedPreferencesInteractor.setShowOnlyWithSalary(currentState.showOnlyWithSalary)
 
         initialFilterState = currentState.copy()
@@ -105,6 +148,8 @@ class FilterViewModel(
 
         sharedPreferencesInteractor.setSalary(null)
         sharedPreferencesInteractor.setIndustry(mutableListOf())
+        sharedPreferencesInteractor.setCountry(null)
+        sharedPreferencesInteractor.setRegion(null)
         sharedPreferencesInteractor.setShowOnlyWithSalary(false)
 
         initialFilterState = _filterState.value

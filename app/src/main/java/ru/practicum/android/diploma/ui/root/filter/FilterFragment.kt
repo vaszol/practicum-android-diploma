@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -18,6 +19,8 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
+import ru.practicum.android.diploma.domain.models.Area
+import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.ui.root.RootActivity
 
@@ -33,24 +36,60 @@ class FilterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as? RootActivity)?.findViewById<BottomNavigationView>(R.id.bottom_navigation_view)?.visibility = View.GONE
+        (activity as? RootActivity)?.findViewById<BottomNavigationView>(R.id.bottom_navigation_view)?.visibility =
+            View.GONE
 
         setupViews()
         setupListeners()
         observeViewModel()
+
+        setFragmentResultListener("requestKey") { _, bundle ->
+            val selectedIndustry = bundle.getSerializable("selected_industry") as? Industry
+            selectedIndustry?.let {
+                viewModel.updateIndustries(mutableListOf(it))
+                binding.inputIndustry.text = it.name
+            }
+        }
+
+        setFragmentResultListener("countryRequestKey") { _, bundle ->
+            val selectedCountry = bundle.getSerializable("selected_country") as? Area
+            val selectedRegion = bundle.getSerializable("selected_region") as? Area
+
+            viewModel.updateLocation(selectedCountry, selectedRegion)
+        }
     }
 
     private fun setupViews() {
         binding.salary.inputType = InputType.TYPE_CLASS_NUMBER
         binding.deleteSalary.isVisible = false
 
-        viewModel.filterState.value.salary?.let {
+        val currentState = viewModel.filterState.value
+
+        // Установка зарплаты
+        currentState.salary?.let {
             binding.salary.setText(it.toString())
+        }
+
+        // Установка локации
+        if (!currentState.locationString.isNullOrEmpty()) {
+            binding.inputWorkplace.text = currentState.locationString
+            binding.inputWorkplace.isVisible = true
+            binding.subtitleWorkplace.isVisible = true
+            binding.deleteWorkplace.isVisible = true
+        }
+
+        // Установка отрасли
+        if (currentState.industries.isNotEmpty()) {
+            binding.inputIndustry.text = currentState.industries.first().name
+            binding.inputIndustry.isVisible = true
+            binding.subtitleIndustry.isVisible = true
+            binding.deleteIndustry.isVisible = true
         }
 
         binding.apply.isVisible = false
         binding.reset.isVisible = false
     }
+
 
     private fun setupListeners() {
         binding.apply {
@@ -62,8 +101,18 @@ class FilterFragment : Fragment() {
                 findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
             }
 
+            deleteWorkplace.setOnClickListener {
+                viewModel.updateLocation(null, null)
+                inputWorkplace.text = ""
+            }
+
             industry.setOnClickListener {
                 findNavController().navigate(R.id.action_filterFragment_to_filterIndustry)
+            }
+
+            deleteIndustry.setOnClickListener {
+                viewModel.updateIndustries(mutableListOf())
+                inputIndustry.text = ""
             }
 
             checkBox.setOnClickListener {
@@ -78,7 +127,6 @@ class FilterFragment : Fragment() {
             apply.setOnClickListener {
                 val currentSalary = salary.text.toString().toIntOrNull()
                 viewModel.updateSalary(currentSalary)
-
                 viewModel.applyFilter()
             }
 
@@ -120,10 +168,28 @@ class FilterFragment : Fragment() {
                     checkBox.isChecked = state.showOnlyWithSalary
                     deleteSalary.isVisible = state.salary != null
 
-                    if (state.salary != null) {
-                        salary.setText(state.salary.toString())
+                    if (state.locationString.isNotEmpty()) {
+                        inputWorkplace.text = state.locationString
+                        inputWorkplace.isVisible = true
+                        subtitleWorkplace.isVisible = true
+                        deleteWorkplace.isVisible = true
                     } else {
-                        salary.text.clear()
+                        inputWorkplace.text = ""
+                        inputWorkplace.isVisible = false
+                        subtitleWorkplace.isVisible = false
+                        deleteWorkplace.isVisible = false
+                    }
+
+                    if (state.industries.isNotEmpty()) {
+                        inputIndustry.text = state.industries.first().name
+                        inputIndustry.isVisible = true
+                        subtitleIndustry.isVisible = true
+                        deleteIndustry.isVisible = true
+                    } else {
+                        inputIndustry.text = ""
+                        inputIndustry.isVisible = false
+                        subtitleIndustry.isVisible = false
+                        deleteIndustry.isVisible = false
                     }
                 }
 
