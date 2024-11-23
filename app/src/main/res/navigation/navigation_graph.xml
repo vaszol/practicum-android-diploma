@@ -24,7 +24,7 @@
         android:id="@+id/favoritesFragment"
         android:name="ru.practicum.android.diploma.ui.root.favorite.FavoritesFragment"
         android:label="fragment_favorites"
-        tools:layout="@layout/fragment_favorites" >
+        tools:layout="@layout/fragment_favorites">
         <action
             android:id="@+id/action_favoritesFragment_to_detailsFragment"
             app:destination="@id/detailsFragment" />
@@ -46,5 +46,40 @@
         android:id="@+id/filterFragment"
         android:name="ru.practicum.android.diploma.ui.root.filter.FilterFragment"
         android:label="fragment_filter"
-        tools:layout="@layout/fragment_filter" />
+        tools:layout="@layout/fragment_filter">
+        <action
+            android:id="@+id/action_filterFragment_to_filterIndustry"
+            app:destination="@id/filterIndustry" />
+        <action
+            android:id="@+id/action_filterFragment_to_selectPlaceFragment"
+            app:destination="@id/selectPlaceFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectPlaceFragment"
+        android:name="ru.practicum.android.diploma.ui.root.place.SelectPlaceFragment"
+        android:label="SelectPlaceFragment" >
+        <action
+            android:id="@+id/action_selectPlaceFragment_to_selectCountryFragment"
+            app:destination="@id/selectCountryFragment" />
+        <action
+            android:id="@+id/action_selectPlaceFragment_to_selectRegionFragment"
+            app:destination="@id/selectRegionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/filterIndustry"
+        android:name="ru.practicum.android.diploma.ui.root.filter.FilterIndustry"
+        android:label="fragment_filter_industry"
+        tools:layout="@layout/fragment_filter_industry" />
+
+    <fragment
+        android:id="@+id/selectCountryFragment"
+        android:name="ru.practicum.android.diploma.ui.root.place.SelectCountryFragment"
+        android:label="SelectCountryFragment" />
+
+    <fragment
+        android:id="@+id/selectRegionFragment"
+        android:name="ru.practicum.android.diploma.ui.root.place.SelectRegionFragment"
+        android:label="SelectRegionFragment" />
 </navigation>

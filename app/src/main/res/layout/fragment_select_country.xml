@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    tools:context="ui.root.place.SelectPlaceFragment">
+    tools:context="ui.root.place.SelectCountryFragment">
 
     <ImageView
         android:id="@+id/back_arrow"
@@ -20,34 +20,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ys_display_medium"
-        android:text="@string/select_place_work"
+        android:text="@string/select_country"
         android:textColor="?attr/colorOnPrimary"
         android:textSize="@dimen/size_22sp"
         app:layout_constraintBottom_toBottomOf="@+id/back_arrow"
         app:layout_constraintStart_toEndOf="@+id/back_arrow"
         app:layout_constraintTop_toTopOf="@+id/back_arrow" />
 
-    <Button
-        android:id="@+id/select_country_button"
-        style="@style/FilterButtonStyle"
-        android:layout_marginTop="@dimen/size_24dp"
-        android:fontFamily="@font/ys_display_medium"
-        android:text="@string/country"
-        app:icon="@drawable/ic_arrow_forward"
-        app:iconGravity="end"
-        app:iconSize="@dimen/size_24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/back_arrow" />
-
-    <Button
-        android:id="@+id/select_region_button"
-        style="@style/FilterButtonStyle"
-        android:fontFamily="@font/ys_display_medium"
-        android:text="@string/region"
-        app:icon="@drawable/ic_arrow_forward"
-        app:iconGravity="end"
-        app:iconSize="@dimen/size_24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/select_country_button" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_0dp"
+        android:layout_marginHorizontal="@dimen/size_16dp"
+        android:layout_marginTop="@dimen/size_16dp"
+        app:layout_constraintTop_toBottomOf="@id/back_arrow"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

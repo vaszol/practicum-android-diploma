@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="?attr/colorPrimary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
     android:orientation="vertical">
 
     <LinearLayout
@@ -17,41 +17,39 @@
             android:id="@+id/back_img"
             style="@style/VacancyIconsStyle"
             android:layout_marginStart="@dimen/size_2dp"
-            android:src="@drawable/ic_arrow_back"/>
+            android:src="@drawable/ic_arrow_back" />
 
         <!--Заголовок-->
-            <TextView
-                android:id="@+id/head_vacancy"
-                style="@style/TextStyleMedium"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="10"
-                android:layout_gravity="center_vertical"
-                android:text="@string/vacancy"/>
+        <TextView
+            android:id="@+id/head_vacancy"
+            style="@style/TextStyleMedium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="10"
+            android:text="@string/vacancy" />
 
         <!--Кнопка Поделиться-->
-            <ImageView
-                android:id="@+id/share_img"
-                style="@style/VacancyIconsStyle"
-                android:layout_marginStart="@dimen/size_4dp"
-                android:src="@drawable/ic_sharing"/>
+        <ImageView
+            android:id="@+id/share_img"
+            style="@style/VacancyIconsStyle"
+            android:layout_marginStart="@dimen/size_4dp"
+            android:src="@drawable/ic_sharing" />
 
         <!--Кнопка Избранное активная и не активная-->
-            <ImageView
-                android:id="@+id/favorite_off"
-                style="@style/VacancyIconsStyle"
-                android:src="@drawable/ic_favorites_not_active"
-                android:layout_marginHorizontal="@dimen/size_4dp"
-                android:visibility="visible"
-                />
+        <ImageView
+            android:id="@+id/favorite_off"
+            style="@style/VacancyIconsStyle"
+            android:layout_marginHorizontal="@dimen/size_4dp"
+            android:src="@drawable/ic_favorites_not_active"
+            android:visibility="visible" />
 
-            <ImageView
-                android:id="@+id/favorite_on"
-                style="@style/VacancyIconsStyle"
-                android:src="@drawable/ic_favorites_active"
-                android:layout_marginHorizontal="@dimen/size_4dp"
-                android:visibility="gone"
-                />
+        <ImageView
+            android:id="@+id/favorite_on"
+            style="@style/VacancyIconsStyle"
+            android:layout_marginHorizontal="@dimen/size_4dp"
+            android:src="@drawable/ic_favorites_active"
+            android:visibility="gone" />
 
 
     </LinearLayout>
@@ -64,10 +62,10 @@
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginBottom="@dimen/size_24dp"
             android:indeterminateTint="@color/blue"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <!--Плейсхолдер ошибка вакансии-->
         <LinearLayout
@@ -83,17 +81,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/size_224dp"
                 android:layout_marginHorizontal="@dimen/size_16dp"
-                android:src="@drawable/placeholder_vacancy_empty_or_not"/>
+                android:src="@drawable/placeholder_vacancy_empty_or_not" />
 
             <TextView
                 android:id="@+id/vacancy_error_txt"
                 style="@style/TextStyleMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/size_16dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginVertical="@dimen/size_16dp"
                 android:gravity="center"
-                android:text="@string/vacancy_error"/>
+                android:text="@string/vacancy_error" />
 
         </LinearLayout>
 
@@ -148,12 +146,12 @@
                         android:layout_width="@dimen/size_48dp"
                         android:layout_height="@dimen/size_48dp"
                         android:background="@drawable/background_icon"
-                        android:src="@drawable/ic_logotype_vacancy"
                         android:scaleType="fitCenter"
-                        app:shapeAppearanceOverlay="@style/RoundedImage"
+                        android:src="@drawable/ic_logotype_vacancy"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:shapeAppearanceOverlay="@style/RoundedImage" />
 
                     <!--Имя вакансии-->
                     <TextView
