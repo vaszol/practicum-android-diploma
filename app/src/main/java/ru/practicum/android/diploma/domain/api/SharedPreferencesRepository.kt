@@ -12,6 +12,7 @@ interface SharedPreferencesRepository {
     fun getIndustries(): MutableList<Industry>
     fun setSalary(salary: Int)
     fun getSalary(): Int?
+    fun removeSalary()
     fun setShowOnlyWithSalary(showOnlyWithSalary: Boolean)
     fun getShowOnlyWithSalary(): Boolean
 }

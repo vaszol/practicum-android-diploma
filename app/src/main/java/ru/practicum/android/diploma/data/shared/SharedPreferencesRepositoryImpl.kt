@@ -52,6 +52,10 @@ class SharedPreferencesRepositoryImpl(
         return sharedPreferences.getString(SALARY_KEY, null)?.toInt()
     }
 
+    override fun removeSalary() {
+        sharedPreferences.edit { remove(SALARY_KEY) }
+    }
+
     override fun setShowOnlyWithSalary(showOnlyWithSalary: Boolean) {
         sharedPreferences.edit { putBoolean(SHOW_ONLY_WITH_SALARY, showOnlyWithSalary) }
     }

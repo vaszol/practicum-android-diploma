@@ -10,7 +10,7 @@ interface SharedPreferencesInteractor {
     fun getRegion(): Area?
     fun setIndustry(industries: MutableList<Industry>)
     fun getIndustries(): MutableList<Industry>
-    fun setSalary(salary: Int)
+    fun setSalary(salary: Int?)
     fun getSalary(): Int?
     fun setShowOnlyWithSalary(isShowOnlyWithSalary: Boolean)
     fun getShowOnlyWithSalary(): Boolean

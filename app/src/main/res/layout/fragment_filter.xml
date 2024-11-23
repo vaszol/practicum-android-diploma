@@ -212,15 +212,14 @@
         app:layout_constraintStart_toEndOf="@+id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/salary" />
 
-    <ImageButton
+    <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/size_60dp"
         android:layout_marginTop="@dimen/size_24dp"
-        android:background="@null"
-        android:src="@drawable/ic_check_box_unmark"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintTop_toBottomOf="@id/salary"
+        android:buttonTint="@color/blue"
         tools:ignore="ContentDescription" />
 
     <androidx.appcompat.widget.AppCompatButton
