@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentSelectRegionBinding
+import ru.practicum.android.diploma.presentation.place.SelectRegionViewModel
 
 class SelectRegionFragment : Fragment() {
 
@@ -15,6 +17,8 @@ class SelectRegionFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var areaAdapter: AreaAdapter
+
+    private val viewModel by viewModel<SelectRegionViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,6 +32,12 @@ class SelectRegionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.observeState().observe(viewLifecycleOwner) {
+            render(it)
+        }
+
+        viewModel.getRegions()
+
         areaAdapter = AreaAdapter{
 
         }
@@ -38,6 +48,13 @@ class SelectRegionFragment : Fragment() {
             }
             recyclerView.adapter = areaAdapter
             recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
+    }
+
+    private fun render(state: AreaState){
+        if (state is AreaState.Content) {
+            areaAdapter.areas.addAll(state.areas)
+            areaAdapter.notifyDataSetChanged()
         }
     }
 }
