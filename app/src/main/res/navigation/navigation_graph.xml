@@ -76,10 +76,18 @@
     <fragment
         android:id="@+id/selectCountryFragment"
         android:name="ru.practicum.android.diploma.ui.root.place.SelectCountryFragment"
-        android:label="SelectCountryFragment" />
+        android:label="SelectCountryFragment" >
+        <action
+            android:id="@+id/action_selectCountryFragment_to_selectPlaceFragment"
+            app:destination="@id/selectPlaceFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/selectRegionFragment"
         android:name="ru.practicum.android.diploma.ui.root.place.SelectRegionFragment"
-        android:label="SelectRegionFragment" />
+        android:label="SelectRegionFragment" >
+        <action
+            android:id="@+id/action_selectRegionFragment_to_selectPlaceFragment"
+            app:destination="@id/selectPlaceFragment" />
+    </fragment>
 </navigation>
