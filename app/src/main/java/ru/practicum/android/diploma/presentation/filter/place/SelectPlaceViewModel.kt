@@ -1,10 +1,10 @@
-package ru.practicum.android.diploma.presentation.place
+package ru.practicum.android.diploma.presentation.filter.place
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
-import ru.practicum.android.diploma.ui.root.place.WorkPlaceState
+import ru.practicum.android.diploma.ui.root.filter.place.WorkPlaceState
 
 class SelectPlaceViewModel(val sharedPreferencesInteractor: SharedPreferencesInteractor) :
     ViewModel() {

@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui.root.place
+package ru.practicum.android.diploma.ui.root.filter.place
 
 import android.view.View
 import android.widget.Button

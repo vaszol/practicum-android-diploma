@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui.root.place
+package ru.practicum.android.diploma.ui.root.filter.place
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentSelectCountryBinding
-import ru.practicum.android.diploma.presentation.place.SelectCountryViewModel
+import ru.practicum.android.diploma.presentation.filter.place.SelectCountryViewModel
 
 class SelectCountryFragment : Fragment() {
 
@@ -29,7 +29,7 @@ class SelectCountryFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSelectCountryBinding.inflate(inflater, container, false)
         return binding.root
     }
