@@ -16,21 +16,38 @@ class SelectRegionViewModel(
 ) : ViewModel() {
     private val stateLiveData = MutableLiveData<AreaState>()
     private var allAreas: List<Area>? = null
+    private var allRegions: List<Area> = emptyList()
     fun observeState(): LiveData<AreaState> = stateLiveData
 
     fun getRegions() {
         viewModelScope.launch {
             hhInteractor.getAreas().collect { areas ->
                 allAreas = areas
+                if (allAreas.isNullOrEmpty()) {
+                    stateLiveData.postValue(AreaState.Error)
+                }
                 val country = getCountry() // Получаю страну из SharedPrefs
-                val regions = if (country != null) {
+                allRegions = if (country != null) {
                     areas
                         .filter { it.id == country.id } // Оставляем только выбранную страну
                         .flatMap { it.areas ?: emptyList() } // Собираем регионы выбранной страны
                 } else {
                     areas.flatMap { it.areas ?: emptyList() } // Собираем регионы всех стран
                 }
-                stateLiveData.postValue(AreaState.Content(regions))
+                stateLiveData.postValue(AreaState.Content(allRegions))
+            }
+        }
+    }
+
+    fun filterRegions(query: String) {
+        if (query.isEmpty()) {
+            stateLiveData.postValue(AreaState.Content(allRegions))
+        } else {
+            val filteredList = allRegions.filter { it.name.contains(query, ignoreCase = true) }
+            if (filteredList.isEmpty()) {
+                stateLiveData.postValue(AreaState.NoSuchRegion)
+            } else {
+                stateLiveData.postValue(AreaState.Content(filteredList))
             }
         }
     }

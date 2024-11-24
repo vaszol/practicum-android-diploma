@@ -47,7 +47,7 @@
         android:autofillHints="name"
         android:background="@android:color/transparent"
         android:ellipsize="end"
-        android:hint="@string/search_request"
+        android:hint="@string/input_region"
         android:inputType="text"
         android:maxLines="1"
         android:minHeight="@dimen/size_48dp"

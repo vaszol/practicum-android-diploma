@@ -66,7 +66,7 @@ class SelectRegionFragment : Fragment() {
                 } else {
                     binding.searchMagnifier.setImageResource(R.drawable.ic_search)
                 }
-                areaAdapter.filter(p0.toString())
+                viewModel.filterRegions(p0.toString())
             }
 
             override fun afterTextChanged(p0: Editable?) = Unit
@@ -79,21 +79,24 @@ class SelectRegionFragment : Fragment() {
             is AreaState.Content -> {
                 binding.recyclerView.visibility = View.VISIBLE
                 binding.placeholder.visibility = View.GONE
+                binding.errorMessage.visibility = View.GONE
                 areaAdapter.updateList(state.areas)
             }
 
             is AreaState.NoSuchRegion -> {
                 binding.recyclerView.visibility = View.GONE
                 binding.placeholderImage.setImageResource(R.drawable.placeholder_no_vacancy)
-                binding.errorMessage.text = state.message
+                binding.errorMessage.setText(R.string.no_such_region)
                 binding.placeholder.visibility = View.VISIBLE
+                binding.errorMessage.visibility = View.VISIBLE
             }
 
             is AreaState.Error -> {
                 binding.recyclerView.visibility = View.GONE
                 binding.placeholderImage.setImageResource(R.drawable.placeholder_empty_industry_list)
-                binding.errorMessage.text = state.message
+                binding.errorMessage.setText(R.string.error_industry)
                 binding.placeholder.visibility = View.VISIBLE
+                binding.errorMessage.visibility = View.VISIBLE
             }
         }
     }
