@@ -17,48 +17,20 @@ class SelectRegionViewModel(
     private val stateLiveData = MutableLiveData<AreaState>()
     fun observeState(): LiveData<AreaState> = stateLiveData
 
-    fun getRegions(query: String) {
+    fun getRegions() {
         viewModelScope.launch {
             hhInteractor.getAreas().collect { areas ->
-
-                val result = ArrayList<Area>()
-                val regions = getRegionsByCountry(areas)
-
-                if (query != "") { // Тут логика фильтрации по поиску
-                    result.addAll(filter(regions, query))
-                    if (result.isEmpty()) {
-                        stateLiveData.postValue(AreaState.NoSuchRegion("Такого региона нет"))
-                    } else {
-                        stateLiveData.postValue(AreaState.Content(result))
-                    }
+                val country = getCountry() // Получаю страну из SharedPrefs
+                val regions = if (country != null) {
+                    areas
+                        .filter { it.id == country.id } // Оставляем только выбранную страну
+                        .flatMap { it.areas ?: emptyList() } // Собираем регионы выбранной страны
                 } else {
-                    if (regions.isEmpty()) {
-                        stateLiveData.postValue(AreaState.Error("Не удалось получить список"))
-                    } else {
-                        stateLiveData.postValue(AreaState.Content(regions))
-                    }
+                    areas.flatMap { it.areas ?: emptyList() } // Собираем регионы всех стран
                 }
+                stateLiveData.postValue(AreaState.Content(regions))
             }
         }
-    }
-
-    private fun getRegionsByCountry(areas: List<Area>): ArrayList<Area> {
-        val result = ArrayList<Area>()
-        val country = getCountry()
-
-        if (country != null) {
-            for (area in areas) {
-                if (area.id == country.id) {
-                    result.addAll(area.areas!!)
-                    return result
-                }
-            }
-        } else {
-            for (area in areas) {
-                result.addAll(area.areas!!)
-            }
-        }
-        return result
     }
 
     private fun filter(list: List<Area>, s: String): ArrayList<Area> {

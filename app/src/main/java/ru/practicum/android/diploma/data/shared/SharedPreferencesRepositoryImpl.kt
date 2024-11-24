@@ -11,6 +11,7 @@ class SharedPreferencesRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
     private val sharedPreferencesConverter: SharedPreferencesConverter,
 ) : SharedPreferencesRepository {
+
     override fun setCountry(country: Area?) {
         if (country != null) {
             val countryString = sharedPreferencesConverter.convertAreaToJson(country)
@@ -44,7 +45,7 @@ class SharedPreferencesRepositoryImpl(
     override fun setIndustry(industry: Industry?) {
         if (industry != null) {
             val json = sharedPreferencesConverter.convertIndustryToJson(industry)
-            sharedPreferences.edit { putString(INDUSTRY_KEY, json) }
+            sharedPreferences.edit().putString(INDUSTRY_KEY, json).apply()
         } else {
             sharedPreferences.edit().remove(INDUSTRY_KEY).apply()
         }
@@ -57,15 +58,23 @@ class SharedPreferencesRepositoryImpl(
     }
 
     override fun setSalary(salary: Int) {
-        sharedPreferences.edit { putString(SALARY_KEY, salary.toString()) }
+        sharedPreferences.edit().putInt(SALARY_KEY, salary).apply()
     }
 
     override fun getSalary(): Int? {
-        return sharedPreferences.getString(SALARY_KEY, null)?.toInt()
+        return if (sharedPreferences.contains(SALARY_KEY)) {
+            sharedPreferences.getInt(SALARY_KEY, -1).takeIf { it != -1 }
+        } else {
+            null
+        }
+    }
+
+    override fun removeSalary() {
+        sharedPreferences.edit().remove(SALARY_KEY).apply()
     }
 
     override fun setShowOnlyWithSalary(showOnlyWithSalary: Boolean) {
-        sharedPreferences.edit { putBoolean(SHOW_ONLY_WITH_SALARY, showOnlyWithSalary) }
+        sharedPreferences.edit().putBoolean(SHOW_ONLY_WITH_SALARY, showOnlyWithSalary).apply()
     }
 
     override fun getShowOnlyWithSalary(): Boolean {

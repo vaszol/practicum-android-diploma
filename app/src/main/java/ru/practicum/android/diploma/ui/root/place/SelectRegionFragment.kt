@@ -44,7 +44,7 @@ class SelectRegionFragment : Fragment() {
             render(it)
         }
 
-        viewModel.getRegions(EMPTY_TEXT)
+        viewModel.getRegions()
 
         with(binding) {
             backArrow.setOnClickListener {
@@ -54,7 +54,7 @@ class SelectRegionFragment : Fragment() {
             recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             searchMagnifier.setOnClickListener {
                 searchRegionEditText.setText(EMPTY_TEXT)
-                viewModel.getRegions(EMPTY_TEXT)
+                viewModel.getRegions()
             }
         }
 
@@ -66,7 +66,7 @@ class SelectRegionFragment : Fragment() {
                 } else {
                     binding.searchMagnifier.setImageResource(R.drawable.ic_search)
                 }
-                viewModel.getRegions(p0.toString())
+                // viewModel.getRegions(p0.toString())
             }
 
             override fun afterTextChanged(p0: Editable?) = Unit
