@@ -54,8 +54,7 @@ class SelectCountryFragment : Fragment() {
 
     private fun render(state: AreaState) {
         if (state is AreaState.Content) {
-            areaAdapter.areas.addAll(state.areas)
-            areaAdapter.notifyDataSetChanged()
+            areaAdapter.updateList(state.areas)
         }
     }
 }

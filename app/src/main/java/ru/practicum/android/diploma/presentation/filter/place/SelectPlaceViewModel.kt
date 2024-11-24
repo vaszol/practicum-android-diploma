@@ -6,8 +6,9 @@ import androidx.lifecycle.ViewModel
 import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
 import ru.practicum.android.diploma.ui.root.filter.place.WorkPlaceState
 
-class SelectPlaceViewModel(val sharedPreferencesInteractor: SharedPreferencesInteractor) :
-    ViewModel() {
+class SelectPlaceViewModel(
+    val sharedPreferencesInteractor: SharedPreferencesInteractor
+) : ViewModel() {
     private val stateLiveData = MutableLiveData<WorkPlaceState>()
     fun observeState(): LiveData<WorkPlaceState> = stateLiveData
 

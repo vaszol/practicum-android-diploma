@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.ui.root.filter.place
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,10 +48,15 @@ class SelectPlaceFragment : Fragment() {
                 findNavController().popBackStack()
             }
             deleteCountry.setOnClickListener {
+                Log.d("Dtest", "deleteCountry.setOnClickListener")
                 viewModel.clearCountry()
+                inputCountry.text = EMPTY_TEXT
             }
+
             deleteRegion.setOnClickListener {
+                Log.d("Dtest", "deleteRegion.setOnClickListener")
                 viewModel.clearRegion()
+                inputRegion.text = EMPTY_TEXT
             }
             selectButton.setOnClickListener {
                 findNavController().popBackStack()

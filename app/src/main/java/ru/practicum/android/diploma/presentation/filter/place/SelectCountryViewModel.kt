@@ -14,7 +14,7 @@ class SelectCountryViewModel(
     private val hhInteractor: HhInteractor,
     private val sharedPreferencesInteractor: SharedPreferencesInteractor
 ) : ViewModel() {
-
+    private var previousCountry: Area? = null
     private val stateLiveData = MutableLiveData<AreaState>()
     fun observeState(): LiveData<AreaState> = stateLiveData
 
@@ -27,6 +27,10 @@ class SelectCountryViewModel(
     }
 
     fun setCountry(area: Area) {
-        sharedPreferencesInteractor.setCountry(area)
+        previousCountry = sharedPreferencesInteractor.getCountry()
+        if (area != previousCountry) {
+            sharedPreferencesInteractor.setCountry(area)
+            sharedPreferencesInteractor.setRegion(null)
+        }
     }
 }

@@ -8,22 +8,36 @@ import ru.practicum.android.diploma.domain.models.Area
 
 class AreaAdapter(private val clickListener: (Area) -> Unit) :
     RecyclerView.Adapter<AreaViewHolder>() {
-
-    var areas = ArrayList<Area>()
+    private var originalList: List<Area> = emptyList()
+    private var currentList: MutableList<Area> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AreaViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_area, parent, false)
         return AreaViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return areas.size
-    }
+    override fun getItemCount() = currentList.size
 
     override fun onBindViewHolder(holder: AreaViewHolder, position: Int) {
-        holder.bind(areas[position])
+        holder.bind(currentList[position])
         holder.itemView.setOnClickListener {
-            clickListener(areas[position])
+            clickListener(currentList[position])
         }
+    }
+
+    fun filter(query: String) {
+        currentList = if (query.isEmpty()) {
+            originalList.toMutableList()
+        } else {
+            originalList.filter { it.name.contains(query, ignoreCase = true) }.toMutableList()
+        }
+        notifyDataSetChanged()
+    }
+
+    fun updateList(newList: List<Area>) {
+        originalList = newList
+        currentList.clear()
+        currentList.addAll(newList)
+        notifyDataSetChanged()
     }
 }

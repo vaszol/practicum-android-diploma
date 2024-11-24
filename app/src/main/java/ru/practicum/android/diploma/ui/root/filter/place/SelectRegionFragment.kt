@@ -66,7 +66,7 @@ class SelectRegionFragment : Fragment() {
                 } else {
                     binding.searchMagnifier.setImageResource(R.drawable.ic_search)
                 }
-                // viewModel.getRegions(p0.toString())
+                areaAdapter.filter(p0.toString())
             }
 
             override fun afterTextChanged(p0: Editable?) = Unit
@@ -79,9 +79,7 @@ class SelectRegionFragment : Fragment() {
             is AreaState.Content -> {
                 binding.recyclerView.visibility = View.VISIBLE
                 binding.placeholder.visibility = View.GONE
-                areaAdapter.areas.clear()
-                areaAdapter.areas.addAll(state.areas)
-                areaAdapter.notifyDataSetChanged()
+                areaAdapter.updateList(state.areas)
             }
 
             is AreaState.NoSuchRegion -> {
