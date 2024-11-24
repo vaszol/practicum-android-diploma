@@ -128,15 +128,15 @@ class FilterFragment : Fragment() {
                 salary.text.clear()
             }
 
+            setupSalaryListener()
+        }
+    }
+
+    private fun setupSalaryListener() {
+        binding.apply {
             salary.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    // Пустой метод, необходим для реализации интерфейса TextWatcher
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    // Пустой метод, необходим для реализации интерфейса TextWatcher
-                }
-
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
                 override fun afterTextChanged(s: Editable?) {
                     val salaryText = s.toString()
                     val salary = salaryText.takeIf { it.isNotBlank() }?.toIntOrNull()
@@ -154,7 +154,8 @@ class FilterFragment : Fragment() {
                         deleteSalary.isVisible = false
                     }
                 }
-            })
+            }
+            )
         }
     }
 

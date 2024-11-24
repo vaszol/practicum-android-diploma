@@ -137,12 +137,13 @@ class FilterViewModel(
     private fun updateButtonStates() {
         val currentState = _filterState.value
 
-        _isResetButtonVisible.value =
-            currentState.salary != null ||
-            currentState.industry != null ||
-            currentState.country != null ||
-            currentState.region != null ||
-            currentState.showOnlyWithSalary
+        _isResetButtonVisible.value = listOf<Any?>(
+            currentState.salary,
+            currentState.industry,
+            currentState.country,
+            currentState.region,
+
+        ).any { it != null }
 
         _isApplyButtonEnabled.value = isFilterChanged() && hasAnyFilterSet()
     }

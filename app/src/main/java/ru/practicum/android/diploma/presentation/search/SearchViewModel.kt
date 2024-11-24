@@ -82,11 +82,16 @@ class SearchViewModel(
 
                     // Применение фильтров
                     val filteredVacancies = currentVacancies.filter { vacancy ->
-                        (salaryFilter == null || vacancy.salaryFrom >= (salaryFilter ?: 0)) &&
+                        (salaryFilter == null || vacancy.salaryFrom >= salaryFilter ?: 0) &&
                             (!showOnlyWithSalary || vacancy.salaryFrom > 0)
                     }
 
-                    _searchScreenState.postValue(SearchScreenState.Results(filteredVacancies.distinct(), triple.third!!))
+                    _searchScreenState.postValue(
+                        SearchScreenState.Results(
+                            filteredVacancies.distinct(),
+                            triple.third!!
+                        )
+                    )
                 }
                 isLoadingNextPage = false
             }
