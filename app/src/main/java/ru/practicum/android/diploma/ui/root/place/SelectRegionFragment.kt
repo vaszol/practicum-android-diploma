@@ -20,14 +20,17 @@ class SelectRegionFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var textWatcher: TextWatcher
-    private lateinit var areaAdapter: AreaAdapter
+    private val areaAdapter by lazy {
+        AreaAdapter {
+            viewModel.setRegion(it)
+            findNavController().popBackStack()
+        }
+    }
 
     private val viewModel by viewModel<SelectRegionViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSelectRegionBinding.inflate(inflater, container, false)
         return binding.root
@@ -42,11 +45,6 @@ class SelectRegionFragment : Fragment() {
 
         viewModel.getRegions(EMPTY_TEXT)
 
-        areaAdapter = AreaAdapter {
-            viewModel.setRegion(it)
-            findNavController().popBackStack()
-        }
-
         with(binding) {
             backArrow.setOnClickListener {
                 findNavController().popBackStack()
@@ -60,7 +58,7 @@ class SelectRegionFragment : Fragment() {
         }
 
         textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0.toString() != EMPTY_TEXT) {
                     binding.searchMagnifier.setImageResource(R.drawable.ic_close)
@@ -70,7 +68,7 @@ class SelectRegionFragment : Fragment() {
                 viewModel.getRegions(p0.toString())
             }
 
-            override fun afterTextChanged(p0: Editable?) {}
+            override fun afterTextChanged(p0: Editable?) = Unit
         }
         textWatcher.let { binding.searchRegionEditText.addTextChangedListener(it) }
     }

@@ -11,7 +11,8 @@ import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.ui.root.place.AreaState
 
 class SelectRegionViewModel(
-    private val hhInteractor: HhInteractor, private val sharedPreferencesInteractor: SharedPreferencesInteractor
+    private val hhInteractor: HhInteractor,
+    private val sharedPreferencesInteractor: SharedPreferencesInteractor
 ) : ViewModel() {
     private val stateLiveData = MutableLiveData<AreaState>()
     fun observeState(): LiveData<AreaState> = stateLiveData
@@ -56,7 +57,6 @@ class SelectRegionViewModel(
             for (area in areas) {
                 result.addAll(area.areas!!)
             }
-            return result
         }
         return result
     }
