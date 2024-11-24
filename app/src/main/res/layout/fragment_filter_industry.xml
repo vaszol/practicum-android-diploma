@@ -32,7 +32,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginVertical="19dp"
             android:layout_marginStart="@dimen/size_4dp"
-            android:text="@string/choise_industry" />
+            android:text="@string/choose_industry" />
     </LinearLayout>
 
     <!--Поиск-->
@@ -125,7 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                tools:text="@string/error_industry" />
+                android:text="@string/error_industry" />
 
         </LinearLayout>
 
@@ -145,6 +145,7 @@
             android:layout_marginTop="@dimen/size_16dp"
             android:layout_marginEnd="@dimen/size_4dp"
             android:visibility="visible"
+            app:layoutManager="LinearLayoutManager"
             tools:listitem="@layout/item_industry" />
     </FrameLayout>
 
@@ -160,7 +161,7 @@
         android:text="@string/industry_button_text"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

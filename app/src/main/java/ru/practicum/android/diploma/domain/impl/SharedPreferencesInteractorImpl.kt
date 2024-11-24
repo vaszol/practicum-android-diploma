@@ -24,12 +24,12 @@ class SharedPreferencesInteractorImpl(
         return repo.getRegion()
     }
 
-    override fun setIndustry(industries: MutableList<Industry>) {
-        repo.setIndustry(industries)
+    override fun setIndustry(industry: Industry?) {
+        repo.setIndustry(industry)
     }
 
-    override fun getIndustries(): MutableList<Industry> {
-        return repo.getIndustries()
+    override fun getIndustry(): Industry? {
+        return repo.getIndustry()
     }
 
     override fun setSalary(salary: Int) {
