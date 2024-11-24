@@ -33,15 +33,15 @@ class SharedPreferencesRepositoryImpl(
         }
     }
 
-    override fun setIndustry(industries: MutableList<Industry>) {
-        val json = sharedPreferencesConverter.convertListToJson(industries)
+    override fun setIndustry(industry: Industry) {
+        val json = sharedPreferencesConverter.convertIndustryToJson(industry)
         sharedPreferences.edit { putString(INDUSTRY_KEY, json) }
     }
 
-    override fun getIndustries(): MutableList<Industry> {
+    override fun getIndustry(): Industry? {
         return sharedPreferences.getString(INDUSTRY_KEY, null)?.let {
-            sharedPreferencesConverter.convertJsonToList(it)
-        }?.toMutableList() ?: mutableListOf()
+            sharedPreferencesConverter.convertJsonToIndustry(it)
+        }
     }
 
     override fun setSalary(salary: Int) {

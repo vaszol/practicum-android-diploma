@@ -10,8 +10,7 @@ class SharedPreferencesConverterImpl(private val gson: Gson) : SharedPreferences
 
     override fun convertJsonToArea(json: String): Area = gson.fromJson(json, Area::class.java)
 
-    override fun convertListToJson(industries: List<Industry>): String = gson.toJson(industries)
+    override fun convertIndustryToJson(industry: Industry): String = gson.toJson(industry)
 
-    override fun convertJsonToList(json: String): List<Industry> =
-        json.isEmpty().let { gson.fromJson(json, Array<Industry>::class.java) }?.toList() ?: emptyList()
+    override fun convertJsonToIndustry(json: String): Industry =  gson.fromJson(json, Industry::class.java)
 }
