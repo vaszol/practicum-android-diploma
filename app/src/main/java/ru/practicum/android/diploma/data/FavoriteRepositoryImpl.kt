@@ -28,16 +28,8 @@ class FavoriteRepositoryImpl(private val dao: FavoriteVacancyDao) : FavoriteRepo
     }
 
     override fun getAllFavoriteVacancies(): Flow<List<VacancyDetail>> {
-        return try {
-            dao.getAllFavoriteVacancies().map { list ->
-                list.map { FavoriteVacancyConverter.map(it) }
-            }
-        } catch (e: SQLiteException) {
-            Log.e("Exception caught in FavoriteRepositoryImpl", "Database error occurred: ${e.localizedMessage}", e)
-            flowOf(emptyList())
-        } catch (e: IllegalStateException) {
-            Log.e("Exception caught in FavoriteRepositoryImpl", "Database state error: ${e.localizedMessage}", e)
-            flowOf(emptyList())
+        return dao.getAllFavoriteVacancies().map { list ->
+            list.map { FavoriteVacancyConverter.map(it) }
         }
     }
 
