@@ -24,13 +24,14 @@ class SharedPreferencesInteractorImpl(
         return repo.getRegion()
     }
 
-    override fun setIndustry(industry: Industry) {
+    override fun setIndustry(industry: Industry?) {
         repo.setIndustry(industry)
     }
 
     override fun getIndustry(): Industry? {
         return repo.getIndustry()
     }
+
 
     override fun setSalary(salary: Int) {
         repo.setSalary(salary)

@@ -47,9 +47,12 @@ class FilterIndustry : Fragment() {
         }
 
         viewModel.selectedIndustry.observe(viewLifecycleOwner) { selected ->
-            binding.buttonIndustry.visibility = View.VISIBLE
             adapter.setSelectedIndustry(selected)
-
+            if (selected != null) {
+                binding.buttonIndustry.visibility = View.VISIBLE
+            } else {
+                binding.buttonIndustry.visibility = View.GONE
+            }
         }
 
         val textWatcher = object : TextWatcher {
@@ -72,7 +75,7 @@ class FilterIndustry : Fragment() {
 
         binding.apply {
             backImg.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
-            buttonIndustry.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() } //TODO
+            buttonIndustry.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
             clearSearchIndustry.setOnClickListener {
                 edtSearchIndustry.setText(EMPTY_TEXT)
                 setKeyboardVisibility(edtSearchIndustry, false)
@@ -86,11 +89,12 @@ class FilterIndustry : Fragment() {
                         dy: Int
                     ) {
                         super.onScrolled(recyclerView, dx, dy)
-                        if (dy > 0) {   // Скрытие клавиатуры при прокрутке вниз
+                        if (dy > 0) { // Скрытие клавиатуры при прокрутке вниз
                             setKeyboardVisibility(edtSearchIndustry, false)
                         }
                     }
-                })
+                }
+            )
         }
 
     }
