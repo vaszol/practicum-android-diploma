@@ -48,7 +48,6 @@ class SharedPreferencesRepositoryImpl(
         }
     }
 
-
     override fun setSalary(salary: Int) {
         sharedPreferences.edit { putString(SALARY_KEY, salary.toString()) }
     }
