@@ -154,6 +154,12 @@ class FilterViewModel(
 
     private fun hasAnyFilterSet(): Boolean {
         val currentState = _filterState.value
-        return currentState.salary != null || currentState.industry != null || currentState.country != null || currentState.region != null || currentState.showOnlyWithSalary
+        val result =
+            currentState.salary != null ||
+                currentState.industry != null ||
+                currentState.country != null ||
+                currentState.region != null ||
+                currentState.showOnlyWithSalary
+        return result
     }
 }
