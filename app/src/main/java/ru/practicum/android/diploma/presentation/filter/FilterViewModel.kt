@@ -10,7 +10,8 @@ import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.presentation.filter.industry.IndustryViewModel
 
 class FilterViewModel(
-    private val sharedPreferencesInteractor: SharedPreferencesInteractor, industryViewModel: IndustryViewModel
+    private val sharedPreferencesInteractor: SharedPreferencesInteractor,
+    industryViewModel: IndustryViewModel
 ) : ViewModel() {
 
     private val _filterState = MutableStateFlow(FilterState())
@@ -54,7 +55,9 @@ class FilterViewModel(
         val locationString = createLocationString(country, region)
 
         val newState = currentState.copy(
-            country = country, region = region, locationString = locationString
+            country = country,
+            region = region,
+            locationString = locationString
         )
 
         _filterState.value = newState

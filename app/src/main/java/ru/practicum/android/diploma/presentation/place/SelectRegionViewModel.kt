@@ -20,19 +20,15 @@ class SelectRegionViewModel(
     fun getRegions() {
         viewModelScope.launch {
             hhInteractor.getAreas().collect { areas ->
-                val regions = ArrayList<Area>()
                 val country = getCountry() // Получаю страну из SharedPrefs
-                if (country != null) { // Если страна назначена
-                    for (area in areas) { // Перебираю все страны
-                        if (area.id == country.id) { // Сравниваю с назначенной
-                            regions.addAll(area.areas!!) // Добавляю регионы этой страны в список
-                        }
-                    }
-                } else { // Если страна не назначена
-                    for (area in areas) {
-                        regions.addAll(area.areas!!) // Добавляю регионы всех стран в список
-                    }
+                val regions = if (country != null) {
+                    areas
+                        .filter { it.id == country.id } // Оставляем только выбранную страну
+                        .flatMap { it.areas ?: emptyList() } // Собираем регионы выбранной страны
+                } else {
+                    areas.flatMap { it.areas ?: emptyList() } // Собираем регионы всех стран
                 }
+                stateLiveData.postValue(AreaState.Content(regions))
             }
         }
     }
