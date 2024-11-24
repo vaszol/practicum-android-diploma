@@ -96,15 +96,13 @@ class FilterIndustry : Fragment() {
                 }
             )
         }
-
     }
 
     private fun showError() {
         binding.apply {
             progressBar.visibility = View.GONE
             recyclerView.visibility = View.GONE
-            imgIndustryError.visibility = View.VISIBLE
-            txtIndustryError.visibility = View.VISIBLE
+            industryError.visibility = View.VISIBLE
         }
     }
 
@@ -112,8 +110,7 @@ class FilterIndustry : Fragment() {
         binding.apply {
             progressBar.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
-            imgIndustryError.visibility = View.GONE
-            txtIndustryError.visibility = View.GONE
+            industryError.visibility = View.GONE
         }
         adapter.updateList(industries)
     }
@@ -122,8 +119,7 @@ class FilterIndustry : Fragment() {
         binding.apply {
             progressBar.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
-            imgIndustryError.visibility = View.GONE
-            txtIndustryError.visibility = View.GONE
+            industryError.visibility = View.GONE
         }
     }
 
