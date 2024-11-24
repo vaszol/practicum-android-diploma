@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui.root.place
+package ru.practicum.android.diploma.ui.root.filter.place
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSelectPlaceBinding
-import ru.practicum.android.diploma.presentation.place.SelectPlaceViewModel
+import ru.practicum.android.diploma.presentation.filter.place.SelectPlaceViewModel
 
 class SelectPlaceFragment : Fragment() {
 

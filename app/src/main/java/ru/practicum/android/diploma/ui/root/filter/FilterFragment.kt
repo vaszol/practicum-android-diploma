@@ -45,18 +45,7 @@ class FilterFragment : Fragment() {
         setupViews()
         setupListeners()
         observeViewModel()
-
-        setFragmentResultListener("industryRequestKey") { _, bundle ->
-            val selectedIndustry = bundle.getSerializable("selected_industry") as? Industry
-            viewModel.updateIndustries(selectedIndustry)
-        }
-
-        setFragmentResultListener("countryRequestKey") { _, bundle ->
-            val selectedCountry = bundle.getSerializable("selected_country") as? Area
-            val selectedRegion = bundle.getSerializable("selected_region") as? Area
-
-            viewModel.updateLocation(selectedCountry, selectedRegion)
-        }
+        setUpFragmentResultListener()
     }
 
     private fun setupViews() {
@@ -178,11 +167,13 @@ class FilterFragment : Fragment() {
                         inputWorkplace.isVisible = true
                         subtitleWorkplace.isVisible = true
                         deleteWorkplace.isVisible = true
+                        binding.workplace.isVisible = false
                     } else {
                         inputWorkplace.text = ""
                         inputWorkplace.isVisible = false
                         subtitleWorkplace.isVisible = false
                         deleteWorkplace.isVisible = false
+                        binding.workplace.isVisible = true
                     }
 
                     // Установка видимости для отрасли
@@ -215,6 +206,20 @@ class FilterFragment : Fragment() {
             viewModel.isResetButtonVisible.collect { isVisible ->
                 binding.reset.isVisible = isVisible
             }
+        }
+    }
+
+    private fun setUpFragmentResultListener(){
+        setFragmentResultListener("industryRequestKey") { _, bundle ->
+            val selectedIndustry = bundle.getSerializable("selected_industry") as? Industry
+            viewModel.updateIndustries(selectedIndustry)
+        }
+
+        setFragmentResultListener("countryRequestKey") { _, bundle ->
+            val selectedCountry = bundle.getSerializable("selected_country") as? Area
+            val selectedRegion = bundle.getSerializable("selected_region") as? Area
+
+            viewModel.updateLocation(selectedCountry, selectedRegion)
         }
     }
 

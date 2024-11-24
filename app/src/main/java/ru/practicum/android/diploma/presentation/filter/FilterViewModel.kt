@@ -50,15 +50,6 @@ class FilterViewModel(
         updateButtonStates()
     }
 
-    private fun createLocationString(country: Area?, region: Area?): String {
-        val locationParts = mutableListOf<String>()
-
-        country?.name?.let { locationParts.add(it) }
-        region?.name?.let { locationParts.add(it) }
-
-        return locationParts.joinToString(", ")
-    }
-
     fun updateLocation(country: Area?, region: Area?) {
         val currentState = _filterState.value
         val locationString = createLocationString(country, region)
@@ -100,37 +91,6 @@ class FilterViewModel(
         updateButtonStates()
     }
 
-    private fun updateButtonStates() {
-        val currentState = _filterState.value
-
-        _isResetButtonVisible.value =
-            currentState.salary != null ||
-                currentState.industry != null ||
-                currentState.country != null ||
-                currentState.region != null ||
-                currentState.showOnlyWithSalary
-
-        _isApplyButtonEnabled.value =
-            isFilterChanged() && hasAnyFilterSet()
-    }
-
-    private fun isFilterChanged(): Boolean {
-        return initialFilterState.salary != _filterState.value.salary ||
-            initialFilterState.industry != _filterState.value.industry ||
-            initialFilterState.country != _filterState.value.country ||
-            initialFilterState.region != _filterState.value.region ||
-            initialFilterState.showOnlyWithSalary != _filterState.value.showOnlyWithSalary
-    }
-
-    private fun hasAnyFilterSet(): Boolean {
-        val currentState = _filterState.value
-        return currentState.salary != null ||
-            currentState.industry != null ||
-            currentState.country != null ||
-            currentState.region != null ||
-            currentState.showOnlyWithSalary
-    }
-
     fun applyFilter() {
         val currentState = _filterState.value
 
@@ -163,5 +123,45 @@ class FilterViewModel(
         initialFilterState = _filterState.value
 
         updateButtonStates()
+    }
+
+    private fun createLocationString(country: Area?, region: Area?): String {
+        val locationParts = mutableListOf<String>()
+
+        country?.name?.let { locationParts.add(it) }
+        region?.name?.let { locationParts.add(it) }
+
+        return locationParts.joinToString(", ")
+    }
+
+    private fun updateButtonStates() {
+        val currentState = _filterState.value
+
+        _isResetButtonVisible.value =
+            currentState.salary != null ||
+                currentState.industry != null ||
+                currentState.country != null ||
+                currentState.region != null ||
+                currentState.showOnlyWithSalary
+
+        _isApplyButtonEnabled.value =
+            isFilterChanged() && hasAnyFilterSet()
+    }
+
+    private fun isFilterChanged(): Boolean {
+        return initialFilterState.salary != _filterState.value.salary ||
+            initialFilterState.industry != _filterState.value.industry ||
+            initialFilterState.country != _filterState.value.country ||
+            initialFilterState.region != _filterState.value.region ||
+            initialFilterState.showOnlyWithSalary != _filterState.value.showOnlyWithSalary
+    }
+
+    private fun hasAnyFilterSet(): Boolean {
+        val currentState = _filterState.value
+        return currentState.salary != null ||
+            currentState.industry != null ||
+            currentState.country != null ||
+            currentState.region != null ||
+            currentState.showOnlyWithSalary
     }
 }

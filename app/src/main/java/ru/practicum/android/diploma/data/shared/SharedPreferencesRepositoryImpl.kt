@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.data.shared
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import ru.practicum.android.diploma.domain.SharedPreferencesConverter
 import ru.practicum.android.diploma.domain.api.SharedPreferencesRepository
 import ru.practicum.android.diploma.domain.models.Area
@@ -10,6 +11,7 @@ class SharedPreferencesRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
     private val sharedPreferencesConverter: SharedPreferencesConverter,
 ) : SharedPreferencesRepository {
+
     override fun setCountry(country: Area?) {
         if (country != null) {
             val countryString = sharedPreferencesConverter.convertAreaToJson(country)
@@ -17,10 +19,6 @@ class SharedPreferencesRepositoryImpl(
         } else {
             sharedPreferences.edit().remove(COUNTRY_KEY).apply()
         }
-
-    override fun setCountry(country: Area) {
-        val countryString = sharedPreferencesConverter.convertAreaToJson(country)
-        sharedPreferences.edit().putString(COUNTRY_KEY, countryString).apply()
     }
 
     override fun getCountry(): Area? {
@@ -36,9 +34,6 @@ class SharedPreferencesRepositoryImpl(
         } else {
             sharedPreferences.edit().remove(REGION_KEY).apply()
         }
-    override fun setRegion(region: Area) {
-        val regionString = sharedPreferencesConverter.convertAreaToJson(region)
-        sharedPreferences.edit().putString(REGION_KEY, regionString).apply()
     }
 
     override fun getRegion(): Area? {

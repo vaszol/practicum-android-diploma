@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui.root.place
+package ru.practicum.android.diploma.ui.root.filter.place
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSelectCountryBinding
-import ru.practicum.android.diploma.presentation.place.SelectCountryViewModel
+import ru.practicum.android.diploma.presentation.filter.place.SelectCountryViewModel
 
 class SelectCountryFragment : Fragment() {
 
