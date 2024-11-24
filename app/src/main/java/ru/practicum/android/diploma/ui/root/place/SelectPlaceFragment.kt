@@ -47,7 +47,10 @@ class SelectPlaceFragment : Fragment() {
                 findNavController().popBackStack()
             }
             deleteCountry.setOnClickListener {
-
+                viewModel.clearCountry()
+            }
+            deleteRegion.setOnClickListener {
+                viewModel.clearRegion()
             }
         }
     }

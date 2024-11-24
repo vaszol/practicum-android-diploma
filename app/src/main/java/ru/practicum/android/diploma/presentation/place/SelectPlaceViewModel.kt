@@ -15,4 +15,14 @@ class SelectPlaceViewModel(val sharedPreferencesInteractor: SharedPreferencesInt
         val region = sharedPreferencesInteractor.getRegion()
         stateLiveData.postValue(WorkPlaceState(country, region))
     }
+
+    fun clearCountry(){
+        sharedPreferencesInteractor.setCountry(null)
+        setState()
+    }
+
+    fun clearRegion(){
+        sharedPreferencesInteractor.setRegion(null)
+        setState()
+    }
 }
