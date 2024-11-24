@@ -21,7 +21,6 @@ class SelectRegionViewModel(
         viewModelScope.launch {
             hhInteractor.getAreas().collect { areas ->
 
-                val result = ArrayList<Area>()
                 val regions = ArrayList<Area>()
                 val country = getCountry() // Получаю страну из SharedPrefs
                 if (country != null) { // Если страна назначена
@@ -36,21 +35,6 @@ class SelectRegionViewModel(
                     }
                 }
             }
-
-           //     if (query != "") { // Тут логика фильтрации по поиску
-           //         result.addAll(filter(regions, query))
-           //         if (result.isEmpty()) {
-           //             stateLiveData.postValue(AreaState.NoSuchRegion("Такого региона нет"))
-           //         } else {
-           //             stateLiveData.postValue(AreaState.Content(result))
-           //         }
-           //     } else {
-           //         if (regions.isEmpty()) {
-           //             stateLiveData.postValue(AreaState.Error("Не удалось получить список"))
-           //         } else {
-           //             stateLiveData.postValue(AreaState.Content(regions))
-           //         }
-           //     }
         }
     }
 

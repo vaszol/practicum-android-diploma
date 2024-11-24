@@ -143,7 +143,7 @@ class FilterViewModel(
             currentState.country,
             currentState.region,
 
-        ).any { it != null }
+            ).any { it != null }
 
         _isApplyButtonEnabled.value = isFilterChanged() && hasAnyFilterSet()
     }
