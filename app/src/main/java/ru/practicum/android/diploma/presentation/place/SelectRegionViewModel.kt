@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
 import ru.practicum.android.diploma.domain.models.Area
-import ru.practicum.android.diploma.ui.root.filter.place.AreaState
+import ru.practicum.android.diploma.ui.root.place.AreaState
 
 class SelectRegionViewModel(
     private val hhInteractor: HhInteractor,
