@@ -10,4 +10,6 @@
     <color name="hint">#1A1B22</color>
     <color name="green">#AACB3D</color>
     <color name="bright_red">#E15537</color>
+    <color name="snack_bar_background">#ffffff</color>
+    <color name="snack_bar_text">@color/black</color>
 </resources>

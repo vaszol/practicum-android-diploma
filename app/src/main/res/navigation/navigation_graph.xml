@@ -77,7 +77,7 @@
 
     <fragment
         android:id="@+id/filterIndustry"
-        android:name="ru.practicum.android.diploma.ui.root.filter.FilterIndustry"
+        android:name="ru.practicum.android.diploma.ui.root.filter.industry.FilterIndustry"
         android:label="fragment_filter_industry"
         tools:layout="@layout/fragment_filter_industry" />
 

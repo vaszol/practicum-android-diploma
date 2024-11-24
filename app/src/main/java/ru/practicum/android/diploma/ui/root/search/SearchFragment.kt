@@ -236,7 +236,7 @@ class SearchFragment : Fragment() {
     private fun showToast(message: String) {
         binding.searchProgressBarBottom.visibility = View.GONE
         val snackBar = Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
-        snackBar.setTextColor(requireContext().getColor(R.color.black))
+        snackBar.setTextColor(requireContext().getColor(R.color.snack_bar_text))
         val backgroundSnackbar = snackBar.view.apply { setBackgroundResource(R.drawable.background_snack_bar) }
         val textSnackbar: TextView = backgroundSnackbar.findViewById(com.google.android.material.R.id.snackbar_text)
         textSnackbar.textAlignment = View.TEXT_ALIGNMENT_CENTER
