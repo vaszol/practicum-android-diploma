@@ -151,10 +151,10 @@ class FilterViewModel(
     private fun isFilterChanged(): Boolean {
         val result =
             initialFilterState.salary != _filterState.value.salary ||
-            initialFilterState.industry != _filterState.value.industry ||
-            initialFilterState.country != _filterState.value.country ||
-            initialFilterState.region != _filterState.value.region ||
-            initialFilterState.showOnlyWithSalary != _filterState.value.showOnlyWithSalary
+                initialFilterState.industry != _filterState.value.industry ||
+                initialFilterState.country != _filterState.value.country ||
+                initialFilterState.region != _filterState.value.region ||
+                initialFilterState.showOnlyWithSalary != _filterState.value.showOnlyWithSalary
         return result
     }
 
