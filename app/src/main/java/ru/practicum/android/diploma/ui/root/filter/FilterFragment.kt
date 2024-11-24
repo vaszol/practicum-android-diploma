@@ -136,26 +136,27 @@ class FilterFragment : Fragment() {
         binding.apply {
             salary.addTextChangedListener(
                 object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-                override fun afterTextChanged(s: Editable?) {
-                    val salaryText = s.toString()
-                    val salary = salaryText.takeIf { it.isNotBlank() }?.toIntOrNull()
-                    viewModel.updateSalary(salary)
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+                    override fun afterTextChanged(s: Editable?) {
+                        val salaryText = s.toString()
+                        val salary = salaryText.takeIf { it.isNotBlank() }?.toIntOrNull()
+                        viewModel.updateSalary(salary)
 
-                    val context = expectedSalary.context
-                    val colorAccent = context.getThemeColor(org.koin.android.R.attr.colorAccent)
-                    val colorOnSecondary = context.getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
+                        val context = expectedSalary.context
+                        val colorAccent = context.getThemeColor(org.koin.android.R.attr.colorAccent)
+                        val colorOnSecondary =
+                            context.getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
 
-                    if (!s.isNullOrEmpty()) {
-                        expectedSalary.setTextColor(colorAccent)
-                        deleteSalary.isVisible = true
-                    } else {
-                        expectedSalary.setTextColor(colorOnSecondary)
-                        deleteSalary.isVisible = false
+                        if (!s.isNullOrEmpty()) {
+                            expectedSalary.setTextColor(colorAccent)
+                            deleteSalary.isVisible = true
+                        } else {
+                            expectedSalary.setTextColor(colorOnSecondary)
+                            deleteSalary.isVisible = false
+                        }
                     }
                 }
-            }
             )
         }
     }
