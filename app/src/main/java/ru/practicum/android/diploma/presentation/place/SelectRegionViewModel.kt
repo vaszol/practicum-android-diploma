@@ -1,11 +1,9 @@
 package ru.practicum.android.diploma.presentation.place
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Query
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
@@ -38,13 +36,19 @@ class SelectRegionViewModel(
                     }
                 }
 
-                if (query != ""){
+                if (query != "") { // Тут логика фильтрации по поиску
                     result.addAll(filter(regions, query))
-                    stateLiveData.postValue(AreaState.Content(result))
-                    Log.d("Список регионов", result.map { it.name }.toString())
+                    if (result.isEmpty()) {
+                        stateLiveData.postValue(AreaState.NoSuchRegion("Такого региона нет"))
+                    } else {
+                        stateLiveData.postValue(AreaState.Content(result))
+                    }
                 } else {
-                    stateLiveData.postValue(AreaState.Content(regions))
-                    Log.d("Список регионов2", regions.map { it.name }.toString())
+                    if (regions.isEmpty()) {
+                        stateLiveData.postValue(AreaState.Error("Не удалось получить список"))
+                    } else {
+                        stateLiveData.postValue(AreaState.Content(regions))
+                    }
                 }
             }
         }

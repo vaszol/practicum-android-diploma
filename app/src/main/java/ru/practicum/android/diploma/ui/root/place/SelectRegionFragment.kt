@@ -3,7 +3,6 @@ package ru.practicum.android.diploma.ui.root.place
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +40,7 @@ class SelectRegionFragment : Fragment() {
             render(it)
         }
 
-        viewModel.getRegions("")
+        viewModel.getRegions(EMPTY_TEXT)
 
         areaAdapter = AreaAdapter {
             viewModel.setRegion(it)
@@ -72,7 +71,6 @@ class SelectRegionFragment : Fragment() {
                     binding.searchMagnifier.setImageResource(R.drawable.ic_search)
                 }
                 viewModel.getRegions(p0.toString())
-                Log.d("SelectRegion", "onTextChanged")
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -83,10 +81,28 @@ class SelectRegionFragment : Fragment() {
     }
 
     private fun render(state: AreaState) {
-        if (state is AreaState.Content) {
-            areaAdapter.areas.clear()
-            areaAdapter.areas.addAll(state.areas)
-            areaAdapter.notifyDataSetChanged()
+        when (state) {
+            is AreaState.Content -> {
+                binding.recyclerView.visibility = View.VISIBLE
+                binding.placeholder.visibility = View.GONE
+                areaAdapter.areas.clear()
+                areaAdapter.areas.addAll(state.areas)
+                areaAdapter.notifyDataSetChanged()
+            }
+
+            is AreaState.NoSuchRegion -> {
+                binding.recyclerView.visibility = View.GONE
+                binding.placeholderImage.setImageResource(R.drawable.placeholder_no_vacancy)
+                binding.errorMessage.text = state.message
+                binding.placeholder.visibility = View.VISIBLE
+            }
+
+            is AreaState.Error -> {
+                binding.recyclerView.visibility = View.GONE
+                binding.placeholderImage.setImageResource(R.drawable.placeholder_empty_industry_list)
+                binding.errorMessage.text = state.message
+                binding.placeholder.visibility = View.VISIBLE
+            }
         }
     }
 
