@@ -43,10 +43,6 @@ class SelectRegionFragment : Fragment() {
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
-//
-      //  viewModel.observeFilteredRegions().observe(viewLifecycleOwner) { filteredRegions ->
-      //      areaAdapter.updateList(filteredRegions)
-      //  }
 
         viewModel.getRegions()
 
