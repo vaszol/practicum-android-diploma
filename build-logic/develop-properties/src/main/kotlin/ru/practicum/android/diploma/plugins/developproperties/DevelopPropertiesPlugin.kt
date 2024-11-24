@@ -13,7 +13,7 @@ import java.util.*
  */
 @Suppress("detekt.UnnecessaryAbstractClass")
 abstract class DevelopPropertiesPluginExtension {
-    var hhAccessToken = ""
+    var hhAccessToken = "APPLVHLEM2HNHL4T62OBA5FCPH264RQBGNTF0VNVKU25KPESQRN9PS2EDGJN4KH4"
 }
 
 class DevelopPropertiesPlugin : Plugin<Project> {
