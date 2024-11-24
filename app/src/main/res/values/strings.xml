@@ -70,9 +70,8 @@
     <string name="select_region">Выбор региона</string>
     <string name="input_region">Введите регион</string>
     <string name="no_such_region">Такого региона нет</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="choise_industry">Выбор отрасли</string>
+
+    <string name="choose_industry">Выбор отрасли</string>
     <string name="industry_hint">Введите отрасль</string>
     <string name="error_industry">Не удалось получить\nсписок</string>
     <string name="industry_button_text">Выбрать</string>

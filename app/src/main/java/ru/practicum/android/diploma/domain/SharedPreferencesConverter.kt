@@ -6,6 +6,6 @@ import ru.practicum.android.diploma.domain.models.Industry
 interface SharedPreferencesConverter {
     fun convertAreaToJson(area: Area): String?
     fun convertJsonToArea(json: String): Area?
-    fun convertListToJson(industries: List<Industry>): String
-    fun convertJsonToList(json: String): List<Industry>
+    fun convertIndustryToJson(industry: Industry): String?
+    fun convertJsonToIndustry(json: String): Industry?
 }
