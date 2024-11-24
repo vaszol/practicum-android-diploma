@@ -15,11 +15,13 @@ class SelectRegionViewModel(
     private val sharedPreferencesInteractor: SharedPreferencesInteractor
 ) : ViewModel() {
     private val stateLiveData = MutableLiveData<AreaState>()
+    private var allAreas: List<Area>? = null
     fun observeState(): LiveData<AreaState> = stateLiveData
 
     fun getRegions() {
         viewModelScope.launch {
             hhInteractor.getAreas().collect { areas ->
+                allAreas = areas
                 val country = getCountry() // Получаю страну из SharedPrefs
                 val regions = if (country != null) {
                     areas
@@ -39,5 +41,7 @@ class SelectRegionViewModel(
 
     fun setRegion(area: Area) {
         sharedPreferencesInteractor.setRegion(area)
+        val country = allAreas?.find { it.areas?.contains(area) == true }
+        sharedPreferencesInteractor.setCountry(country)
     }
 }
