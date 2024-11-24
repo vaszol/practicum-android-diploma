@@ -32,7 +32,7 @@ class SelectRegionViewModel(
                     }
                 } else { // Если страна не назначена
                     for (area in areas) {
-                        regions.addAll(area.areas!!)// Добавляю регионы всех стран в список
+                        regions.addAll(area.areas!!) // Добавляю регионы всех стран в список
                     }
                 }
 

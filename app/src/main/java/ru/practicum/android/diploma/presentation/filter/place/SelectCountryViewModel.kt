@@ -10,7 +10,7 @@ import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.ui.root.filter.place.AreaState
 
-class SelectCountryViewModel (
+class SelectCountryViewModel(
     private val hhInteractor: HhInteractor,
     private val sharedPreferencesInteractor: SharedPreferencesInteractor
 ) : ViewModel() {

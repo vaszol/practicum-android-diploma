@@ -199,7 +199,7 @@ class FilterFragment : Fragment() {
         }
     }
 
-    private fun observeButtonVisibility () {
+    private fun observeButtonVisibility() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isApplyButtonEnabled.collect { isEnabled ->
                 binding.apply.isVisible = isEnabled
@@ -213,7 +213,7 @@ class FilterFragment : Fragment() {
         }
     }
 
-    private fun setUpFragmentResultListener(){
+    private fun setUpFragmentResultListener() {
         setFragmentResultListener("industryRequestKey") { _, bundle ->
             val selectedIndustry = bundle.getSerializable("selected_industry") as? Industry
             viewModel.updateIndustries(selectedIndustry)

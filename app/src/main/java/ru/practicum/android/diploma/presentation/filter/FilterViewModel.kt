@@ -139,13 +139,12 @@ class FilterViewModel(
 
         _isResetButtonVisible.value =
             currentState.salary != null ||
-                currentState.industry != null ||
-                currentState.country != null ||
-                currentState.region != null ||
-                currentState.showOnlyWithSalary
+            currentState.industry != null ||
+            currentState.country != null ||
+            currentState.region != null ||
+            currentState.showOnlyWithSalary
 
-        _isApplyButtonEnabled.value =
-            isFilterChanged() && hasAnyFilterSet()
+        _isApplyButtonEnabled.value = isFilterChanged() && hasAnyFilterSet()
     }
 
     private fun isFilterChanged(): Boolean {
