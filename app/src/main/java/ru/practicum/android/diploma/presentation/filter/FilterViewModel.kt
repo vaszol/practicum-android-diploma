@@ -23,13 +23,17 @@ class FilterViewModel(
     private val _isResetButtonVisible = MutableStateFlow(false)
     val isResetButtonVisible: StateFlow<Boolean> = _isResetButtonVisible.asStateFlow()
 
-    private var initialFilterState: FilterState
+    private var initialFilterState: FilterState = FilterState()
 
     init {
         industryViewModel.selectedIndustry.observeForever { selectedIndustry ->
             updateIndustries(selectedIndustry)
         }
+        getInitialState()
+        updateButtonStates()
+    }
 
+    fun getInitialState() {
         val savedSalary = sharedPreferencesInteractor.getSalary()
         val savedIndustry = sharedPreferencesInteractor.getIndustry()
         val savedCountry = sharedPreferencesInteractor.getCountry()
@@ -47,7 +51,6 @@ class FilterViewModel(
         )
 
         _filterState.value = initialFilterState.copy()
-        updateButtonStates()
     }
 
     fun updateLocation(country: Area?, region: Area?) {

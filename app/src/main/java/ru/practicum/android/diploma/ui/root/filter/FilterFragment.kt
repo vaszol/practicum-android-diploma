@@ -41,7 +41,7 @@ class FilterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as? RootActivity)?.findViewById<BottomNavigationView>(R.id.bottom_navigation_view)?.visibility =
             View.GONE
-
+        viewModel.getInitialState()
         setupViews()
         setupListeners()
         observeViewModel()

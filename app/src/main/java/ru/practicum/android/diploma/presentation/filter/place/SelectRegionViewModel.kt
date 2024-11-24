@@ -33,12 +33,6 @@ class SelectRegionViewModel(
         }
     }
 
-    private fun filter(list: List<Area>, s: String): ArrayList<Area> {
-        val result = ArrayList<Area>()
-        result.addAll(list.filter { it.name.contains(s, true) })
-        return result
-    }
-
     private fun getCountry(): Area? {
         return sharedPreferencesInteractor.getCountry()
     }

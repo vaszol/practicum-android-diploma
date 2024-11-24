@@ -10,7 +10,7 @@ class SharedPreferencesInteractorImpl(
 ) : SharedPreferencesInteractor {
 
     override fun setCountry(country: Area?) {
-        country?.let { repo.setCountry(it) }
+        repo.setCountry(country)
     }
 
     override fun getCountry(): Area? {
@@ -18,7 +18,7 @@ class SharedPreferencesInteractorImpl(
     }
 
     override fun setRegion(region: Area?) {
-        region?.let { repo.setRegion(it) }
+        repo.setRegion(region)
     }
 
     override fun getRegion(): Area? {

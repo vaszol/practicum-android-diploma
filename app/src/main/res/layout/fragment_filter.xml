@@ -57,6 +57,8 @@
             style="@style/InputValueStyle"
             android:text="@string/workplace"
             android:textColor="?attr/colorOnSecondary"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintEnd_toEndOf="@+id/workplaceLayout"
             app:layout_constraintStart_toStartOf="@+id/workplaceLayout"
             app:layout_constraintTop_toTopOf="@+id/workplaceLayout" />
@@ -111,6 +113,8 @@
             style="@style/InputValueStyle"
             android:text="@string/industry"
             android:textColor="?attr/colorOnSecondary"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintEnd_toEndOf="@+id/industryLayout"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/industryLayout"
