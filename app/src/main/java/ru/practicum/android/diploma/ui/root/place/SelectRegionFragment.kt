@@ -1,6 +1,9 @@
 package ru.practicum.android.diploma.ui.root.place
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSelectRegionBinding
-import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.presentation.place.SelectRegionViewModel
 
 class SelectRegionFragment : Fragment() {
@@ -17,8 +20,8 @@ class SelectRegionFragment : Fragment() {
     private var _binding: FragmentSelectRegionBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var textWatcher: TextWatcher
     private lateinit var areaAdapter: AreaAdapter
-    private var regions = ArrayList<Area>()
 
     private val viewModel by viewModel<SelectRegionViewModel>()
 
@@ -38,7 +41,7 @@ class SelectRegionFragment : Fragment() {
             render(it)
         }
 
-        viewModel.getRegions()
+        viewModel.getRegions("")
 
         areaAdapter = AreaAdapter {
             viewModel.setRegion(it)
@@ -51,14 +54,43 @@ class SelectRegionFragment : Fragment() {
             }
             recyclerView.adapter = areaAdapter
             recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            searchMagnifier.setOnClickListener {
+                searchRegionEditText.setText(EMPTY_TEXT)
+                viewModel.getRegions(EMPTY_TEXT)
+            }
         }
+
+        textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (p0.toString() != EMPTY_TEXT) {
+                    binding.searchMagnifier.setImageResource(R.drawable.ic_close)
+                } else {
+                    binding.searchMagnifier.setImageResource(R.drawable.ic_search)
+                }
+                viewModel.getRegions(p0.toString())
+                Log.d("SelectRegion", "onTextChanged")
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        }
+        textWatcher.let { binding.searchRegionEditText.addTextChangedListener(it) }
     }
 
     private fun render(state: AreaState) {
         if (state is AreaState.Content) {
-            regions.addAll(state.areas)
-            areaAdapter.areas.addAll(regions)
+            areaAdapter.areas.clear()
+            areaAdapter.areas.addAll(state.areas)
             areaAdapter.notifyDataSetChanged()
         }
+    }
+
+    companion object {
+        private const val EMPTY_TEXT = ""
     }
 }

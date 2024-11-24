@@ -1,9 +1,11 @@
 package ru.practicum.android.diploma.presentation.place
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.Query
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
@@ -17,10 +19,11 @@ class SelectRegionViewModel(
     private val stateLiveData = MutableLiveData<AreaState>()
     fun observeState(): LiveData<AreaState> = stateLiveData
 
-    fun getRegions() {
+    fun getRegions(query: String) {
         viewModelScope.launch {
             hhInteractor.getAreas().collect { areas ->
 
+                val result = ArrayList<Area>()
                 val regions = ArrayList<Area>()
                 val country = getCountry() //Получаю страну из SharedPrefs
                 if (country != null) { //Если страна назначена
@@ -34,9 +37,23 @@ class SelectRegionViewModel(
                         regions.addAll(area.areas!!)// Добавляю регионы всех стран в список
                     }
                 }
-                stateLiveData.postValue(AreaState.Content(regions))
+
+                if (query != ""){
+                    result.addAll(filter(regions, query))
+                    stateLiveData.postValue(AreaState.Content(result))
+                    Log.d("Список регионов", result.map { it.name }.toString())
+                } else {
+                    stateLiveData.postValue(AreaState.Content(regions))
+                    Log.d("Список регионов2", regions.map { it.name }.toString())
+                }
             }
         }
+    }
+
+    private fun filter(list: List<Area>, s: String): ArrayList<Area> {
+        val result = ArrayList<Area>()
+        result.addAll(list.filter { it.name.contains(s, true) })
+        return result
     }
 
     private fun getCountry(): Area? {

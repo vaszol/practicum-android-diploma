@@ -6,7 +6,8 @@ import androidx.lifecycle.ViewModel
 import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
 import ru.practicum.android.diploma.ui.root.place.WorkPlaceState
 
-class SelectPlaceViewModel(val sharedPreferencesInteractor: SharedPreferencesInteractor) : ViewModel() {
+class SelectPlaceViewModel(val sharedPreferencesInteractor: SharedPreferencesInteractor) :
+    ViewModel() {
     private val stateLiveData = MutableLiveData<WorkPlaceState>()
     fun observeState(): LiveData<WorkPlaceState> = stateLiveData
 
@@ -16,12 +17,12 @@ class SelectPlaceViewModel(val sharedPreferencesInteractor: SharedPreferencesInt
         stateLiveData.postValue(WorkPlaceState(country, region))
     }
 
-    fun clearCountry(){
+    fun clearCountry() {
         sharedPreferencesInteractor.setCountry(null)
         setState()
     }
 
-    fun clearRegion(){
+    fun clearRegion() {
         sharedPreferencesInteractor.setRegion(null)
         setState()
     }

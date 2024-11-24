@@ -23,7 +23,6 @@ class SelectCountryViewModel (
         viewModelScope.launch {
             hhInteractor.getAreas().collect{ areas ->
                 stateLiveData.postValue(AreaState.Content(areas))
-                Log.d("AreasList", areas.map { area -> area.name }.toString())
             }
         }
     }
