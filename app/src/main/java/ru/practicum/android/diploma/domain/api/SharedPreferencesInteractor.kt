@@ -4,9 +4,9 @@ import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Industry
 
 interface SharedPreferencesInteractor {
-    fun setCountry(country: Area)
+    fun setCountry(country: Area?)
     fun getCountry(): Area?
-    fun setRegion(region: Area)
+    fun setRegion(region: Area?)
     fun getRegion(): Area?
     fun setIndustry(industry: Industry?)
     fun getIndustry(): Industry?
