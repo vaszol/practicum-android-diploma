@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.presentation.place
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +10,7 @@ import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.ui.root.place.AreaState
 
-class SelectCountryViewModel (
+class SelectCountryViewModel(
     private val hhInteractor: HhInteractor,
     private val sharedPreferencesInteractor: SharedPreferencesInteractor
 ) : ViewModel() {
@@ -19,15 +18,15 @@ class SelectCountryViewModel (
     private val stateLiveData = MutableLiveData<AreaState>()
     fun observeState(): LiveData<AreaState> = stateLiveData
 
-    fun getCountries(){
+    fun getCountries() {
         viewModelScope.launch {
-            hhInteractor.getAreas().collect{ areas ->
+            hhInteractor.getAreas().collect { areas ->
                 stateLiveData.postValue(AreaState.Content(areas))
             }
         }
     }
 
-    fun setCountry(area: Area){
+    fun setCountry(area: Area) {
         sharedPreferencesInteractor.setCountry(area)
     }
 }

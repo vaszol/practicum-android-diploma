@@ -60,10 +60,7 @@ class SelectRegionFragment : Fragment() {
         }
 
         textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0.toString() != EMPTY_TEXT) {
                     binding.searchMagnifier.setImageResource(R.drawable.ic_close)
@@ -73,9 +70,7 @@ class SelectRegionFragment : Fragment() {
                 viewModel.getRegions(p0.toString())
             }
 
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
+            override fun afterTextChanged(p0: Editable?) {}
         }
         textWatcher.let { binding.searchRegionEditText.addTextChangedListener(it) }
     }
