@@ -5,7 +5,7 @@ import ru.practicum.android.diploma.domain.models.Industry
 
 data class FilterState(
     val salary: Int? = null,
-    val industries: MutableList<Industry> = mutableListOf(),
+    val industry: Industry? = null,
     val country: Area? = null,
     val region: Area? = null,
     val showOnlyWithSalary: Boolean = false,

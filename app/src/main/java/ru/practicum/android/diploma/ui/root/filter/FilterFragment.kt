@@ -46,12 +46,9 @@ class FilterFragment : Fragment() {
         setupListeners()
         observeViewModel()
 
-        setFragmentResultListener("requestKey") { _, bundle ->
+        setFragmentResultListener("industryRequestKey") { _, bundle ->
             val selectedIndustry = bundle.getSerializable("selected_industry") as? Industry
-            selectedIndustry?.let {
-                viewModel.updateIndustries(mutableListOf(it))
-                binding.inputIndustry.text = it.name
-            }
+            viewModel.updateIndustries(selectedIndustry)
         }
 
         setFragmentResultListener("countryRequestKey") { _, bundle ->
@@ -82,17 +79,20 @@ class FilterFragment : Fragment() {
         }
 
         // Установка отрасли
-        if (currentState.industries.isNotEmpty()) {
-            binding.inputIndustry.text = currentState.industries.first().name
+        currentState.industry?.let { industry ->
+            binding.inputIndustry.text = industry.name
             binding.inputIndustry.isVisible = true
             binding.subtitleIndustry.isVisible = true
             binding.deleteIndustry.isVisible = true
+        } ?: run {
+            binding.inputIndustry.text = ""
+            binding.inputIndustry.isVisible = false
+            binding.subtitleIndustry.isVisible = false
+            binding.deleteIndustry.isVisible = false
         }
 
-        binding.apply.isVisible = false
-        binding.reset.isVisible = false
+        updateButtonVisibility()
     }
-
 
     private fun setupListeners() {
         binding.apply {
@@ -114,7 +114,7 @@ class FilterFragment : Fragment() {
             }
 
             deleteIndustry.setOnClickListener {
-                viewModel.updateIndustries(mutableListOf())
+                viewModel.updateIndustries(null)
                 inputIndustry.text = ""
             }
 
@@ -172,6 +172,7 @@ class FilterFragment : Fragment() {
                     checkBox.isChecked = state.showOnlyWithSalary
                     deleteSalary.isVisible = state.salary != null
 
+                    // Установка видимости для локации
                     if (state.locationString.isNotEmpty()) {
                         inputWorkplace.text = state.locationString
                         inputWorkplace.isVisible = true
@@ -184,16 +185,19 @@ class FilterFragment : Fragment() {
                         deleteWorkplace.isVisible = false
                     }
 
-                    if (state.industries.isNotEmpty()) {
-                        inputIndustry.text = state.industries.first().name
+                    // Установка видимости для отрасли
+                    state.industry?.let { industry ->
+                        inputIndustry.text = industry.name
                         inputIndustry.isVisible = true
                         subtitleIndustry.isVisible = true
                         deleteIndustry.isVisible = true
-                    } else {
+                        binding.industry.isVisible = false
+                    } ?: run {
                         inputIndustry.text = ""
                         inputIndustry.isVisible = false
                         subtitleIndustry.isVisible = false
                         deleteIndustry.isVisible = false
+                        binding.industry.isVisible = true
                     }
                 }
 
@@ -215,7 +219,7 @@ class FilterFragment : Fragment() {
     }
 
     private fun updateButtonVisibility() {
-        binding.apply.isVisible = viewModel.isApplyButtonEnabled.value
+        binding.apply.isVisible = viewModel.isApplyButtonEnabled.value || viewModel.filterState.value.industry != null
         binding.reset.isVisible = viewModel.isResetButtonVisible.value
     }
 

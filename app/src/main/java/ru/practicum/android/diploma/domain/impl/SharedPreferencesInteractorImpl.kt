@@ -8,10 +8,9 @@ import ru.practicum.android.diploma.domain.models.Industry
 class SharedPreferencesInteractorImpl(
     private val repo: SharedPreferencesRepository,
 ) : SharedPreferencesInteractor {
+
     override fun setCountry(country: Area?) {
-        if (country != null) {
-            repo.setCountry(country)
-        }
+        country?.let { repo.setCountry(it) }
     }
 
     override fun getCountry(): Area? {
@@ -19,9 +18,7 @@ class SharedPreferencesInteractorImpl(
     }
 
     override fun setRegion(region: Area?) {
-        if (region != null) {
-            repo.setRegion(region)
-        }
+        region?.let { repo.setRegion(it) }
     }
 
     override fun getRegion(): Area? {

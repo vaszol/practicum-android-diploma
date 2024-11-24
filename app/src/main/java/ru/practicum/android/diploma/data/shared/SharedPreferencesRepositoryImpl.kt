@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.data.shared
 
 import android.content.SharedPreferences
-import androidx.core.content.edit
 import ru.practicum.android.diploma.domain.SharedPreferencesConverter
 import ru.practicum.android.diploma.domain.api.SharedPreferencesRepository
 import ru.practicum.android.diploma.domain.models.Area
@@ -11,9 +10,10 @@ class SharedPreferencesRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
     private val sharedPreferencesConverter: SharedPreferencesConverter,
 ) : SharedPreferencesRepository {
+
     override fun setCountry(country: Area) {
         val countryString = sharedPreferencesConverter.convertAreaToJson(country)
-        sharedPreferences.edit { putString(COUNTRY_KEY, countryString) }
+        sharedPreferences.edit().putString(COUNTRY_KEY, countryString).apply()
     }
 
     override fun getCountry(): Area? {
@@ -24,7 +24,7 @@ class SharedPreferencesRepositoryImpl(
 
     override fun setRegion(region: Area) {
         val regionString = sharedPreferencesConverter.convertAreaToJson(region)
-        sharedPreferences.edit { putString(REGION_KEY, regionString) }
+        sharedPreferences.edit().putString(REGION_KEY, regionString).apply()
     }
 
     override fun getRegion(): Area? {
@@ -36,7 +36,7 @@ class SharedPreferencesRepositoryImpl(
     override fun setIndustry(industry: Industry?) {
         if (industry != null) {
             val json = sharedPreferencesConverter.convertIndustryToJson(industry)
-            sharedPreferences.edit { putString(INDUSTRY_KEY, json) }
+            sharedPreferences.edit().putString(INDUSTRY_KEY, json).apply()
         } else {
             sharedPreferences.edit().remove(INDUSTRY_KEY).apply()
         }
@@ -49,19 +49,23 @@ class SharedPreferencesRepositoryImpl(
     }
 
     override fun setSalary(salary: Int) {
-        sharedPreferences.edit { putString(SALARY_KEY, salary.toString()) }
+        sharedPreferences.edit().putInt(SALARY_KEY, salary).apply()
     }
 
     override fun getSalary(): Int? {
-        return sharedPreferences.getString(SALARY_KEY, null)?.toInt()
+        return if (sharedPreferences.contains(SALARY_KEY)) {
+            sharedPreferences.getInt(SALARY_KEY, -1).takeIf { it != -1 }
+        } else {
+            null
+        }
     }
 
     override fun removeSalary() {
-        sharedPreferences.edit { remove(SALARY_KEY) }
+        sharedPreferences.edit().remove(SALARY_KEY).apply()
     }
 
     override fun setShowOnlyWithSalary(showOnlyWithSalary: Boolean) {
-        sharedPreferences.edit { putBoolean(SHOW_ONLY_WITH_SALARY, showOnlyWithSalary) }
+        sharedPreferences.edit().putBoolean(SHOW_ONLY_WITH_SALARY, showOnlyWithSalary).apply()
     }
 
     override fun getShowOnlyWithSalary(): Boolean {

@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentFilterIndustryBinding
 import ru.practicum.android.diploma.domain.models.Industry
@@ -75,7 +77,13 @@ class FilterIndustry : Fragment() {
 
         binding.apply {
             backImg.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
-            buttonIndustry.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+            buttonIndustry.setOnClickListener {
+                val selectedIndustry = viewModel.selectedIndustry.value
+                selectedIndustry?.let { industry ->
+                    setFragmentResult("industryRequestKey", bundleOf("selected_industry" to industry))
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+            }
             clearSearchIndustry.setOnClickListener {
                 edtSearchIndustry.setText(EMPTY_TEXT)
                 setKeyboardVisibility(edtSearchIndustry, false)
