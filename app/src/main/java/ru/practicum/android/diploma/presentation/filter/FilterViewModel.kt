@@ -62,8 +62,8 @@ class FilterViewModel(
 
         _filterState.value = newState
 
-        country?.let { sharedPreferencesInteractor.setCountry(it) }
-        region?.let { sharedPreferencesInteractor.setRegion(it) }
+        sharedPreferencesInteractor.setCountry(country)
+        sharedPreferencesInteractor.setRegion(region)
 
         updateButtonStates()
     }
