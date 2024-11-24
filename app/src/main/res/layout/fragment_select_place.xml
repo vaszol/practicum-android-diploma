@@ -40,7 +40,7 @@
         >
 
         <TextView
-            android:id="@+id/country"
+            android:id="@+id/countryTitle"
             style="@style/InputValueStyle"
             android:text="@string/country"
             android:textColor="?attr/colorOnSecondary"

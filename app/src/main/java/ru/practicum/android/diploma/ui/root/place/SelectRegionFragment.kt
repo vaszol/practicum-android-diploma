@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentSelectRegionBinding
+import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.presentation.place.SelectRegionViewModel
 
 class SelectRegionFragment : Fragment() {
@@ -17,6 +18,7 @@ class SelectRegionFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var areaAdapter: AreaAdapter
+    private var regions = ArrayList<Area>()
 
     private val viewModel by viewModel<SelectRegionViewModel>()
 
@@ -38,8 +40,9 @@ class SelectRegionFragment : Fragment() {
 
         viewModel.getRegions()
 
-        areaAdapter = AreaAdapter{
-
+        areaAdapter = AreaAdapter {
+            viewModel.setRegion(it)
+            findNavController().popBackStack()
         }
 
         with(binding) {
@@ -51,9 +54,10 @@ class SelectRegionFragment : Fragment() {
         }
     }
 
-    private fun render(state: AreaState){
+    private fun render(state: AreaState) {
         if (state is AreaState.Content) {
-            areaAdapter.areas.addAll(state.areas)
+            regions.addAll(state.areas)
+            areaAdapter.areas.addAll(regions)
             areaAdapter.notifyDataSetChanged()
         }
     }

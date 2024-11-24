@@ -65,6 +65,14 @@
         <action
             android:id="@+id/action_selectPlaceFragment_to_selectRegionFragment"
             app:destination="@id/selectRegionFragment" />
+        <argument
+            android:name="country"
+            app:argType="string"
+            android:defaultValue='""' />
+        <argument
+            android:name="region"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
 
     <fragment
