@@ -35,22 +35,22 @@ class SelectRegionViewModel(
                         regions.addAll(area.areas!!) // Добавляю регионы всех стран в список
                     }
                 }
-
-                if (query != "") { // Тут логика фильтрации по поиску
-                    result.addAll(filter(regions, query))
-                    if (result.isEmpty()) {
-                        stateLiveData.postValue(AreaState.NoSuchRegion("Такого региона нет"))
-                    } else {
-                        stateLiveData.postValue(AreaState.Content(result))
-                    }
-                } else {
-                    if (regions.isEmpty()) {
-                        stateLiveData.postValue(AreaState.Error("Не удалось получить список"))
-                    } else {
-                        stateLiveData.postValue(AreaState.Content(regions))
-                    }
-                }
             }
+
+           //     if (query != "") { // Тут логика фильтрации по поиску
+           //         result.addAll(filter(regions, query))
+           //         if (result.isEmpty()) {
+           //             stateLiveData.postValue(AreaState.NoSuchRegion("Такого региона нет"))
+           //         } else {
+           //             stateLiveData.postValue(AreaState.Content(result))
+           //         }
+           //     } else {
+           //         if (regions.isEmpty()) {
+           //             stateLiveData.postValue(AreaState.Error("Не удалось получить список"))
+           //         } else {
+           //             stateLiveData.postValue(AreaState.Content(regions))
+           //         }
+           //     }
         }
     }
 
