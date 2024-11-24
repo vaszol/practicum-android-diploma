@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui.root.place
+package ru.practicum.android.diploma.ui.root.filter.place
 
 import android.os.Bundle
 import android.text.Editable
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSelectRegionBinding
-import ru.practicum.android.diploma.presentation.place.SelectRegionViewModel
+import ru.practicum.android.diploma.presentation.filter.place.SelectRegionViewModel
 
 class SelectRegionFragment : Fragment() {
 
@@ -32,7 +32,7 @@ class SelectRegionFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSelectRegionBinding.inflate(inflater, container, false)
         return binding.root
     }
