@@ -75,4 +75,5 @@
     <string name="industry_hint">Введите отрасль</string>
     <string name="error_industry">Не удалось получить\nсписок</string>
     <string name="industry_button_text">Выбрать</string>
+    <string name="select_text">Выбрать</string>
 </resources>

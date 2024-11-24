@@ -52,6 +52,9 @@ class SelectPlaceFragment : Fragment() {
             deleteRegion.setOnClickListener {
                 viewModel.clearRegion()
             }
+            selectButton.setOnClickListener {
+                findNavController().popBackStack()
+            }
         }
     }
 
@@ -83,6 +86,12 @@ class SelectPlaceFragment : Fragment() {
                 inputRegion.text = EMPTY_TEXT
                 inputRegion.visibility = View.GONE
                 deleteRegion.visibility = View.GONE
+            }
+
+            if (state.country != null || state.region != null) {
+                selectButton.visibility = View.VISIBLE
+            } else {
+                selectButton.visibility = View.GONE
             }
         }
     }
