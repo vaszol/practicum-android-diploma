@@ -47,9 +47,12 @@ class FilterIndustry : Fragment() {
         }
 
         viewModel.selectedIndustry.observe(viewLifecycleOwner) { selected ->
-            binding.buttonIndustry.visibility = View.VISIBLE
             adapter.setSelectedIndustry(selected)
-
+            if (selected != null) {
+                binding.buttonIndustry.visibility = View.VISIBLE
+            } else {
+                binding.buttonIndustry.visibility = View.GONE
+            }
         }
 
         val textWatcher = object : TextWatcher {
@@ -72,7 +75,7 @@ class FilterIndustry : Fragment() {
 
         binding.apply {
             backImg.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
-            buttonIndustry.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() } //TODO
+            buttonIndustry.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
             clearSearchIndustry.setOnClickListener {
                 edtSearchIndustry.setText(EMPTY_TEXT)
                 setKeyboardVisibility(edtSearchIndustry, false)
@@ -86,21 +89,20 @@ class FilterIndustry : Fragment() {
                         dy: Int
                     ) {
                         super.onScrolled(recyclerView, dx, dy)
-                        if (dy > 0) {   // Скрытие клавиатуры при прокрутке вниз
+                        if (dy > 0) { // Скрытие клавиатуры при прокрутке вниз
                             setKeyboardVisibility(edtSearchIndustry, false)
                         }
                     }
-                })
+                }
+            )
         }
-
     }
 
     private fun showError() {
         binding.apply {
             progressBar.visibility = View.GONE
             recyclerView.visibility = View.GONE
-            imgIndustryError.visibility = View.VISIBLE
-            txtIndustryError.visibility = View.VISIBLE
+            industryError.visibility = View.VISIBLE
         }
     }
 
@@ -108,8 +110,7 @@ class FilterIndustry : Fragment() {
         binding.apply {
             progressBar.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
-            imgIndustryError.visibility = View.GONE
-            txtIndustryError.visibility = View.GONE
+            industryError.visibility = View.GONE
         }
         adapter.updateList(industries)
     }
@@ -118,8 +119,7 @@ class FilterIndustry : Fragment() {
         binding.apply {
             progressBar.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
-            imgIndustryError.visibility = View.GONE
-            txtIndustryError.visibility = View.GONE
+            industryError.visibility = View.GONE
         }
     }
 

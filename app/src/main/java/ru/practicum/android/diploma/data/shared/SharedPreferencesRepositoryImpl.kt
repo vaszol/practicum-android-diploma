@@ -33,9 +33,13 @@ class SharedPreferencesRepositoryImpl(
         }
     }
 
-    override fun setIndustry(industry: Industry) {
-        val json = sharedPreferencesConverter.convertIndustryToJson(industry)
-        sharedPreferences.edit { putString(INDUSTRY_KEY, json) }
+    override fun setIndustry(industry: Industry?) {
+        if (industry != null) {
+            val json = sharedPreferencesConverter.convertIndustryToJson(industry)
+            sharedPreferences.edit { putString(INDUSTRY_KEY, json) }
+        } else {
+            sharedPreferences.edit().remove(INDUSTRY_KEY).apply()
+        }
     }
 
     override fun getIndustry(): Industry? {

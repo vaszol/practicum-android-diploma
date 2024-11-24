@@ -8,7 +8,7 @@ import ru.practicum.android.diploma.databinding.ItemIndustryBinding
 import ru.practicum.android.diploma.domain.models.Industry
 
 class IndustryAdapter(
-    private val onItemSelected: (Industry) -> Unit
+    private val onItemSelected: (Industry?) -> Unit
 ) : RecyclerView.Adapter<IndustryViewHolder>() {
 
     private var selectedPosition: Int = RecyclerView.NO_POSITION
@@ -25,15 +25,26 @@ class IndustryAdapter(
     override fun getItemCount() = currentList.size
 
     override fun onBindViewHolder(holder: IndustryViewHolder, @SuppressLint("RecyclerView") position: Int) {
-        holder.bind(currentList[position], position == selectedPosition)
+        val industry = currentList[position]
+        holder.bind(industry, industry == selectedIndustry)
 
         holder.itemView.setOnClickListener {
-            val previousPosition = selectedPosition
-            selectedPosition = position
-            notifyItemChanged(previousPosition)
-            notifyItemChanged(selectedPosition)
-
-            onItemSelected(currentList[position])
+            if (selectedIndustry == industry) {
+                // Если элемент уже выбран, сбрасываем выбор
+                val previousPosition = selectedPosition
+                selectedPosition = RecyclerView.NO_POSITION
+                selectedIndustry = null
+                notifyItemChanged(previousPosition)
+                onItemSelected(null) // Передаем null как снятие выбора
+            } else {
+                // Если элемент не выбран, устанавливаем его
+                val previousPosition = selectedPosition
+                selectedPosition = position
+                selectedIndustry = industry
+                notifyItemChanged(previousPosition)
+                notifyItemChanged(selectedPosition)
+                onItemSelected(industry)
+            }
         }
     }
 

@@ -12,5 +12,5 @@ class SharedPreferencesConverterImpl(private val gson: Gson) : SharedPreferences
 
     override fun convertIndustryToJson(industry: Industry): String = gson.toJson(industry)
 
-    override fun convertJsonToIndustry(json: String): Industry =  gson.fromJson(json, Industry::class.java)
+    override fun convertJsonToIndustry(json: String): Industry = gson.fromJson(json, Industry::class.java)
 }
