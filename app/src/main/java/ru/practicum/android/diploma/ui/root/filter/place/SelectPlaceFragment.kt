@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSelectPlaceBinding
-import ru.practicum.android.diploma.presentation.filter.place.SelectPlaceViewModel
+import ru.practicum.android.diploma.presentation.place.SelectPlaceViewModel
 
 class SelectPlaceFragment : Fragment() {
 

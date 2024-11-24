@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentSelectCountryBinding
-import ru.practicum.android.diploma.presentation.filter.place.SelectCountryViewModel
+import ru.practicum.android.diploma.presentation.place.SelectCountryViewModel
 
 class SelectCountryFragment : Fragment() {
 
