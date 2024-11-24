@@ -23,14 +23,14 @@ class SelectRegionViewModel(
 
                 val result = ArrayList<Area>()
                 val regions = ArrayList<Area>()
-                val country = getCountry() //Получаю страну из SharedPrefs
-                if (country != null) { //Если страна назначена
-                    for (area in areas) { //Перебираю все страны
-                        if (area.id == country.id) { //Сравниваю с назначенной
-                            regions.addAll(area.areas!!) //Добавляю регионы этой страны в список
+                val country = getCountry() // Получаю страну из SharedPrefs
+                if (country != null) { // Если страна назначена
+                    for (area in areas) { // Перебираю все страны
+                        if (area.id == country.id) { // Сравниваю с назначенной
+                            regions.addAll(area.areas!!) // Добавляю регионы этой страны в список
                         }
                     }
-                } else {// Если страна не назначена
+                } else { // Если страна не назначена
                     for (area in areas) {
                         regions.addAll(area.areas!!)// Добавляю регионы всех стран в список
                     }

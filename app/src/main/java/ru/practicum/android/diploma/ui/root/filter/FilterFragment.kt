@@ -129,9 +129,9 @@ class FilterFragment : Fragment() {
             }
 
             salary.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { TODO() }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { TODO() }
 
                 override fun afterTextChanged(s: Editable?) {
                     val salaryText = s.toString()
@@ -155,13 +155,17 @@ class FilterFragment : Fragment() {
     }
 
     private fun observeViewModel() {
+        observeFilterState()
+        observeButtonVisibility()
+    }
+
+    private fun observeFilterState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.filterState.collect { state ->
                 binding.apply {
                     checkBox.isChecked = state.showOnlyWithSalary
                     deleteSalary.isVisible = state.salary != null
 
-                    // Установка видимости для локации
                     if (state.locationString.isNotEmpty()) {
                         inputWorkplace.text = state.locationString
                         inputWorkplace.isVisible = true
@@ -176,7 +180,6 @@ class FilterFragment : Fragment() {
                         binding.workplace.isVisible = true
                     }
 
-                    // Установка видимости для отрасли
                     state.industry?.let { industry ->
                         inputIndustry.text = industry.name
                         inputIndustry.isVisible = true
@@ -191,11 +194,12 @@ class FilterFragment : Fragment() {
                         binding.industry.isVisible = true
                     }
                 }
-
                 updateButtonVisibility()
             }
         }
+    }
 
+    private fun observeButtonVisibility () {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isApplyButtonEnabled.collect { isEnabled ->
                 binding.apply.isVisible = isEnabled
