@@ -19,7 +19,6 @@ class SelectRegionFragment : Fragment() {
     private var _binding: FragmentSelectRegionBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var textWatcher: TextWatcher
     private val areaAdapter by lazy {
         AreaAdapter {
             viewModel.setRegion(it)
@@ -30,7 +29,9 @@ class SelectRegionFragment : Fragment() {
     private val viewModel by viewModel<SelectRegionViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSelectRegionBinding.inflate(inflater, container, false)
         return binding.root
@@ -57,7 +58,7 @@ class SelectRegionFragment : Fragment() {
             }
         }
 
-        textWatcher = object : TextWatcher {
+        val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0.toString() != EMPTY_TEXT) {
