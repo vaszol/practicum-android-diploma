@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.root.filter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -9,9 +10,10 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,13 +25,11 @@ import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
-import ru.practicum.android.diploma.presentation.filter.SharedFilterViewModel
 import ru.practicum.android.diploma.ui.root.RootActivity
 
 class FilterFragment : Fragment() {
     private val viewModel: FilterViewModel by viewModel()
     private val binding by lazy { FragmentFilterBinding.inflate(layoutInflater) }
-    private val sharedFilterViewModel: SharedFilterViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,36 +48,35 @@ class FilterFragment : Fragment() {
         setUpFragmentResultListener()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupViews() {
         binding.salary.inputType = InputType.TYPE_CLASS_NUMBER
         binding.deleteSalary.isVisible = false
 
-        val currentState = viewModel.filterState.value
-
-        // Установка зарплаты
-        currentState.salary?.let {
-            binding.salary.setText(it.toString())
-        }
-
-        // Установка локации
-        if (currentState.locationString.isNotEmpty()) {
-            binding.inputWorkplace.text = currentState.locationString
-            binding.inputWorkplace.isVisible = true
-            binding.subtitleWorkplace.isVisible = true
-            binding.deleteWorkplace.isVisible = true
-        }
-
-        // Установка отрасли
-        currentState.industry?.let { industry ->
-            binding.inputIndustry.text = industry.name
-            binding.inputIndustry.isVisible = true
-            binding.subtitleIndustry.isVisible = true
-            binding.deleteIndustry.isVisible = true
-        } ?: run {
-            binding.inputIndustry.text = ""
-            binding.inputIndustry.isVisible = false
-            binding.subtitleIndustry.isVisible = false
-            binding.deleteIndustry.isVisible = false
+        viewModel.filterState.value.let { state ->
+            // Установка зарплаты
+            state.salary?.let {
+                binding.salary.setText(it.toString())
+            }
+            // Установка локации
+            if (state.locationString.isNotEmpty()) {
+                binding.inputWorkplace.text = state.locationString
+                binding.inputWorkplace.isVisible = true
+                binding.subtitleWorkplace.isVisible = true
+                binding.deleteWorkplace.isVisible = true
+            }
+            // Установка отрасли
+            state.industry?.let { industry ->
+                binding.inputIndustry.text = industry.name
+                binding.inputIndustry.isVisible = true
+                binding.subtitleIndustry.isVisible = true
+                binding.deleteIndustry.isVisible = true
+            } ?: run {
+                binding.inputIndustry.text = ""
+                binding.inputIndustry.isVisible = false
+                binding.subtitleIndustry.isVisible = false
+                binding.deleteIndustry.isVisible = false
+            }
         }
 
         updateButtonVisibility()
@@ -118,9 +117,10 @@ class FilterFragment : Fragment() {
 
             apply.setOnClickListener {
                 val currentSalary = salary.text.toString().toIntOrNull()
-                sharedFilterViewModel.setFilters(currentSalary, checkBox.isChecked)
                 viewModel.updateSalary(currentSalary)
                 viewModel.applyFilter()
+                setFragmentResult("applyFilter", bundleOf("updated" to true))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
             }
 
             reset.setOnClickListener {

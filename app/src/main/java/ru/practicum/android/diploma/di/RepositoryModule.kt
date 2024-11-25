@@ -12,7 +12,7 @@ import ru.practicum.android.diploma.domain.favorite.FavoriteRepository
 val repositoryModule = module {
     factory { VacancyConverter() }
     single<HhRepository> {
-        HhRepositoryImpl(get(), get(), get())
+        HhRepositoryImpl(get(), get(), get(), get())
     }
     factory<FavoriteRepository> {
         FavoriteRepositoryImpl(get())

@@ -15,6 +15,7 @@ import ru.practicum.android.diploma.data.dto.Response
 import ru.practicum.android.diploma.data.dto.VacanciesRequest
 import ru.practicum.android.diploma.data.dto.VacancyRequest
 import ru.practicum.android.diploma.data.dto.VacancyResponse
+import ru.practicum.android.diploma.util.extentions.getQueryMap
 import javax.net.ssl.HttpsURLConnection
 
 class HHApiClient(
@@ -28,7 +29,7 @@ class HHApiClient(
                 when {
                     !isConnected() -> Response().apply { resultCode = -1 }
 
-                    dto is VacanciesRequest -> hhApi.getVacancies(dto.text, dto.currency, dto.size, dto.page).apply {
+                    dto is VacanciesRequest -> hhApi.getVacancies(getQueryMap(dto)).apply {
                         resultCode = HttpsURLConnection.HTTP_OK
                     }
 

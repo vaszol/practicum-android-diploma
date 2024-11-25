@@ -13,14 +13,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.domain.models.Vacancy
-import ru.practicum.android.diploma.presentation.filter.SharedFilterViewModel
 import ru.practicum.android.diploma.presentation.search.SearchEventState
 import ru.practicum.android.diploma.presentation.search.SearchScreenState
 import ru.practicum.android.diploma.presentation.search.SearchViewModel
@@ -29,11 +28,8 @@ import java.text.DecimalFormat
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
-    private val sharedFilterViewModel: SharedFilterViewModel by activityViewModels()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
     private val adapter by lazy { VacancyAdapter(mutableListOf()) { selectVacancy(it) } }
-
-    private var latestSearchText: String? = null
 
     private fun selectVacancy(vacancy: Vacancy) {
         findNavController().navigate(
@@ -52,16 +48,6 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        sharedFilterViewModel.salary.observe(viewLifecycleOwner) { salary ->
-            viewModel.setFilters(salary, sharedFilterViewModel.showOnlyWithSalary.value ?: false)
-            viewModel.searchDebounce(latestSearchText ?: "")
-        }
-
-        sharedFilterViewModel.showOnlyWithSalary.observe(viewLifecycleOwner) { showOnlyWithSalary ->
-            viewModel.setFilters(sharedFilterViewModel.salary.value, showOnlyWithSalary)
-            viewModel.searchDebounce(latestSearchText ?: "")
-        }
 
         binding.searchFilterNotActvie.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
@@ -138,6 +124,11 @@ class SearchFragment : Fragment() {
 
             searchFilterNotActvie.setOnClickListener {
                 findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
+            }
+        }
+        setFragmentResultListener("applyFilter") { _, bundle ->
+            if (bundle.getSerializable("updated") as Boolean) {
+                viewModel.updateFilter()
             }
         }
     }
