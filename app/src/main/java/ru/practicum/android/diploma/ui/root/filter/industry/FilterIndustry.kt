@@ -83,7 +83,8 @@ class FilterIndustry : Fragment() {
                 selectedIndustry?.let { industry ->
                     viewModel.saveSelectedIndustry(industry)
 
-                    setFragmentResult(FilterFragmentKeys.INDUSTRY_REQUEST_KEY,
+                    setFragmentResult(
+                        FilterFragmentKeys.INDUSTRY_REQUEST_KEY,
                         bundleOf(FilterFragmentKeys.SELECTED_INDUSTRY_KEY to industry)
                     )
 
