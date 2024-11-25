@@ -32,7 +32,7 @@ class IndustryViewModel(
                 .collect { pair ->
                     when {
                         pair.second != null -> {
-                            Log.e("Exception caught in IndustryViewModel", "IOException occurred")
+                            Log.e("IOException caught in IndustryViewModel", "IOException occurred")
                             _industryScreenState.postValue(IndustryScreenState.Error)
                         }
                         pair.first.isNullOrEmpty() -> {
@@ -50,7 +50,7 @@ class IndustryViewModel(
                     _selectedIndustry.postValue(it)
                 }
             } catch (e: JsonSyntaxException) {
-                Log.e("Exception caught in IndustryViewModel", "JsonSyntaxException occurred: ${e.localizedMessage}", e)
+                Log.e("JsonSyntaxException caught in IndustryViewModel", e.localizedMessage, e)
                 _industryScreenState.postValue(IndustryScreenState.Error)
             }
         }
