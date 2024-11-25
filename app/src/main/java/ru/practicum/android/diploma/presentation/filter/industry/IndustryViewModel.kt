@@ -47,7 +47,10 @@ class IndustryViewModel(
     }
 
     fun selectIndustry(industry: Industry?) {
-        sharedPrefInteractor.setIndustry(industry)
         _selectedIndustry.value = industry
+    }
+
+    fun saveSelectedIndustry(industry: Industry) {
+        sharedPrefInteractor.setIndustry(industry)
     }
 }

@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.ui.root.filter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
@@ -26,6 +27,7 @@ import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.ui.root.RootActivity
+import ru.practicum.android.diploma.util.constants.FilterFragmentKeys
 
 class FilterFragment : Fragment() {
     private val viewModel: FilterViewModel by viewModel()
@@ -231,14 +233,32 @@ class FilterFragment : Fragment() {
     }
 
     private fun setUpFragmentResultListener() {
-        setFragmentResultListener("industryRequestKey") { _, bundle ->
-            val selectedIndustry = bundle.getSerializable("selected_industry") as? Industry
+        // Для Industry
+        setFragmentResultListener(FilterFragmentKeys.INDUSTRY_REQUEST_KEY) { _, bundle ->
+            val selectedIndustry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getSerializable(FilterFragmentKeys.SELECTED_INDUSTRY_KEY, Industry::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                bundle.getSerializable(FilterFragmentKeys.SELECTED_INDUSTRY_KEY) as? Industry
+            }
             viewModel.updateIndustries(selectedIndustry)
         }
 
-        setFragmentResultListener("countryRequestKey") { _, bundle ->
-            val selectedCountry = bundle.getSerializable("selected_country") as? Area
-            val selectedRegion = bundle.getSerializable("selected_region") as? Area
+        // Для Area (Country и Region)
+        setFragmentResultListener(FilterFragmentKeys.COUNTRY_REQUEST_KEY) { _, bundle ->
+            val selectedCountry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getSerializable(FilterFragmentKeys.SELECTED_COUNTRY_KEY, Area::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                bundle.getSerializable(FilterFragmentKeys.SELECTED_COUNTRY_KEY) as? Area
+            }
+
+            val selectedRegion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getSerializable(FilterFragmentKeys.SELECTED_REGION_KEY, Area::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                bundle.getSerializable(FilterFragmentKeys.SELECTED_REGION_KEY) as? Area
+            }
 
             viewModel.updateLocation(selectedCountry, selectedRegion)
         }

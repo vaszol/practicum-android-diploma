@@ -17,6 +17,7 @@ import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.presentation.filter.industry.IndustryScreenState
 import ru.practicum.android.diploma.presentation.filter.industry.IndustryViewModel
 import ru.practicum.android.diploma.ui.root.search.SearchFragment.Companion.EMPTY_TEXT
+import ru.practicum.android.diploma.util.constants.FilterFragmentKeys
 
 class FilterIndustry : Fragment() {
     private val binding by lazy { FragmentFilterIndustryBinding.inflate(layoutInflater) }
@@ -80,7 +81,11 @@ class FilterIndustry : Fragment() {
             buttonIndustry.setOnClickListener {
                 val selectedIndustry = viewModel.selectedIndustry.value
                 selectedIndustry?.let { industry ->
-                    setFragmentResult("industryRequestKey", bundleOf("selected_industry" to industry))
+                    viewModel.saveSelectedIndustry(industry)
+
+                    setFragmentResult(FilterFragmentKeys.INDUSTRY_REQUEST_KEY,
+                        bundleOf(FilterFragmentKeys.SELECTED_INDUSTRY_KEY to industry))
+
                     requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
             }
