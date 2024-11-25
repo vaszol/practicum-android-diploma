@@ -41,7 +41,9 @@ class FilterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as? RootActivity)?.findViewById<BottomNavigationView>(R.id.bottom_navigation_view)?.visibility =
             View.GONE
+
         viewModel.getInitialState()
+
         setupViews()
         setupListeners()
         observeViewModel()
@@ -92,12 +94,20 @@ class FilterFragment : Fragment() {
                 findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
             }
 
+            inputWorkplace.setOnClickListener {
+                findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
+            }
+
             deleteWorkplace.setOnClickListener {
                 viewModel.updateLocation(null, null)
                 inputWorkplace.text = ""
             }
 
             industry.setOnClickListener {
+                findNavController().navigate(R.id.action_filterFragment_to_filterIndustry)
+            }
+
+            inputIndustry.setOnClickListener {
                 findNavController().navigate(R.id.action_filterFragment_to_filterIndustry)
             }
 
@@ -235,7 +245,13 @@ class FilterFragment : Fragment() {
     }
 
     private fun updateButtonVisibility() {
-        binding.apply.isVisible = viewModel.isApplyButtonEnabled.value || viewModel.filterState.value.industry != null
+        val isButtonEnabled = viewModel.isFilterChanged() ||
+            viewModel.filterState.value.industry != null ||
+            viewModel.filterState.value.country != null ||
+            viewModel.filterState.value.region != null ||
+            viewModel.filterState.value.salary != null
+
+        binding.apply.isVisible = isButtonEnabled
         binding.reset.isVisible = viewModel.isResetButtonVisible.value
     }
 

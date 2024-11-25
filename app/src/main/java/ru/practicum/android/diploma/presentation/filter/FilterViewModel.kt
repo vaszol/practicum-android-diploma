@@ -148,17 +148,18 @@ class FilterViewModel(
             currentState.showOnlyWithSalary.takeIf { it }
         ).any { it != null }
 
-        _isApplyButtonEnabled.value = isFilterChanged() && hasAnyFilterSet()
+        _isApplyButtonEnabled.value = isFilterChanged() ||
+            currentState.industry != null ||
+            currentState.country != null ||
+            currentState.region != null
     }
 
-    private fun isFilterChanged(): Boolean {
-        val result =
-            initialFilterState.salary != _filterState.value.salary ||
-                initialFilterState.industry != _filterState.value.industry ||
-                initialFilterState.country != _filterState.value.country ||
-                initialFilterState.region != _filterState.value.region ||
-                initialFilterState.showOnlyWithSalary != _filterState.value.showOnlyWithSalary
-        return result
+    fun isFilterChanged(): Boolean {
+        return initialFilterState.salary != _filterState.value.salary ||
+            initialFilterState.industry != _filterState.value.industry ||
+            initialFilterState.country != _filterState.value.country ||
+            initialFilterState.region != _filterState.value.region ||
+            initialFilterState.showOnlyWithSalary != _filterState.value.showOnlyWithSalary
     }
 
     private fun hasAnyFilterSet(): Boolean {
