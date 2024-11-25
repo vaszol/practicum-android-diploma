@@ -43,8 +43,8 @@ class SelectPlaceFragment : Fragment() {
         setupClickListeners()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onPause() {
+        super.onPause()
 
         if (!isSelectButtonClicked) {
             viewModel.resetSelectedValues()
