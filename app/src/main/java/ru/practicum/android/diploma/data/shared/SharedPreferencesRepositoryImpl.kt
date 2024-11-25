@@ -57,8 +57,12 @@ class SharedPreferencesRepositoryImpl(
         }
     }
 
-    override fun setSalary(salary: Int) {
-        sharedPreferences.edit().putInt(SALARY_KEY, salary).apply()
+    override fun setSalary(salary: Int?) {
+        if (salary != null) {
+            sharedPreferences.edit().putInt(SALARY_KEY, salary).apply()
+        } else {
+            sharedPreferences.edit().remove(SALARY_KEY).apply()
+        }
     }
 
     override fun getSalary(): Int? {
@@ -67,10 +71,6 @@ class SharedPreferencesRepositoryImpl(
         } else {
             null
         }
-    }
-
-    override fun removeSalary() {
-        sharedPreferences.edit().remove(SALARY_KEY).apply()
     }
 
     override fun setShowOnlyWithSalary(showOnlyWithSalary: Boolean) {

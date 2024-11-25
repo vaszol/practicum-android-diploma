@@ -21,7 +21,11 @@ class SelectCountryViewModel(
     fun getCountries() {
         viewModelScope.launch {
             hhInteractor.getAreas().collect { areas ->
-                stateLiveData.postValue(AreaState.Content(areas))
+                if (areas.isEmpty()) {
+                    stateLiveData.postValue(AreaState.Error)
+                } else {
+                    stateLiveData.postValue(AreaState.Content(areas))
+                }
             }
         }
     }

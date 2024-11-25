@@ -10,9 +10,8 @@ interface SharedPreferencesRepository {
     fun getRegion(): Area?
     fun setIndustry(industry: Industry?)
     fun getIndustry(): Industry?
-    fun setSalary(salary: Int)
+    fun setSalary(salary: Int?)
     fun getSalary(): Int?
-    fun removeSalary()
     fun setShowOnlyWithSalary(showOnlyWithSalary: Boolean)
     fun getShowOnlyWithSalary(): Boolean
 }

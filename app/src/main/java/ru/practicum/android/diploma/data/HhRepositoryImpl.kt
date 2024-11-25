@@ -4,7 +4,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.converter.VacancyConverter
-import ru.practicum.android.diploma.data.dto.LocaleRequest
+import ru.practicum.android.diploma.data.dto.AreasRequest
+import ru.practicum.android.diploma.data.dto.AreasResponse
+import ru.practicum.android.diploma.data.dto.IndustriesRequest
+import ru.practicum.android.diploma.data.dto.IndustriesResponse
 import ru.practicum.android.diploma.data.dto.VacanciesRequest
 import ru.practicum.android.diploma.data.dto.VacanciesResponse
 import ru.practicum.android.diploma.data.dto.VacancyRequest
@@ -81,16 +84,14 @@ class HhRepositoryImpl(
     }
 
     override fun getIndustries(): Flow<List<Industry>> = flow {
-        val responseList = networkClient.getIndustries(LocaleRequest())
-        val flatList = responseList.flatMap { topLevelIndustry ->
-            topLevelIndustry.industries?.map { vacancyConverter.mapToDomain(it) } ?: emptyList()
-        }
-        emit(flatList)
+        val response = networkClient.getIndustries(IndustriesRequest()) as IndustriesResponse
+        val industries = response.items.map { vacancyConverter.mapToDomain(it) }
+        emit(industries)
     }
 
     override fun getAreas(): Flow<List<Area>> = flow {
-        val responseList = networkClient.getAreas(LocaleRequest())
-        val list = responseList.map { vacancyConverter.mapToDomain(it) }
-        emit(list)
+        val response = networkClient.getAreas(AreasRequest()) as AreasResponse
+        val areas = response.items.map { vacancyConverter.mapToDomain(it) }
+        emit(areas)
     }
 }

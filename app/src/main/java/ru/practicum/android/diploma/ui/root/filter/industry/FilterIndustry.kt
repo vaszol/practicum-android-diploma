@@ -40,27 +40,10 @@ class FilterIndustry : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerView.adapter = adapter
         viewModel.getIndustries()
-
-        viewModel.industryScreenState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                IndustryScreenState.Loading -> showLoading()
-                IndustryScreenState.Error -> showError()
-                is IndustryScreenState.Content -> showIndustries(state.industries)
-            }
-        }
-
-        viewModel.selectedIndustry.observe(viewLifecycleOwner) { selected ->
-            adapter.setSelectedIndustry(selected)
-            if (selected != null) {
-                binding.buttonIndustry.visibility = View.VISIBLE
-            } else {
-                binding.buttonIndustry.visibility = View.GONE
-            }
-        }
+        setupStateObservers()
 
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!s.isNullOrBlank()) {
                     binding.clearSearchIndustry.visibility = View.VISIBLE
@@ -72,7 +55,6 @@ class FilterIndustry : Fragment() {
                     adapter.filter("")
                 }
             }
-
             override fun afterTextChanged(s: Editable?) = Unit
         }
 
@@ -110,6 +92,25 @@ class FilterIndustry : Fragment() {
                     }
                 }
             )
+        }
+    }
+
+    private fun setupStateObservers() {
+        viewModel.industryScreenState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                IndustryScreenState.Loading -> showLoading()
+                IndustryScreenState.Error -> showError()
+                is IndustryScreenState.Content -> showIndustries(state.industries)
+            }
+        }
+
+        viewModel.selectedIndustry.observe(viewLifecycleOwner) { selected ->
+            adapter.setSelectedIndustry(selected)
+            if (selected != null) {
+                binding.buttonIndustry.visibility = View.VISIBLE
+            } else {
+                binding.buttonIndustry.visibility = View.GONE
+            }
         }
     }
 
