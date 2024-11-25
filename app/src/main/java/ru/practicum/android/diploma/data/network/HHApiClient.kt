@@ -28,7 +28,7 @@ class HHApiClient(
                 when {
                     !isConnected() -> Response().apply { resultCode = -1 }
 
-                    dto is VacanciesRequest -> hhApi.getVacancies(dto.text, dto.currency, dto.size, dto.page).apply {
+                    dto is VacanciesRequest -> hhApi.getVacancies(dto.getQueryMap()).apply {
                         resultCode = HttpsURLConnection.HTTP_OK
                     }
 

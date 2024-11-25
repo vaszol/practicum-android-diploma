@@ -4,6 +4,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 import ru.practicum.android.diploma.data.dto.AreaDto
 import ru.practicum.android.diploma.data.dto.IndustryDto
 import ru.practicum.android.diploma.data.dto.VacanciesResponse
@@ -13,12 +14,7 @@ interface HhApi {
 
     // Поиск по вакансиям
     @GET("/vacancies")
-    suspend fun getVacancies(
-        @Query("text") text: String,
-        @Query("currency") currency: String,
-        @Query("per_page") size: Int,
-        @Query("page") page: Int
-    ): VacanciesResponse
+    suspend fun getVacancies(@QueryMap options: Map<String, String>): VacanciesResponse
 
     // Просмотр вакансии
     @GET("/vacancies/{vacancy_id}")

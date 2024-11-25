@@ -10,6 +10,7 @@ import ru.practicum.android.diploma.data.dto.VacanciesResponse
 import ru.practicum.android.diploma.data.dto.VacancyRequest
 import ru.practicum.android.diploma.data.dto.VacancyResponse
 import ru.practicum.android.diploma.domain.api.HhRepository
+import ru.practicum.android.diploma.domain.api.SharedPreferencesRepository
 import ru.practicum.android.diploma.domain.favorite.FavoriteRepository
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.DetailsVacancyRequest
@@ -26,6 +27,7 @@ class HhRepositoryImpl(
     private val networkClient: NetworkClient,
     private val vacancyConverter: VacancyConverter,
     private val repository: FavoriteRepository,
+    private val filter: SharedPreferencesRepository,
 ) : HhRepository {
     override fun searchVacancies(
         text: String,
@@ -34,8 +36,18 @@ class HhRepositoryImpl(
         locale: String,
         host: Host
     ): Flow<Resource<Pair<List<Vacancy>, Int>>> = flow {
-        val response =
-            networkClient.getVacancies(VacanciesRequest(text = text, currency = currency, size = PAGES, page = page))
+        val response = networkClient.getVacancies(
+            VacanciesRequest(
+                text = text,
+                currency = currency,
+                area = filter.getRegion()?.id,
+                industry = filter.getIndustry()?.id,
+                salary = filter.getSalary(),
+                onlyWithSalary = filter.getShowOnlyWithSalary(),
+                size = PAGES,
+                page = page
+            )
+        )
         if (response.resultCode == HttpsURLConnection.HTTP_OK) {
             val vacanciesResponse = response as VacanciesResponse
             val vacancies = vacanciesResponse.items.map { vacancyConverter.mapToDomain(it) }

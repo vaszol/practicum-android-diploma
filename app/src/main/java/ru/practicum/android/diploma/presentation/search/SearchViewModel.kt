@@ -26,14 +26,6 @@ class SearchViewModel(
     private var isEndOfListReached = false
     private val debouncer = Debouncer(viewModelScope, SEARCH_DEBOUNCE_DELAY)
 
-    private var salaryFilter: Int? = null
-    private var showOnlyWithSalary: Boolean = false
-
-    fun setFilters(salary: Int?, showOnlyWithSalary: Boolean) {
-        this.salaryFilter = salary
-        this.showOnlyWithSalary = showOnlyWithSalary
-    }
-
     fun searchDebounce(changedText: String) {
         if (latestSearchText == changedText) {
             return
@@ -79,19 +71,7 @@ class SearchViewModel(
                 } else {
                     page++
                     currentVacancies.addAll(triple.first!!)
-
-                    // Применение фильтров
-                    val filteredVacancies = currentVacancies.filter { vacancy ->
-                        (salaryFilter == null || vacancy.salaryFrom >= salaryFilter ?: 0) &&
-                            (!showOnlyWithSalary || vacancy.salaryFrom > 0)
-                    }
-
-                    _searchScreenState.postValue(
-                        SearchScreenState.Results(
-                            filteredVacancies.distinct(),
-                            triple.third!!
-                        )
-                    )
+                    _searchScreenState.postValue(SearchScreenState.Results(currentVacancies.distinct(), triple.third!!))
                 }
                 isLoadingNextPage = false
             }
@@ -132,6 +112,12 @@ class SearchViewModel(
             isLoadingNextPage = true
             searchRequest()
         }
+    }
+
+    fun updateFilter() {
+        page = 0
+        currentVacancies.clear()
+        searchRequest()
     }
 
     companion object {
