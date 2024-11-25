@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.presentation.filter.place
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,20 +22,31 @@ class SelectRegionViewModel(
 
     fun getRegions() {
         viewModelScope.launch {
-            hhInteractor.getAreas().collect { areas ->
-                allAreas = areas
-                if (allAreas.isNullOrEmpty()) {
-                    stateLiveData.postValue(AreaState.Error)
+            hhInteractor.getAreas().collect { pair ->
+                when {
+                    pair.second != null -> {
+                        Log.e("Exception caught in SelectRegionViewModel", "IOException occurred")
+                        stateLiveData.postValue(AreaState.Error)
+                    }
+
+                    pair.first.isNullOrEmpty() -> {
+                        Log.e("Exception caught in SelectRegionViewModel", "regions.isNullOrEmpty")
+                        stateLiveData.postValue(AreaState.Error)
+                    }
+
+                    else -> {
+                        allAreas = pair.first!!
+                        val country = getCountry() // Получаю страну из SharedPrefs
+                        allRegions = if (country != null) {
+                            allAreas!!
+                                .filter { it.id == country.id } // Оставляем только выбранную страну
+                                .flatMap { it.areas ?: emptyList() } // Собираем регионы выбранной страны
+                        } else {
+                            allAreas!!.flatMap { it.areas ?: emptyList() } // Собираем регионы всех стран
+                        }
+                        stateLiveData.postValue(AreaState.Content(allRegions))
+                    }
                 }
-                val country = getCountry() // Получаю страну из SharedPrefs
-                allRegions = if (country != null) {
-                    areas
-                        .filter { it.id == country.id } // Оставляем только выбранную страну
-                        .flatMap { it.areas ?: emptyList() } // Собираем регионы выбранной страны
-                } else {
-                    areas.flatMap { it.areas ?: emptyList() } // Собираем регионы всех стран
-                }
-                stateLiveData.postValue(AreaState.Content(allRegions))
             }
         }
     }
@@ -57,8 +69,11 @@ class SelectRegionViewModel(
     }
 
     fun setRegion(area: Area) {
-        sharedPreferencesInteractor.setRegion(area)
         val country = allAreas?.find { it.areas?.contains(area) == true }
-        sharedPreferencesInteractor.setCountry(country)
+        val storedCountry = getCountry()
+        if (country != storedCountry) {
+            sharedPreferencesInteractor.setCountry(country)
+        }
+        sharedPreferencesInteractor.setRegion(area)
     }
 }

@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.presentation.filter.place
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,11 +21,21 @@ class SelectCountryViewModel(
 
     fun getCountries() {
         viewModelScope.launch {
-            hhInteractor.getAreas().collect { areas ->
-                if (areas.isEmpty()) {
-                    stateLiveData.postValue(AreaState.Error)
-                } else {
-                    stateLiveData.postValue(AreaState.Content(areas))
+            hhInteractor.getAreas().collect { pair ->
+                when {
+                    pair.second != null -> {
+                        Log.e("Exception caught in SelectCountryViewModel", "IOException occurred")
+                        stateLiveData.postValue(AreaState.Error)
+                    }
+
+                    pair.first.isNullOrEmpty() -> {
+                        Log.e("Exception caught in SelectCountryViewModel", "countries.isNullOrEmpty")
+                        stateLiveData.postValue(AreaState.Error)
+                    }
+
+                    else -> {
+                        stateLiveData.postValue(AreaState.Content(pair.first!!))
+                    }
                 }
             }
         }
