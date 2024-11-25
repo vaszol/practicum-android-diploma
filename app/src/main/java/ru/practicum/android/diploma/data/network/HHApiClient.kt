@@ -8,9 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.practicum.android.diploma.data.NetworkClient
-import ru.practicum.android.diploma.data.dto.AreaDto
-import ru.practicum.android.diploma.data.dto.IndustryDto
-import ru.practicum.android.diploma.data.dto.LocaleRequest
+import ru.practicum.android.diploma.data.dto.AreasRequest
+import ru.practicum.android.diploma.data.dto.AreasResponse
+import ru.practicum.android.diploma.data.dto.IndustriesRequest
+import ru.practicum.android.diploma.data.dto.IndustriesResponse
 import ru.practicum.android.diploma.data.dto.Response
 import ru.practicum.android.diploma.data.dto.VacanciesRequest
 import ru.practicum.android.diploma.data.dto.VacancyRequest
@@ -61,36 +62,46 @@ class HHApiClient(
         }
     }
 
-    override suspend fun getIndustries(dto: Any): List<IndustryDto> {
+    override suspend fun getIndustries(dto: Any): Response {
         return withContext(Dispatchers.IO) {
             try {
                 when {
-                    !isConnected() -> emptyList()
+                    !isConnected() -> Response().apply { resultCode = -1 }
 
-                    dto is LocaleRequest -> hhApi.getIndustries(dto.locale, dto.host)
+                    dto is IndustriesRequest -> {
+                        val industries = hhApi.getIndustries(dto.locale, dto.host)
+                        IndustriesResponse(ArrayList(industries)).apply {
+                            resultCode = HttpsURLConnection.HTTP_OK
+                        }
+                    }
 
-                    else -> emptyList()
+                    else -> Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
                 }
             } catch (exception: HttpException) {
                 Log.d("Exception caught in HHApiClient: $exception", exception.message())
-                emptyList()
+                Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
             }
         }
     }
 
-    override suspend fun getAreas(dto: Any): List<AreaDto> {
+    override suspend fun getAreas(dto: Any): Response {
         return withContext(Dispatchers.IO) {
             try {
                 when {
-                    !isConnected() -> emptyList()
+                    !isConnected() -> Response().apply { resultCode = -1 }
 
-                    dto is LocaleRequest -> hhApi.getAreas(dto.locale, dto.host)
+                    dto is AreasRequest -> {
+                        val areas = hhApi.getAreas(dto.locale, dto.host)
+                        AreasResponse(ArrayList(areas)).apply {
+                            resultCode = HttpsURLConnection.HTTP_OK
+                        }
+                    }
 
-                    else -> emptyList()
+                    else -> Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
                 }
             } catch (exception: HttpException) {
                 Log.d("Exception caught in HHApiClient: $exception", exception.message())
-                emptyList()
+                Response().apply { resultCode = HttpsURLConnection.HTTP_BAD_REQUEST }
             }
         }
     }
