@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -37,26 +38,25 @@ class SelectPlaceFragment : Fragment() {
             render(it)
         }
 
+        setupClickListeners()
+    }
+
+    private fun setupClickListeners() {
         with(binding) {
             selectCountryButton.setOnClickListener {
-                findNavController().navigate(R.id.action_selectPlaceFragment_to_selectCountryFragment)
+                navigateToSelectCountry()
             }
             selectRegionButton.setOnClickListener {
-                findNavController().navigate(R.id.action_selectPlaceFragment_to_selectRegionFragment)
+                navigateToSelectRegion()
             }
             backArrow.setOnClickListener {
                 findNavController().popBackStack()
             }
             deleteCountry.setOnClickListener {
-                Log.d("Dtest", "deleteCountry.setOnClickListener")
-                viewModel.clearCountry()
-                inputCountry.text = EMPTY_TEXT
+                clearCountry()
             }
-
             deleteRegion.setOnClickListener {
-                Log.d("Dtest", "deleteRegion.setOnClickListener")
-                viewModel.clearRegion()
-                inputRegion.text = EMPTY_TEXT
+                clearRegion()
             }
             selectButton.setOnClickListener {
                 findNavController().popBackStack()
@@ -64,41 +64,57 @@ class SelectPlaceFragment : Fragment() {
         }
     }
 
+    private fun navigateToSelectCountry() {
+        findNavController().navigate(R.id.action_selectPlaceFragment_to_selectCountryFragment)
+    }
+
+    private fun navigateToSelectRegion() {
+        findNavController().navigate(R.id.action_selectPlaceFragment_to_selectRegionFragment)
+    }
+
+    private fun clearCountry() {
+        Log.d("Dtest", "deleteCountry.setOnClickListener")
+        viewModel.clearCountry()
+        binding.inputCountry.text = EMPTY_TEXT
+    }
+
+    private fun clearRegion() {
+        Log.d("Dtest", "deleteRegion.setOnClickListener")
+        viewModel.clearRegion()
+        binding.inputRegion.text = EMPTY_TEXT
+    }
+
     private fun render(state: WorkPlaceState) {
         with(binding) {
             if (state.country != null) {
-                countryTitle.visibility = View.GONE
-                subtitleCountry.visibility = View.VISIBLE
+                countryTitle.isVisible = false
+                subtitleCountry.isVisible = true
                 inputCountry.text = state.country.name
-                inputCountry.visibility = View.VISIBLE
-                deleteCountry.visibility = View.VISIBLE
+                inputCountry.isVisible = true
+                deleteCountry.isVisible = true
             } else {
                 countryTitle.visibility = View.VISIBLE
-                subtitleCountry.visibility = View.GONE
+                subtitleCountry.isVisible = false
                 inputCountry.text = EMPTY_TEXT
-                inputCountry.visibility = View.GONE
-                deleteCountry.visibility = View.GONE
+                inputCountry.isVisible = false
+                deleteCountry.isVisible = false
             }
 
             if (state.region != null) {
-                region.visibility = View.GONE
-                subtitleRegion.visibility = View.VISIBLE
+                region.isVisible = false
+                subtitleRegion.isVisible = true
                 inputRegion.text = state.region.name
-                inputRegion.visibility = View.VISIBLE
-                deleteRegion.visibility = View.VISIBLE
+                inputRegion.isVisible = true
+                deleteRegion.isVisible = true
             } else {
-                region.visibility = View.VISIBLE
-                subtitleRegion.visibility = View.GONE
+                region.isVisible = true
+                subtitleRegion.isVisible = false
                 inputRegion.text = EMPTY_TEXT
-                inputRegion.visibility = View.GONE
-                deleteRegion.visibility = View.GONE
+                inputRegion.isVisible = false
+                deleteRegion.isVisible = false
             }
 
-            if (state.country != null || state.region != null) {
-                selectButton.visibility = View.VISIBLE
-            } else {
-                selectButton.visibility = View.GONE
-            }
+            selectButton.isVisible = state.country != null || state.region != null
         }
     }
 
