@@ -59,7 +59,7 @@
         android:ellipsize="end"
         android:hint="@string/industry_hint"
         android:inputType="text"
-        android:maxLines="1"
+        android:maxLines="2"
         android:minHeight="@dimen/size_50dp"
         android:singleLine="true"
         android:textAppearance="@style/TextStyleRegular"
@@ -161,7 +161,7 @@
         android:text="@string/industry_button_text"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
