@@ -27,4 +27,10 @@ class SelectPlaceViewModel(
         sharedPreferencesInteractor.setRegion(null)
         setState()
     }
+
+    fun resetSelectedValues() {
+        sharedPreferencesInteractor.setCountry(null)
+        sharedPreferencesInteractor.setRegion(null)
+        setState()
+    }
 }
