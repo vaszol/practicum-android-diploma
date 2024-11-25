@@ -54,7 +54,21 @@ class SelectCountryFragment : Fragment() {
 
     private fun render(state: AreaState) {
         if (state is AreaState.Content) {
+            showContent()
             areaAdapter.updateList(state.areas)
+        } else {
+            showPlaceholder()
         }
+
+    }
+
+    private fun showPlaceholder() {
+        binding.placeholder.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.GONE
+    }
+
+    private fun showContent() {
+        binding.placeholder.visibility = View.GONE
+        binding.recyclerView.visibility = View.VISIBLE
     }
 }
