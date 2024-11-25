@@ -43,7 +43,7 @@
         android:layout_marginHorizontal="@dimen/size_16dp"
         android:layout_marginTop="@dimen/size_8dp"
         android:background="@drawable/background_edit_text_search"
-        android:backgroundTint="@color/grey_light"
+        android:backgroundTint="?attr/colorSurfaceContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/heading" />
@@ -55,7 +55,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/size_8dp"
-        android:background="@color/grey_light"
+        android:background="?attr/colorSurfaceContainer"
         android:ellipsize="end"
         android:hint="@string/industry_hint"
         android:inputType="text"
@@ -161,7 +161,7 @@
         android:text="@string/industry_button_text"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
