@@ -162,14 +162,13 @@ class FilterViewModel(
             initialFilterState.showOnlyWithSalary != _filterState.value.showOnlyWithSalary
     }
 
-    private fun hasAnyFilterSet(): Boolean {
+    fun hasActiveFilters(): Boolean {
         val currentState = _filterState.value
-        val result =
-            currentState.salary != null ||
-                currentState.industry != null ||
-                currentState.country != null ||
-                currentState.region != null ||
-                currentState.showOnlyWithSalary
-        return result
+        val hasFilters = currentState.salary != null ||
+            currentState.industry != null ||
+            currentState.country != null ||
+            currentState.region != null ||
+            currentState.showOnlyWithSalary
+        return hasFilters
     }
 }

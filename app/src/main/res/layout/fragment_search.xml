@@ -62,6 +62,7 @@
             android:padding="@dimen/size_4dp"
             android:scaleType="center"
             android:src="@drawable/ic_filter_active"
+            android:background="@null"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/search_vacancy"
             app:layout_constraintEnd_toEndOf="@id/right_guideline"

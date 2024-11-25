@@ -66,21 +66,23 @@
         <TextView
             android:id="@+id/subtitleWorkplace"
             style="@style/TextStyleRegular"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/size_0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/size_14dp"
             android:text="@string/workplace"
             android:textSize="@dimen/size_12sp"
             android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/deleteWorkplace"
             app:layout_constraintStart_toStartOf="@+id/workplaceLayout"
             app:layout_constraintTop_toTopOf="@id/workplaceLayout" />
 
         <TextView
             android:id="@+id/inputWorkplace"
             style="@style/TextStyleRegular"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/size_0dp"
             android:layout_height="wrap_content"
             android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/deleteWorkplace"
             app:layout_constraintStart_toStartOf="@+id/workplaceLayout"
             app:layout_constraintTop_toBottomOf="@id/subtitleWorkplace"
             tools:text="Москва" />
@@ -123,21 +125,23 @@
         <TextView
             android:id="@+id/subtitleIndustry"
             style="@style/TextStyleRegular"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/size_0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/size_14dp"
             android:text="@string/industry"
             android:textSize="@dimen/size_12sp"
             android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/deleteIndustry"
             app:layout_constraintStart_toStartOf="@+id/industryLayout"
             app:layout_constraintTop_toTopOf="@id/industryLayout" />
 
         <TextView
             android:id="@+id/inputIndustry"
             style="@style/TextStyleRegular"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/size_0dp"
             android:layout_height="wrap_content"
             android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/deleteIndustry"
             app:layout_constraintStart_toStartOf="@+id/industryLayout"
             app:layout_constraintTop_toBottomOf="@id/subtitleIndustry"
             tools:text="IT" />

@@ -20,6 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.domain.models.Vacancy
+import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.presentation.search.SearchEventState
 import ru.practicum.android.diploma.presentation.search.SearchScreenState
 import ru.practicum.android.diploma.presentation.search.SearchViewModel
@@ -28,6 +29,7 @@ import java.text.DecimalFormat
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
+    private val filterViewModel: FilterViewModel by viewModel()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
     private val adapter by lazy { VacancyAdapter(mutableListOf()) { selectVacancy(it) } }
 
@@ -48,6 +50,9 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        filterViewModel.getInitialState()
+        updateFilterUI()
 
         binding.searchFilterNotActvie.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
@@ -125,10 +130,16 @@ class SearchFragment : Fragment() {
             searchFilterNotActvie.setOnClickListener {
                 findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
             }
+
+            searchFilterActive.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
+            }
         }
+
         setFragmentResultListener("applyFilter") { _, bundle ->
             if (bundle.getSerializable("updated") as Boolean) {
                 viewModel.updateFilter()
+                updateFilterUI()
             }
         }
     }
@@ -226,6 +237,17 @@ class SearchFragment : Fragment() {
             searchProgressBarBottom.visibility = View.GONE
             searchProgressBar.visibility = View.VISIBLE
             setKeyboardVisibility(searchEditText, false)
+        }
+    }
+
+    private fun updateFilterUI() {
+        val hasActiveFilters = filterViewModel.hasActiveFilters()
+        if (hasActiveFilters) {
+            binding.searchFilterActive.visibility = View.VISIBLE
+            binding.searchFilterNotActvie.visibility = View.GONE
+        } else {
+            binding.searchFilterActive.visibility = View.GONE
+            binding.searchFilterNotActvie.visibility = View.VISIBLE
         }
     }
 
