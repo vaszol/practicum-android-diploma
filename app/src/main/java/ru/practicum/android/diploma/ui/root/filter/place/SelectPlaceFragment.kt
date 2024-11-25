@@ -83,13 +83,11 @@ class SelectPlaceFragment : Fragment() {
     }
 
     private fun clearCountry() {
-        Log.d("Dtest", "deleteCountry.setOnClickListener")
         viewModel.clearCountry()
         binding.inputCountry.text = EMPTY_TEXT
     }
 
     private fun clearRegion() {
-        Log.d("Dtest", "deleteRegion.setOnClickListener")
         viewModel.clearRegion()
         binding.inputRegion.text = EMPTY_TEXT
     }
