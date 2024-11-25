@@ -85,8 +85,10 @@ class HhRepositoryImpl(
 
     override fun getIndustries(): Flow<List<Industry>> = flow {
         val response = networkClient.getIndustries(IndustriesRequest()) as IndustriesResponse
-        val industries = response.items.map { vacancyConverter.mapToDomain(it) }
-        emit(industries)
+        val flatList = response.items.flatMap { topLevelIndustry ->
+            topLevelIndustry.industries?.map { vacancyConverter.mapToDomain(it) } ?: emptyList()
+        }
+        emit(flatList)
     }
 
     override fun getAreas(): Flow<List<Area>> = flow {
