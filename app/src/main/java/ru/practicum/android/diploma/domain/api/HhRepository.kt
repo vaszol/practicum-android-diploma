@@ -19,6 +19,6 @@ interface HhRepository {
     ): Flow<Resource<Pair<List<Vacancy>, Int>>>
 
     fun searchVacancy(request: DetailsVacancyRequest): Flow<Resource<VacancyDetail?>>
-    fun getIndustries(): Flow<List<Industry>>
-    fun getAreas(): Flow<List<Area>>
+    fun getIndustries(): Flow<Resource<List<Industry>>>
+    fun getAreas(): Flow<Resource<List<Area>>>
 }

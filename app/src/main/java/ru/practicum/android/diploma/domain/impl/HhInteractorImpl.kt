@@ -37,11 +37,21 @@ class HhInteractorImpl(private val repository: HhRepository) : HhInteractor {
         }
     }
 
-    override fun getIndustries(): Flow<List<Industry>> {
-        return repository.getIndustries()
+    override fun getIndustries(): Flow<Pair<List<Industry>?, String?>> {
+        return repository.getIndustries().map { result ->
+            when (result) {
+                is Resource.Success -> Pair(result.data, null)
+                is Resource.Error -> Pair(null, result.message)
+            }
+        }
     }
 
-    override fun getAreas(): Flow<List<Area>> {
-        return repository.getAreas()
+    override fun getAreas(): Flow<Pair<List<Area>?, String?>> {
+        return repository.getAreas().map { result ->
+            when (result) {
+                is Resource.Success -> Pair(result.data, null)
+                is Resource.Error -> Pair(null, result.message)
+            }
+        }
     }
 }

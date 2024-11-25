@@ -18,6 +18,6 @@ interface HhInteractor {
     ): Flow<Triple<List<Vacancy>?, String?, Int?>>
 
     fun searchVacancy(request: DetailsVacancyRequest): Flow<Pair<VacancyDetail?, String?>>
-    fun getIndustries(): Flow<List<Industry>>
-    fun getAreas(): Flow<List<Area>>
+    fun getIndustries(): Flow<Pair<List<Industry>?, String?>>
+    fun getAreas(): Flow<Pair<List<Area>?, String?>>
 }

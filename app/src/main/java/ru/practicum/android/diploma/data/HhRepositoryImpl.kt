@@ -83,17 +83,27 @@ class HhRepositoryImpl(
         }
     }
 
-    override fun getIndustries(): Flow<List<Industry>> = flow {
-        val response = networkClient.getIndustries(IndustriesRequest()) as IndustriesResponse
-        val flatList = response.items.flatMap { topLevelIndustry ->
-            topLevelIndustry.industries?.map { vacancyConverter.mapToDomain(it) } ?: emptyList()
+    override fun getIndustries(): Flow<Resource<List<Industry>>> = flow {
+        val response = networkClient.getIndustries(IndustriesRequest())
+        if (response.resultCode == HttpsURLConnection.HTTP_OK) {
+            val industriesResponse = response as IndustriesResponse
+            val flatList = industriesResponse.items.flatMap { topLevelIndustry ->
+                topLevelIndustry.industries?.map { vacancyConverter.mapToDomain(it) } ?: emptyList()
+            }
+            emit(Resource.Success(flatList))
+        } else {
+            emit(Resource.Error(response.resultCode.toString()))
         }
-        emit(flatList)
     }
 
-    override fun getAreas(): Flow<List<Area>> = flow {
-        val response = networkClient.getAreas(AreasRequest()) as AreasResponse
-        val areas = response.items.map { vacancyConverter.mapToDomain(it) }
-        emit(areas)
+    override fun getAreas(): Flow<Resource<List<Area>>> = flow {
+        val response = networkClient.getAreas(AreasRequest())
+        if (response.resultCode == HttpsURLConnection.HTTP_OK) {
+            val areasResponse = response as AreasResponse
+            val areas = areasResponse.items.map { vacancyConverter.mapToDomain(it) }
+            emit(Resource.Success(areas))
+        } else {
+            emit(Resource.Error(response.resultCode.toString()))
+        }
     }
 }
