@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import ru.practicum.android.diploma.R
@@ -27,6 +28,41 @@ class RootActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
         val navController = navHostFragment.navController
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.filterFragment -> {
+                    binding.bottomNavigationView.isVisible = false
+                    binding.line.isVisible = false
+                }
+
+                R.id.filterIndustry -> {
+                    binding.bottomNavigationView.isVisible = false
+                    binding.line.isVisible = false
+                }
+                R.id.detailsFragment -> {
+                    binding.bottomNavigationView.isVisible = false
+                    binding.line.isVisible = false
+                }
+                R.id.selectRegionFragment -> {
+                    binding.bottomNavigationView.isVisible = false
+                    binding.line.isVisible = false
+                }
+                R.id.selectCountryFragment -> {
+                    binding.bottomNavigationView.isVisible = false
+                    binding.line.isVisible = false
+                }
+                R.id.selectPlaceFragment -> {
+                    binding.bottomNavigationView.isVisible = false
+                    binding.line.isVisible = false
+                }
+                else -> {
+                    binding.bottomNavigationView.isVisible = true
+                    binding.line.isVisible = true
+                }
+
+            }
+
+        }
 
         binding.bottomNavigationView.setupWithNavController(navController)
     }
