@@ -11,6 +11,8 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.EditText
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -50,6 +52,7 @@ class FilterFragment : Fragment() {
         setupListeners()
         observeViewModel()
         setUpFragmentResultListener()
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -160,16 +163,17 @@ class FilterFragment : Fragment() {
                         val colorOnSecondary =
                             context.getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
 
-                        if (!s.isNullOrEmpty()) {
+                        if (!s.isNullOrEmpty() && !checkBox.isChecked) {
                             expectedSalary.setTextColor(colorAccent)
                             deleteSalary.isVisible = true
-                        } else {
+                        } else if (!checkBox.isChecked) {
                             expectedSalary.setTextColor(colorOnSecondary)
                             deleteSalary.isVisible = false
                         }
                     }
                 }
             )
+            getStateFocus(salary)
         }
     }
 
@@ -214,6 +218,7 @@ class FilterFragment : Fragment() {
                     }
                 }
                 updateButtonVisibility()
+                getColorExpectedSalary(binding.checkBox)
             }
         }
     }
@@ -280,4 +285,26 @@ class FilterFragment : Fragment() {
         theme.resolveAttribute(attr, typedValue, true)
         return typedValue.data
     }
+
+    private fun getColorExpectedSalary(checkBox: CheckBox){
+        if (checkBox.isChecked){
+            binding.expectedSalary.setTextColor(requireContext().getColor(R.color.black))
+        }
+        else if (!checkBox.isChecked && binding.salary.text.trim().isNotEmpty()){
+            binding.expectedSalary.setTextColor(requireContext().getThemeColor(com.google.android.material.R.attr.colorAccent))
+        }
+        else{
+            binding.expectedSalary.setTextColor(requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary))
+        }
+    }
+
+    private fun getStateFocus(editText: EditText){
+        editText.setOnFocusChangeListener { view, hasFocus ->
+            when(hasFocus){
+                true ->{binding.expectedSalary.setTextColor(requireContext().getThemeColor(org.koin.android.R.attr.colorAccent))}
+                else ->{ binding.expectedSalary.setTextColor(requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary))}
+            }
+        }
+    }
+
 }

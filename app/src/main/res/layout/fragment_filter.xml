@@ -176,6 +176,7 @@
         android:paddingBottom="@dimen/size_8dp"
         android:singleLine="true"
         android:textColorHint="?attr/colorOnSecondary"
+        android:textColor="@color/black"
         android:textCursorDrawable="@drawable/ic_cursor"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
