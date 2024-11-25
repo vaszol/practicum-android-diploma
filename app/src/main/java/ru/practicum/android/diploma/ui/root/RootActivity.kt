@@ -39,29 +39,32 @@ class RootActivity : AppCompatActivity() {
                     binding.bottomNavigationView.isVisible = false
                     binding.line.isVisible = false
                 }
+
                 R.id.detailsFragment -> {
                     binding.bottomNavigationView.isVisible = false
                     binding.line.isVisible = false
                 }
+
                 R.id.selectRegionFragment -> {
                     binding.bottomNavigationView.isVisible = false
                     binding.line.isVisible = false
                 }
+
                 R.id.selectCountryFragment -> {
                     binding.bottomNavigationView.isVisible = false
                     binding.line.isVisible = false
                 }
+
                 R.id.selectPlaceFragment -> {
                     binding.bottomNavigationView.isVisible = false
                     binding.line.isVisible = false
                 }
+
                 else -> {
                     binding.bottomNavigationView.isVisible = true
                     binding.line.isVisible = true
                 }
-
             }
-
         }
 
         binding.bottomNavigationView.setupWithNavController(navController)
