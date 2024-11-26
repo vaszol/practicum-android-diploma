@@ -286,25 +286,27 @@ class FilterFragment : Fragment() {
         return typedValue.data
     }
 
-    private fun getColorExpectedSalary(checkBox: CheckBox){
-        if (checkBox.isChecked){
+    private fun getColorExpectedSalary(checkBox: CheckBox) {
+        if (checkBox.isChecked) {
             binding.expectedSalary.setTextColor(requireContext().getColor(R.color.black))
-        }
-        else if (!checkBox.isChecked && binding.salary.text.trim().isNotEmpty()){
+        } else if (!checkBox.isChecked && binding.salary.text.trim().isNotEmpty()) {
             binding.expectedSalary.setTextColor(requireContext().getThemeColor(com.google.android.material.R.attr.colorAccent))
-        }
-        else{
+        } else {
             binding.expectedSalary.setTextColor(requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary))
         }
     }
 
-    private fun getStateFocus(editText: EditText){
+    private fun getStateFocus(editText: EditText) {
         editText.setOnFocusChangeListener { view, hasFocus ->
-            when(hasFocus){
-                true ->{binding.expectedSalary.setTextColor(requireContext().getThemeColor(org.koin.android.R.attr.colorAccent))}
-                else ->{ binding.expectedSalary.setTextColor(requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary))}
+            if (hasFocus) {
+                binding.expectedSalary.setTextColor(
+                    requireContext().getThemeColor(org.koin.android.R.attr.colorAccent)
+                )
+            } else {
+                binding.expectedSalary.setTextColor(
+                    requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
+                )
             }
         }
     }
-
 }
