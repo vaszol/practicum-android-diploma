@@ -20,6 +20,6 @@ data class WorkPlaceState(
     }
 
     companion object {
-        const val WORK_PLACE_STATE_DEFAULT_VALUE = 1L
+        const val SERIAL_VERSION_UID = 1L
     }
 }
