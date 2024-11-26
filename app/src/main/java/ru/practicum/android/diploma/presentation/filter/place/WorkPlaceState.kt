@@ -18,4 +18,8 @@ data class WorkPlaceState(
         if (region != other.region) return false
         return true
     }
+
+    companion object {
+        const val AREA_DEFAULT_VALUE = "-1"
+    }
 }

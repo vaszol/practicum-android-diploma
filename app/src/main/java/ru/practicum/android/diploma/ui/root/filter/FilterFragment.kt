@@ -63,7 +63,7 @@ class FilterFragment : Fragment() {
         binding.salary.inputType = InputType.TYPE_CLASS_NUMBER
         binding.deleteSalary.isVisible = false
 
-        viewModel.filterState.value.let { state ->
+        viewModel.state.value.let { state ->
             // Установка зарплаты
             state.salary?.let {
                 binding.salary.setText(it.toString())
@@ -144,8 +144,8 @@ class FilterFragment : Fragment() {
             PLACE_REQUEST_KEY,
             bundleOf(
                 SELECTED_PLACE_KEY to WorkPlaceState(
-                    viewModel._filterState.value.country,
-                    viewModel._filterState.value.region
+                    viewModel.filter.value.country,
+                    viewModel.filter.value.region
                 )
             )
         )
@@ -190,7 +190,7 @@ class FilterFragment : Fragment() {
 
     private fun observeFilterState() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.filterState.collect { state ->
+            viewModel.state.collect { state ->
                 binding.apply {
                     checkBox.isChecked = state.showOnlyWithSalary
                     deleteSalary.isVisible = state.salary != null
@@ -272,10 +272,10 @@ class FilterFragment : Fragment() {
 
     private fun updateButtonVisibility() {
         val isButtonEnabled = viewModel.isFilterChanged() ||
-            viewModel.filterState.value.industry != null ||
-            viewModel.filterState.value.country != null ||
-            viewModel.filterState.value.region != null ||
-            viewModel.filterState.value.salary != null
+            viewModel.state.value.industry != null ||
+            viewModel.state.value.country != null ||
+            viewModel.state.value.region != null ||
+            viewModel.state.value.salary != null
 
         binding.apply.isVisible = isButtonEnabled
         binding.reset.isVisible = viewModel.isResetButtonVisible.value

@@ -14,8 +14,8 @@ class FilterViewModel(
     industryViewModel: IndustryViewModel
 ) : ViewModel() {
 
-    val _filterState = MutableStateFlow(FilterState())
-    val filterState: StateFlow<FilterState> = _filterState.asStateFlow()
+    val filter = MutableStateFlow(FilterState())
+    val state: StateFlow<FilterState> = filter.asStateFlow()
 
     private val _isApplyButtonEnabled = MutableStateFlow(false)
     val isApplyButtonEnabled: StateFlow<Boolean> = _isApplyButtonEnabled.asStateFlow()
@@ -50,11 +50,11 @@ class FilterViewModel(
             locationString = locationString
         )
 
-        _filterState.value = initialFilterState.copy()
+        filter.value = initialFilterState.copy()
     }
 
     fun updateLocation(country: Area?, region: Area?) {
-        val currentState = _filterState.value
+        val currentState = filter.value
         val locationString = createLocationString(country, region)
 
         val newState = currentState.copy(
@@ -63,7 +63,7 @@ class FilterViewModel(
             locationString = locationString
         )
 
-        _filterState.value = newState
+        filter.value = newState
 
         sharedPreferencesInteractor.setCountry(country)
         sharedPreferencesInteractor.setRegion(region)
@@ -72,30 +72,30 @@ class FilterViewModel(
     }
 
     fun updateSalary(salary: Int?) {
-        val currentState = _filterState.value
+        val currentState = filter.value
         val newState = currentState.copy(salary = salary)
-        _filterState.value = newState
+        filter.value = newState
         updateButtonStates()
     }
 
     fun updateIndustries(industry: Industry?) {
-        val currentState = _filterState.value
+        val currentState = filter.value
         val newState = currentState.copy(industry = industry)
-        _filterState.value = newState
+        filter.value = newState
         sharedPreferencesInteractor.setIndustry(industry)
     }
 
     fun toggleShowOnlyWithSalary() {
-        val currentState = _filterState.value
+        val currentState = filter.value
         val newState = currentState.copy(
             showOnlyWithSalary = !currentState.showOnlyWithSalary
         )
-        _filterState.value = newState
+        filter.value = newState
         updateButtonStates()
     }
 
     fun applyFilter() {
-        val currentState = _filterState.value
+        val currentState = filter.value
 
         sharedPreferencesInteractor.setSalary(currentState.salary)
 
@@ -115,7 +115,7 @@ class FilterViewModel(
     }
 
     fun resetFilter() {
-        _filterState.value = FilterState()
+        filter.value = FilterState()
 
         sharedPreferencesInteractor.setSalary(null)
         sharedPreferencesInteractor.setIndustry(null)
@@ -123,7 +123,7 @@ class FilterViewModel(
         sharedPreferencesInteractor.setRegion(null)
         sharedPreferencesInteractor.setShowOnlyWithSalary(false)
 
-        initialFilterState = _filterState.value
+        initialFilterState = filter.value
 
         updateButtonStates()
     }
@@ -138,7 +138,7 @@ class FilterViewModel(
     }
 
     private fun updateButtonStates() {
-        val currentState = _filterState.value
+        val currentState = filter.value
 
         _isResetButtonVisible.value = listOf<Any?>(
             currentState.salary,
@@ -155,15 +155,15 @@ class FilterViewModel(
     }
 
     fun isFilterChanged(): Boolean {
-        return initialFilterState.salary != _filterState.value.salary ||
-            initialFilterState.industry != _filterState.value.industry ||
-            initialFilterState.country != _filterState.value.country ||
-            initialFilterState.region != _filterState.value.region ||
-            initialFilterState.showOnlyWithSalary != _filterState.value.showOnlyWithSalary
+        return initialFilterState.salary != filter.value.salary ||
+            initialFilterState.industry != filter.value.industry ||
+            initialFilterState.country != filter.value.country ||
+            initialFilterState.region != filter.value.region ||
+            initialFilterState.showOnlyWithSalary != filter.value.showOnlyWithSalary
     }
 
     fun hasActiveFilters(): Boolean {
-        val currentState = _filterState.value
+        val currentState = filter.value
         val hasFilters = currentState.salary != null ||
             currentState.industry != null ||
             currentState.country != null ||

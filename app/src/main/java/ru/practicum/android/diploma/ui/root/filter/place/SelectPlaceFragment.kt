@@ -39,7 +39,7 @@ class SelectPlaceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.state.observe(viewLifecycleOwner) {
-            if (it==null) {
+            if (it == null) {
                 viewModel.getAreas()
             }
             it?.let { render(it) }
@@ -65,20 +65,11 @@ class SelectPlaceFragment : Fragment() {
                 clearRegion()
             }
             selectButton.setOnClickListener {
-                WorkPlaceState(viewModel.state.value?.country, viewModel.state.value?.region)
-                setFragmentResult(
-                    APPLY_PLACE_KEY,
-                    bundleOf(
-                        SELECTED_PLACE_KEY to WorkPlaceState(
-                            viewModel.state.value?.country,
-                            viewModel.state.value?.region
-                        )
-                    )
-                )
+                val workPlaceState = WorkPlaceState(viewModel.state.value?.country, viewModel.state.value?.region)
+                setFragmentResult(APPLY_PLACE_KEY, bundleOf(SELECTED_PLACE_KEY to workPlaceState))
                 findNavController().popBackStack()
             }
         }
-
         setFragmentResultListener(PLACE_REQUEST_KEY) { _, bundle ->
             val workPlaceState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 bundle.getSerializable(SELECTED_PLACE_KEY, WorkPlaceState::class.java)
