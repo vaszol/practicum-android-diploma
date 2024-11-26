@@ -20,6 +20,6 @@ data class Area(
     }
 
     companion object {
-        const val serialVersionUID = 1L
+        const val AREA_DEFAULT_VALUE = "-1"
     }
 }

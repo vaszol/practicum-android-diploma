@@ -20,6 +20,6 @@ data class WorkPlaceState(
     }
 
     companion object {
-        const val AREA_DEFAULT_VALUE = "-1"
+        const val WORK_PLACE_STATE_DEFAULT_VALUE = 1L
     }
 }
