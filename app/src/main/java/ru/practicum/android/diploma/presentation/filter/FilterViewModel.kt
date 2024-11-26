@@ -14,7 +14,7 @@ class FilterViewModel(
     industryViewModel: IndustryViewModel
 ) : ViewModel() {
 
-    private val _filterState = MutableStateFlow(FilterState())
+    val _filterState = MutableStateFlow(FilterState())
     val filterState: StateFlow<FilterState> = _filterState.asStateFlow()
 
     private val _isApplyButtonEnabled = MutableStateFlow(false)

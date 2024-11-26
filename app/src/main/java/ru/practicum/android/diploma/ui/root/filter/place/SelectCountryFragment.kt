@@ -7,16 +7,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.databinding.FragmentSelectCountryBinding
-import ru.practicum.android.diploma.presentation.filter.place.SelectCountryViewModel
+import ru.practicum.android.diploma.presentation.filter.place.SelectPlaceViewModel
 
 class SelectCountryFragment : Fragment() {
 
     private var _binding: FragmentSelectCountryBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModel<SelectCountryViewModel>()
+    private val viewModel by activityViewModel<SelectPlaceViewModel>()
 
     private val areaAdapter by lazy {
         AreaAdapter {
@@ -37,11 +37,20 @@ class SelectCountryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeState().observe(viewLifecycleOwner) {
-            render(it)
-        }
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when {
+                state == null -> {
+                    showPlaceholder()
+                }
 
-        viewModel.getCountries()
+                else -> {
+                    state.areas.let {
+                        showContent()
+                        areaAdapter.updateList(it)
+                    }
+                }
+            }
+        }
 
         with(binding) {
             backArrow.setOnClickListener {
@@ -50,16 +59,6 @@ class SelectCountryFragment : Fragment() {
             recyclerView.adapter = areaAdapter
             recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
-    }
-
-    private fun render(state: AreaState) {
-        if (state is AreaState.Content) {
-            showContent()
-            areaAdapter.updateList(state.areas)
-        } else {
-            showPlaceholder()
-        }
-
     }
 
     private fun showPlaceholder() {

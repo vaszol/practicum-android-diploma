@@ -25,11 +25,14 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
-import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
+import ru.practicum.android.diploma.presentation.filter.place.WorkPlaceState
 import ru.practicum.android.diploma.ui.root.RootActivity
 import ru.practicum.android.diploma.util.constants.FilterFragmentKeys
+import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.APPLY_PLACE_KEY
+import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.PLACE_REQUEST_KEY
+import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.SELECTED_PLACE_KEY
 
 class FilterFragment : Fragment() {
     private val viewModel: FilterViewModel by viewModel()
@@ -94,42 +97,33 @@ class FilterFragment : Fragment() {
             backButton.setOnClickListener {
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
-
             workplace.setOnClickListener {
-                findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
+                navigateToPlase()
             }
-
             inputWorkplace.setOnClickListener {
-                findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
+                navigateToPlase()
             }
-
             deleteWorkplace.setOnClickListener {
                 viewModel.updateLocation(null, null)
                 inputWorkplace.text = ""
             }
-
             industry.setOnClickListener {
                 findNavController().navigate(R.id.action_filterFragment_to_filterIndustry)
             }
-
             inputIndustry.setOnClickListener {
                 findNavController().navigate(R.id.action_filterFragment_to_filterIndustry)
             }
-
             deleteIndustry.setOnClickListener {
                 viewModel.updateIndustries(null)
                 inputIndustry.text = ""
             }
-
             checkBox.setOnClickListener {
                 viewModel.toggleShowOnlyWithSalary()
             }
-
             deleteSalary.setOnClickListener {
                 salary.text.clear()
                 viewModel.updateSalary(null)
             }
-
             apply.setOnClickListener {
                 val currentSalary = salary.text.toString().toIntOrNull()
                 viewModel.updateSalary(currentSalary)
@@ -137,14 +131,26 @@ class FilterFragment : Fragment() {
                 setFragmentResult("applyFilter", bundleOf("updated" to true))
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
-
             reset.setOnClickListener {
                 viewModel.resetFilter()
                 salary.text.clear()
             }
-
             setupSalaryListener()
         }
+    }
+
+    private fun navigateToPlase() {
+        setFragmentResult(
+            PLACE_REQUEST_KEY,
+            bundleOf(
+                SELECTED_PLACE_KEY to WorkPlaceState(
+                    viewModel._filterState.value.country,
+                    viewModel._filterState.value.region
+                )
+            )
+        )
+
+        findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
     }
 
     private fun setupSalaryListener() {
@@ -250,22 +256,17 @@ class FilterFragment : Fragment() {
         }
 
         // Для Area (Country и Region)
-        setFragmentResultListener(FilterFragmentKeys.COUNTRY_REQUEST_KEY) { _, bundle ->
-            val selectedCountry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                bundle.getSerializable(FilterFragmentKeys.SELECTED_COUNTRY_KEY, Area::class.java)
+        setFragmentResultListener(APPLY_PLACE_KEY) { _, bundle ->
+            val workPlaceState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getSerializable(SELECTED_PLACE_KEY, WorkPlaceState::class.java)
             } else {
                 @Suppress("DEPRECATION")
-                bundle.getSerializable(FilterFragmentKeys.SELECTED_COUNTRY_KEY) as? Area
+                bundle.getSerializable(SELECTED_PLACE_KEY) as? WorkPlaceState
             }
 
-            val selectedRegion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                bundle.getSerializable(FilterFragmentKeys.SELECTED_REGION_KEY, Area::class.java)
-            } else {
-                @Suppress("DEPRECATION")
-                bundle.getSerializable(FilterFragmentKeys.SELECTED_REGION_KEY) as? Area
+            if (workPlaceState != null) {
+                viewModel.updateLocation(workPlaceState.country, workPlaceState.region)
             }
-
-            viewModel.updateLocation(selectedCountry, selectedRegion)
         }
     }
 
