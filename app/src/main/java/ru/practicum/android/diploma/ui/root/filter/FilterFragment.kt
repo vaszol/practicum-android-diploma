@@ -298,16 +298,15 @@ class FilterFragment : Fragment() {
 
     private fun getStateFocus(editText: EditText) {
         editText.setOnFocusChangeListener { view, hasFocus ->
-            when (hasFocus) {
-                true -> {
-                    binding.expectedSalary.setTextColor(requireContext().getThemeColor(org.koin.android.R.attr.colorAccent))
-                }
-
-                else -> {
-                    binding.expectedSalary.setTextColor(requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary))
-                }
+            if (hasFocus) {
+                binding.expectedSalary.setTextColor(
+                    requireContext().getThemeColor(org.koin.android.R.attr.colorAccent)
+                )
+            } else {
+                binding.expectedSalary.setTextColor(
+                    requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
+                )
             }
         }
     }
-
 }
