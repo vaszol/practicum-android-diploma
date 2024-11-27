@@ -117,6 +117,8 @@
             android:textColor="@color/grey"
             android:clickable="true"
             android:focusable="true"
+            android:ellipsize="end"
+            android:maxLines="2"
             app:layout_constraintEnd_toEndOf="@+id/industryLayout"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/industryLayout"

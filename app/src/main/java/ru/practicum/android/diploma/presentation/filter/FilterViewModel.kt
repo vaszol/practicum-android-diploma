@@ -7,11 +7,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Industry
-import ru.practicum.android.diploma.presentation.filter.industry.IndustryViewModel
 
 class FilterViewModel(
     private val sharedPreferencesInteractor: SharedPreferencesInteractor,
-    industryViewModel: IndustryViewModel
 ) : ViewModel() {
 
     val filter = MutableStateFlow(FilterState())
@@ -26,9 +24,6 @@ class FilterViewModel(
     private var initialFilterState: FilterState = FilterState()
 
     init {
-        industryViewModel.selectedIndustry.observeForever { selectedIndustry ->
-            updateIndustries(selectedIndustry)
-        }
         getInitialState()
         updateButtonStates()
     }
@@ -65,9 +60,6 @@ class FilterViewModel(
 
         filter.value = newState
 
-        sharedPreferencesInteractor.setCountry(country)
-        sharedPreferencesInteractor.setRegion(region)
-
         updateButtonStates()
     }
 
@@ -81,8 +73,9 @@ class FilterViewModel(
     fun updateIndustries(industry: Industry?) {
         val currentState = filter.value
         val newState = currentState.copy(industry = industry)
-        filter.value = newState
-        sharedPreferencesInteractor.setIndustry(industry)
+
+        _filterState.value = newState
+     //   filter.value = newState
     }
 
     fun toggleShowOnlyWithSalary() {
@@ -148,18 +141,16 @@ class FilterViewModel(
             currentState.showOnlyWithSalary.takeIf { it }
         ).any { it != null }
 
-        _isApplyButtonEnabled.value = isFilterChanged() ||
-            currentState.industry != null ||
-            currentState.country != null ||
-            currentState.region != null
+        _isApplyButtonEnabled.value = isFilterChanged()
     }
 
     fun isFilterChanged(): Boolean {
-        return initialFilterState.salary != filter.value.salary ||
-            initialFilterState.industry != filter.value.industry ||
-            initialFilterState.country != filter.value.country ||
-            initialFilterState.region != filter.value.region ||
-            initialFilterState.showOnlyWithSalary != filter.value.showOnlyWithSalary
+        val currentState = _filterState.value
+        return initialFilterState.salary != currentState.salary ||
+            initialFilterState.industry != currentState.industry ||
+            initialFilterState.country != currentState.country ||
+            initialFilterState.region != currentState.region ||
+            initialFilterState.showOnlyWithSalary != currentState.showOnlyWithSalary
     }
 
     fun hasActiveFilters(): Boolean {
