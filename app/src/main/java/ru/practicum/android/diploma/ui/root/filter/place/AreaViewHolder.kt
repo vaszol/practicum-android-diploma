@@ -11,5 +11,6 @@ class AreaViewHolder(itemView: View) : ViewHolder(itemView) {
 
     fun bind(area: Area) {
         item.text = area.name
+        item.letterSpacing = 0f
     }
 }
