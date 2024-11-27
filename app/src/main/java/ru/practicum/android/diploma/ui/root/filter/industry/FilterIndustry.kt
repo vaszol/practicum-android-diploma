@@ -25,6 +25,7 @@ class FilterIndustry : Fragment() {
     private val adapter by lazy {
         IndustryAdapter { selectedIndustry ->
             viewModel.selectIndustry(selectedIndustry)
+            setKeyboardVisibility(binding.edtSearchIndustry, false)
         }
     }
 

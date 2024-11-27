@@ -40,21 +40,16 @@ class SelectRegionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel.getRegionsList()
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when {
-                state == null -> {
-                    showError()
-                }
-
-                state.noSuchRegion -> {
-                    showNoSuchRegion()
-                }
-
-                else -> {
-                    showContent(state.regions)
-                }
+                state.error -> showError()
+                state.noSuchRegion -> showNoSuchRegion()
             }
+        }
+
+        viewModel.areasToDisplay.observe(viewLifecycleOwner) { regions ->
+            showContent(regions)
         }
 
         with(binding) {

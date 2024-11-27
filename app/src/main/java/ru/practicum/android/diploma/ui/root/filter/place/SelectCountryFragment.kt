@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.databinding.FragmentSelectCountryBinding
+import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.presentation.filter.place.SelectPlaceViewModel
 
 class SelectCountryFragment : Fragment() {
@@ -36,20 +37,16 @@ class SelectCountryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel.getCountriesList()
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when {
-                state == null -> {
-                    showPlaceholder()
-                }
-
-                else -> {
-                    state.areas.let {
-                        showContent()
-                        areaAdapter.updateList(it)
-                    }
-                }
+                state.error -> showError()
+                state.noInternet -> showNoInternet()
             }
+        }
+
+        viewModel.areasToDisplay.observe(viewLifecycleOwner) { countries ->
+            showContent(countries)
         }
 
         with(binding) {
@@ -61,13 +58,19 @@ class SelectCountryFragment : Fragment() {
         }
     }
 
-    private fun showPlaceholder() {
+    private fun showError() {
         binding.placeholder.visibility = View.VISIBLE
         binding.recyclerView.visibility = View.GONE
     }
 
-    private fun showContent() {
+    private fun showNoInternet() {
+        binding.placeholder.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.GONE
+    }
+
+    private fun showContent(countries: List<Area>) {
         binding.placeholder.visibility = View.GONE
         binding.recyclerView.visibility = View.VISIBLE
+        areaAdapter.updateList(countries)
     }
 }

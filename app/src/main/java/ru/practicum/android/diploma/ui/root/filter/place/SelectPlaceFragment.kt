@@ -37,11 +37,7 @@ class SelectPlaceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.state.observe(viewLifecycleOwner) {
-            if (it == null) {
-                viewModel.getAreas()
-            }
             it?.let { render(it) }
         }
         setupListeners()

@@ -19,6 +19,9 @@ data class Area(
         return true
     }
 
+    fun flattenAreas(): List<Area> =
+        listOf(this) + (areas?.flatMap { it.flattenAreas() } ?: emptyList())
+
     companion object {
         const val AREA_DEFAULT_VALUE = "-1"
     }

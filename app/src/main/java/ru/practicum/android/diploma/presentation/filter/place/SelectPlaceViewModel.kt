@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.presentation.filter.place
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,113 +8,136 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.models.Area
+import ru.practicum.android.diploma.domain.models.Area.Companion.AREA_DEFAULT_VALUE
 
 class SelectPlaceViewModel(
     private val hhInteractor: HhInteractor,
 ) : ViewModel() {
     private val _state = MutableLiveData<PlaceState>()
     val state: LiveData<PlaceState> = _state
+    private val emptyPlaceState = PlaceState(
+        country = null,
+        region = null,
+        error = false,
+        noInternet = false,
+        noSuchRegion = false
+    )
+    private var allAreas: List<Area> = emptyList()
+    private val _areasToDisplay = MutableLiveData<List<Area>>()
+    val areasToDisplay: LiveData<List<Area>> = _areasToDisplay
+
 
     init {
-        _state.postValue(
-            PlaceState(
-                areas = emptyList(),
-                regions = emptyList(),
-                error = false,
-                noSuchRegion = false,
-                country = null,
-                region = null
-            )
-        )
+        getAreas()
+        _state.value = emptyPlaceState
     }
 
-    fun getAreas() {
+    private fun getAreas() {
         viewModelScope.launch {
             hhInteractor.getAreas().collect { pair ->
                 when {
-                    pair.second != null -> _state.postValue(state.value?.copy(error = true))
-                    pair.first.isNullOrEmpty() -> _state.postValue(state.value?.copy(noSuchRegion = true))
-                    else -> updateAreas(pair.first!!)
+                    pair.second != null -> _state.setValue(state.value?.copy(error = true))
+                    pair.first.isNullOrEmpty() -> _state.setValue(state.value?.copy(noSuchRegion = true))
+                    else -> allAreas = pair.first!!
                 }
             }
         }
     }
 
-    private fun updateAreas(areas: List<Area>) {
-        val country = state.value?.country
-        val region = state.value?.region
-        _state.postValue(
-            PlaceState(
-                areas = areas,
-                regions = areas.flatMap { it.areas ?: emptyList() },
-                error = false,
-                noSuchRegion = false,
-                country = country,
-                region = region
+    fun getRegionsList() {
+        if (state.value?.country != null) {
+            _areasToDisplay.setValue(
+                allAreas
+                    .filter { it.id == state.value!!.country!!.id } // Оставляем только выбранную страну
+                    .flatMap { it.flattenAreas() } // Собираем регионы выбранной страны
+                    .filter { it.parentId != AREA_DEFAULT_VALUE } // Убираем саму страну
             )
-        )
-    }
-
-    private fun filterRegions(country: Area?): List<Area> {
-        return if (country != null) {
-            state.value!!.areas
-                .filter { it.id == country.id } // Оставляем только выбранную страну
-                .flatMap { it.areas ?: emptyList() } // Собираем регионы выбранной страны
         } else {
-            state.value!!.areas.flatMap { it.areas ?: emptyList() } // Собираем регионы всех стран
+            _areasToDisplay.setValue(
+                allAreas
+                    .flatMap { it.flattenAreas() }
+                    .filter { it.parentId != AREA_DEFAULT_VALUE } // Собираем регионы всех стран (без самих стран)
+            )
         }
     }
 
     fun filterRegions(query: String) {
         if (query.isEmpty()) {
-            _state.postValue(state.value?.copy(regions = filterRegions(state.value!!.country)))
+            getRegionsList()
         } else {
-            val filteredList = state.value!!.regions.filter { it.name.contains(query, ignoreCase = true) }
+            val filteredList =
+                if (state.value?.country != null) {
+                    allAreas
+                        .filter { it.id == state.value!!.country!!.id } // Оставляем только выбранную страну
+                        .flatMap { it.flattenAreas() } // Собираем регионы выбранной страны
+                        .filter { it.name.contains(query, ignoreCase = true) }
+
+                } else {
+                    allAreas
+                        .flatMap { it.flattenAreas() }
+                        .filter { it.parentId != AREA_DEFAULT_VALUE } // Собираем регионы всех стран (без самих стран)
+                        .filter { it.name.contains(query, ignoreCase = true) }
+                }
             if (filteredList.isEmpty()) {
-                _state.postValue(state.value?.copy(noSuchRegion = true))
+                _state.setValue(state.value?.copy(noSuchRegion = true))
             } else {
-                _state.postValue(state.value?.copy(regions = filteredList))
+                _areasToDisplay.setValue(filteredList)
             }
         }
     }
 
     fun clearCountry() {
-        _state.postValue(
-            state.value?.copy(
-                country = null,
-                region = null,
-                regions = filterRegions(null)
-            )
+        _state.value = state.value?.copy(
+            country = null,
+            region = null,
         )
     }
 
     fun clearRegion() {
-        _state.postValue(state.value?.copy(region = null))
+        _state.value = state.value?.copy(region = null)
     }
 
     fun setPlace(workPlaceState: WorkPlaceState?) {
         if (workPlaceState != null) {
-            _state.postValue(
-                state.value?.copy(
-                    country = workPlaceState.country,
-                    region = workPlaceState.region,
-                    regions = filterRegions(workPlaceState.country),
-                )
+            _state.value = state.value?.copy(
+                country = workPlaceState.country,
+                region = workPlaceState.region,
             )
         }
     }
 
     fun setCountry(country: Area) {
-        _state.postValue(
-            state.value?.copy(
-                country = country,
-                region = null,
-                regions = filterRegions(country)
-            )
+        _state.value = state.value?.copy(
+            country = country,
+            region = null,
         )
     }
 
     fun setRegion(region: Area) {
-        _state.postValue(state.value?.copy(region = region))
+        val parentCountry = findRootArea(region)
+        _state.value = state.value?.copy(region = region, country = parentCountry)
+    }
+
+    fun getCountriesList() {
+        val countriesList = allAreas.filter { it.parentId == AREA_DEFAULT_VALUE }
+        _areasToDisplay.value = countriesList
+    }
+
+    private fun findRootArea(area: Area): Area? {
+        var current = area
+        while (current.parentId != AREA_DEFAULT_VALUE) {
+            val parent = allAreas
+                .flatMap { it.flattenAreas() }
+                .firstOrNull { it.id == current.parentId }
+            if (parent == null) {
+                Log.e(
+                    "Exception caught in SelectPlaceViewModel",
+                    "Parent area with id=${current.parentId} is not found"
+                )
+                return null
+            }
+            current = parent
+        }
+        return current
     }
 }
