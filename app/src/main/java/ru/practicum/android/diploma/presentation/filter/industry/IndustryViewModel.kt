@@ -32,7 +32,7 @@ class IndustryViewModel(
                     when {
                         pair.second != null -> {
                             Log.e("IOException caught in IndustryViewModel", "IOException occurred")
-                            _industryScreenState.postValue(IndustryScreenState.Error)
+                            _industryScreenState.postValue(IndustryScreenState.NoInternet)
                         }
 
                         pair.first.isNullOrEmpty() -> {

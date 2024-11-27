@@ -12,6 +12,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterIndustryBinding
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.presentation.filter.industry.IndustryScreenState
@@ -55,6 +56,7 @@ class FilterIndustry : Fragment() {
                     adapter.filter("")
                 }
             }
+
             override fun afterTextChanged(s: Editable?) = Unit
         }
 
@@ -98,9 +100,21 @@ class FilterIndustry : Fragment() {
     private fun setupStateObservers() {
         viewModel.industryScreenState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                IndustryScreenState.Loading -> showLoading()
-                IndustryScreenState.Error -> showError()
-                is IndustryScreenState.Content -> showIndustries(state.industries)
+                is IndustryScreenState.Loading -> {
+                    showLoading()
+                }
+
+                is IndustryScreenState.Error -> {
+                    showError()
+                }
+
+                is IndustryScreenState.NoInternet -> {
+                    showNoInternet()
+                }
+
+                is IndustryScreenState.Content -> {
+                    showIndustries(state.industries)
+                }
             }
         }
 
@@ -114,10 +128,22 @@ class FilterIndustry : Fragment() {
         }
     }
 
+    private fun showNoInternet() {
+        binding.apply {
+            progressBar.visibility = View.GONE
+            recyclerView.visibility = View.GONE
+            imgIndustryError.setImageResource(R.drawable.placeholder_no_internet)
+            txtIndustryError.setText(R.string.no_internet)
+            industryError.visibility = View.VISIBLE
+        }
+    }
+
     private fun showError() {
         binding.apply {
             progressBar.visibility = View.GONE
             recyclerView.visibility = View.GONE
+            imgIndustryError.setImageResource(R.drawable.placeholder_empty_industry_list)
+            txtIndustryError.setText(R.string.error_industry)
             industryError.visibility = View.VISIBLE
         }
     }

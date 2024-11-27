@@ -6,4 +6,5 @@ sealed interface AreaState {
     data class Content(val areas: List<Area>) : AreaState
     object NoSuchRegion : AreaState
     object Error : AreaState
+    object NoInternet : AreaState
 }
