@@ -26,7 +26,7 @@ class SelectRegionViewModel(
                 when {
                     pair.second != null -> {
                         Log.e("Exception caught in SelectRegionViewModel", "IOException occurred")
-                        stateLiveData.postValue(AreaState.Error)
+                        stateLiveData.postValue(AreaState.NoInternet)
                     }
 
                     pair.first.isNullOrEmpty() -> {

@@ -19,8 +19,6 @@ class SelectPlaceFragment : Fragment() {
 
     private val viewModel by viewModel<SelectPlaceViewModel>()
 
-    private var isSelectButtonClicked = false
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,14 +40,6 @@ class SelectPlaceFragment : Fragment() {
         setupClickListeners()
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        if (!isSelectButtonClicked) {
-            viewModel.resetSelectedValues()
-        }
-    }
-
     private fun setupClickListeners() {
         with(binding) {
             selectCountryButton.setOnClickListener {
@@ -68,7 +58,6 @@ class SelectPlaceFragment : Fragment() {
                 clearRegion()
             }
             selectButton.setOnClickListener {
-                isSelectButtonClicked = true
                 findNavController().popBackStack()
             }
         }

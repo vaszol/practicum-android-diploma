@@ -98,6 +98,14 @@ class SelectRegionFragment : Fragment() {
                 binding.placeholder.visibility = View.VISIBLE
                 binding.errorMessage.visibility = View.VISIBLE
             }
+
+            is AreaState.NoInternet -> {
+                binding.recyclerView.visibility = View.GONE
+                binding.placeholderImage.setImageResource(R.drawable.placeholder_no_internet)
+                binding.errorMessage.setText(R.string.no_internet)
+                binding.placeholder.visibility = View.VISIBLE
+                binding.errorMessage.visibility = View.VISIBLE
+            }
         }
     }
 
