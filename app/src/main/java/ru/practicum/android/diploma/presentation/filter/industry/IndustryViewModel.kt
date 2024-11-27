@@ -13,7 +13,6 @@ import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.presentation.filter.industry.IndustryScreenState.Content
 
-
 class IndustryViewModel(
     private val hhInteractor: HhInteractor,
     private val sharedPrefInteractor: SharedPreferencesInteractor
@@ -35,10 +34,12 @@ class IndustryViewModel(
                             Log.e("IOException caught in IndustryViewModel", "IOException occurred")
                             _industryScreenState.postValue(IndustryScreenState.Error)
                         }
+
                         pair.first.isNullOrEmpty() -> {
                             Log.e("Exception caught in IndustryViewModel", "industries.isNullOrEmpty")
                             _industryScreenState.postValue(IndustryScreenState.Error)
                         }
+
                         else -> {
                             _industryScreenState.postValue(Content(pair.first!!))
                         }
