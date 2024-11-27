@@ -19,8 +19,6 @@ object FavoriteVacancyConverter {
         street = vacancy.street,
         building = vacancy.building,
         url = vacancy.url,
-        contactsEmail = vacancy.contactsEmail,
-        contactsName = vacancy.contactsName,
         experience = vacancy.experience,
         employment = vacancy.employment,
         schedule = vacancy.schedule
@@ -43,8 +41,6 @@ object FavoriteVacancyConverter {
         street = entity.street,
         building = entity.building,
         url = entity.url,
-        contactsEmail = entity.contactsEmail,
-        contactsName = entity.contactsName,
         isFavorite = true
     )
 

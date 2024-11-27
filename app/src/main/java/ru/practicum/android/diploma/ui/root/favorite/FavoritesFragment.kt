@@ -36,7 +36,7 @@ class FavoritesFragment : Fragment() {
         viewModel.getFavoriteVacancies()
         viewModel.favoriteScreenState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                FavoriteScreenState.NothingInFav -> showEmpty()
+                FavoriteScreenState.EmptyList -> showEmpty()
                 FavoriteScreenState.Error -> showError()
                 is FavoriteScreenState.FavoriteVacancies -> showFavorite(state.favoriteVacancies)
             }

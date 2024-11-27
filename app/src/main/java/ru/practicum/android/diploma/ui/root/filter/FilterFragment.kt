@@ -1,89 +1,316 @@
 package ru.practicum.android.diploma.ui.root.filter
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
+import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.EditText
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
+import ru.practicum.android.diploma.domain.models.Area
+import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.ui.root.RootActivity
+import ru.practicum.android.diploma.util.constants.FilterFragmentKeys
 
 class FilterFragment : Fragment() {
     private val viewModel: FilterViewModel by viewModel()
     private val binding by lazy { FragmentFilterBinding.inflate(layoutInflater) }
 
-    private var isClickAllowed = true
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return binding.root
-    }
+    ): View = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as? RootActivity)?.findViewById<BottomNavigationView>(R.id.bottom_navigation_view)?.visibility =
             View.GONE
 
+        viewModel.getInitialState()
+
+        setupViews()
         setupListeners()
-        setupTextWatchers()
+        observeViewModel()
+        setUpFragmentResultListener()
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setupViews() {
+        binding.salary.inputType = InputType.TYPE_CLASS_NUMBER
+        binding.deleteSalary.isVisible = false
+
+        viewModel.filterState.value.let { state ->
+            // Установка зарплаты
+            state.salary?.let {
+                binding.salary.setText(it.toString())
+            }
+            // Установка локации
+            if (state.locationString.isNotEmpty()) {
+                binding.inputWorkplace.text = state.locationString
+                binding.inputWorkplace.isVisible = true
+                binding.subtitleWorkplace.isVisible = true
+                binding.deleteWorkplace.isVisible = true
+            }
+            // Установка отрасли
+            state.industry?.let { industry ->
+                binding.inputIndustry.text = industry.name
+                binding.inputIndustry.isVisible = true
+                binding.subtitleIndustry.isVisible = true
+                binding.deleteIndustry.isVisible = true
+            } ?: run {
+                binding.inputIndustry.text = ""
+                binding.inputIndustry.isVisible = false
+                binding.subtitleIndustry.isVisible = false
+                binding.deleteIndustry.isVisible = false
+            }
+        }
+
+        updateButtonVisibility()
     }
 
     private fun setupListeners() {
-        binding.backButton.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-        binding.apply.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-        binding.reset.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-        binding.checkBox.setOnClickListener {
-            isClickAllowed = !isClickAllowed
-            if (isClickAllowed) {
-                binding.checkBox.setImageResource(R.drawable.ic_check_box_mark)
-            } else {
-                binding.checkBox.setImageResource(R.drawable.ic_check_box_unmark)
+        binding.apply {
+            backButton.setOnClickListener {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
             }
-        }
-        binding.deleteSalary.setOnClickListener {
-            binding.salary.text.clear()
+
+            workplace.setOnClickListener {
+                findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
+            }
+
+            inputWorkplace.setOnClickListener {
+                findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
+            }
+
+            deleteWorkplace.setOnClickListener {
+                viewModel.updateLocation(null, null)
+                inputWorkplace.text = ""
+            }
+
+            industry.setOnClickListener {
+                findNavController().navigate(R.id.action_filterFragment_to_filterIndustry)
+            }
+
+            inputIndustry.setOnClickListener {
+                findNavController().navigate(R.id.action_filterFragment_to_filterIndustry)
+            }
+
+            deleteIndustry.setOnClickListener {
+                viewModel.updateIndustries(null)
+                inputIndustry.text = ""
+            }
+
+            checkBox.setOnClickListener {
+                viewModel.toggleShowOnlyWithSalary()
+            }
+
+            deleteSalary.setOnClickListener {
+                salary.text.clear()
+                viewModel.updateSalary(null)
+            }
+
+            apply.setOnClickListener {
+                val currentSalary = salary.text.toString().toIntOrNull()
+                viewModel.updateSalary(currentSalary)
+                viewModel.applyFilter()
+                setFragmentResult("applyFilter", bundleOf("updated" to true))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            reset.setOnClickListener {
+                viewModel.resetFilter()
+                salary.text.clear()
+            }
+
+            setupSalaryListener()
         }
     }
 
-    private fun setupTextWatchers() {
-        binding.salary.addTextChangedListener(
-            afterTextChanged = { s: Editable? ->
-                val context = binding.expectedSalary.context
-                val colorOnSecondary = context.getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
-                val colorAccent = context.getThemeColor(org.koin.android.R.attr.colorAccent)
+    private fun setupSalaryListener() {
+        binding.apply {
+            salary.addTextChangedListener(
+                object : TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+                    override fun afterTextChanged(s: Editable?) {
+                        val salaryText = s.toString()
+                        val salary = salaryText.takeIf { it.isNotBlank() }?.toIntOrNull()
+                        viewModel.updateSalary(salary)
 
-                if (!s.isNullOrEmpty()) {
-                    binding.expectedSalary.setTextColor(colorAccent)
-                    binding.deleteSalary.isVisible = true
-                } else {
-                    binding.expectedSalary.setTextColor(colorOnSecondary)
-                    binding.deleteSalary.isVisible = false
+                        val context = expectedSalary.context
+                        val colorAccent = context.getThemeColor(org.koin.android.R.attr.colorAccent)
+                        val colorOnSecondary =
+                            context.getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
+
+                        if (!s.isNullOrEmpty() && !checkBox.isChecked) {
+                            expectedSalary.setTextColor(colorAccent)
+                            deleteSalary.isVisible = true
+                        } else if (!checkBox.isChecked) {
+                            expectedSalary.setTextColor(colorOnSecondary)
+                            deleteSalary.isVisible = false
+                        }
+                    }
                 }
+            )
+            getStateFocus(salary)
+        }
+    }
+
+    private fun observeViewModel() {
+        observeFilterState()
+        observeButtonVisibility()
+    }
+
+    private fun observeFilterState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.filterState.collect { state ->
+                binding.apply {
+                    checkBox.isChecked = state.showOnlyWithSalary
+                    deleteSalary.isVisible = state.salary != null
+
+                    if (state.locationString.isNotEmpty()) {
+                        inputWorkplace.text = state.locationString
+                        inputWorkplace.isVisible = true
+                        subtitleWorkplace.isVisible = true
+                        deleteWorkplace.isVisible = true
+                        binding.workplace.isVisible = false
+                    } else {
+                        inputWorkplace.text = ""
+                        inputWorkplace.isVisible = false
+                        subtitleWorkplace.isVisible = false
+                        deleteWorkplace.isVisible = false
+                        binding.workplace.isVisible = true
+                    }
+
+                    state.industry?.let { industry ->
+                        inputIndustry.text = industry.name
+                        inputIndustry.isVisible = true
+                        subtitleIndustry.isVisible = true
+                        deleteIndustry.isVisible = true
+                        binding.industry.isVisible = false
+                    } ?: run {
+                        inputIndustry.text = ""
+                        inputIndustry.isVisible = false
+                        subtitleIndustry.isVisible = false
+                        deleteIndustry.isVisible = false
+                        binding.industry.isVisible = true
+                    }
+                }
+                updateButtonVisibility()
+                getColorExpectedSalary(binding.checkBox)
             }
-        )
+        }
+    }
+
+    private fun observeButtonVisibility() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isApplyButtonEnabled.collect { isEnabled ->
+                binding.apply.isVisible = isEnabled
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isResetButtonVisible.collect { isVisible ->
+                binding.reset.isVisible = isVisible
+            }
+        }
+    }
+
+    private fun setUpFragmentResultListener() {
+        // Для Industry
+        setFragmentResultListener(FilterFragmentKeys.INDUSTRY_REQUEST_KEY) { _, bundle ->
+            val selectedIndustry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getSerializable(FilterFragmentKeys.SELECTED_INDUSTRY_KEY, Industry::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                bundle.getSerializable(FilterFragmentKeys.SELECTED_INDUSTRY_KEY) as? Industry
+            }
+            viewModel.updateIndustries(selectedIndustry)
+        }
+
+        // Для Area (Country и Region)
+        setFragmentResultListener(FilterFragmentKeys.COUNTRY_REQUEST_KEY) { _, bundle ->
+            val selectedCountry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getSerializable(FilterFragmentKeys.SELECTED_COUNTRY_KEY, Area::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                bundle.getSerializable(FilterFragmentKeys.SELECTED_COUNTRY_KEY) as? Area
+            }
+
+            val selectedRegion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getSerializable(FilterFragmentKeys.SELECTED_REGION_KEY, Area::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                bundle.getSerializable(FilterFragmentKeys.SELECTED_REGION_KEY) as? Area
+            }
+
+            viewModel.updateLocation(selectedCountry, selectedRegion)
+        }
+    }
+
+    private fun updateButtonVisibility() {
+        val isButtonEnabled = viewModel.isFilterChanged() ||
+            viewModel.filterState.value.industry != null ||
+            viewModel.filterState.value.country != null ||
+            viewModel.filterState.value.region != null ||
+            viewModel.filterState.value.salary != null
+
+        binding.apply.isVisible = isButtonEnabled
+        binding.reset.isVisible = viewModel.isResetButtonVisible.value
     }
 
     private fun Context.getThemeColor(attr: Int): Int {
         val typedValue = TypedValue()
         theme.resolveAttribute(attr, typedValue, true)
         return typedValue.data
+    }
+
+    private fun getColorExpectedSalary(checkBox: CheckBox) {
+        if (checkBox.isChecked) {
+            binding.expectedSalary.setTextColor(requireContext().getColor(R.color.black))
+        } else if (!checkBox.isChecked && binding.salary.text.trim().isNotEmpty()) {
+            binding.expectedSalary.setTextColor(
+                requireContext().getThemeColor(com.google.android.material.R.attr.colorAccent)
+            )
+        } else {
+            binding.expectedSalary.setTextColor(
+                requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
+            )
+        }
+    }
+
+    private fun getStateFocus(editText: EditText) {
+        editText.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                binding.expectedSalary.setTextColor(
+                    requireContext().getThemeColor(org.koin.android.R.attr.colorAccent)
+                )
+            } else {
+                binding.expectedSalary.setTextColor(
+                    requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
+                )
+            }
+        }
     }
 }

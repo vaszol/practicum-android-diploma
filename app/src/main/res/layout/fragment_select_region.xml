@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
+    tools:context=".ui.root.filter.place.SelectRegionFragment">
+
+    <ImageView
+        android:id="@+id/back_arrow"
+        android:layout_width="@dimen/size_48dp"
+        android:layout_height="@dimen/size_48dp"
+        android:scaleType="center"
+        android:src="@drawable/arrow_back_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/select_region"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="@dimen/size_22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/back_arrow"
+        app:layout_constraintStart_toEndOf="@+id/back_arrow"
+        app:layout_constraintTop_toTopOf="@+id/back_arrow" />
+
+    <View
+        android:id="@+id/search_view"
+        android:layout_width="@dimen/size_0dp"
+        android:layout_height="@dimen/size_48dp"
+        android:layout_marginHorizontal="@dimen/size_16dp"
+        android:layout_marginTop="@dimen/size_8dp"
+        android:background="@drawable/background_edit_text_search"
+        android:backgroundTint="?attr/colorSurfaceContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/back_arrow" />
+
+    <EditText
+        android:id="@+id/search_region_edit_text"
+        android:layout_width="@dimen/size_0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_16dp"
+        android:autofillHints="name"
+        android:background="@android:color/transparent"
+        android:ellipsize="end"
+        android:hint="@string/input_region"
+        android:inputType="text"
+        android:maxLines="1"
+        android:minHeight="@dimen/size_48dp"
+        android:singleLine="true"
+        android:textAppearance="@style/TextStyleRegular"
+        android:textColor="@color/black"
+        android:textColorHint="?attr/colorOnSecondary"
+        app:layout_constraintBottom_toBottomOf="@+id/search_view"
+        app:layout_constraintEnd_toStartOf="@+id/search_magnifier"
+        app:layout_constraintStart_toStartOf="@id/search_view"
+        app:layout_constraintTop_toTopOf="@id/search_view" />
+
+    <ImageView
+        android:id="@+id/search_magnifier"
+        android:layout_width="@dimen/size_48dp"
+        android:layout_height="@dimen/size_48dp"
+        android:contentDescription="@string/clear_description"
+        android:scaleType="center"
+        android:src="@drawable/ic_search"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/search_region_edit_text"
+        app:layout_constraintEnd_toEndOf="@id/search_view"
+        app:layout_constraintTop_toTopOf="@+id/search_region_edit_text" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_0dp"
+        android:layout_marginTop="@dimen/size_16dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/search_view" />
+
+    <LinearLayout
+        android:id="@+id/placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/placeholderImage"
+            android:layout_width="@dimen/_328dp"
+            android:layout_height="@dimen/_223dp"
+            android:src="@drawable/placeholder_no_vacancy" />
+
+        <TextView
+            android:id="@+id/error_message"
+            style="@style/TextStyleRegular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="@string/no_such_region"
+            android:textSize="@dimen/size_22sp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

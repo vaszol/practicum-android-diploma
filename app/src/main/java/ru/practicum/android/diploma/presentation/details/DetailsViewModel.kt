@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.domain.api.VacancyInteractor
+import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.favorite.FavoriteInteractor
 import ru.practicum.android.diploma.domain.models.DetailsVacancyRequest
 import ru.practicum.android.diploma.domain.models.VacancyDetail
 
 class DetailsViewModel(
-    private val vacancyInteractor: VacancyInteractor,
+    private val hhInteractor: HhInteractor,
     private val favoriteInteractor: FavoriteInteractor
 ) : ViewModel() {
     private val _screenState = MutableLiveData<DetailsScreenState>()
@@ -21,15 +21,14 @@ class DetailsViewModel(
     fun loadVacancyDetails(vacancyId: String) {
         _screenState.value = DetailsScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            vacancyInteractor.searchVacancy(
+            hhInteractor.searchVacancy(
                 DetailsVacancyRequest(id = vacancyId)
             ).collect { pair ->
-                if (pair.second != null) {
-                    _screenState.postValue(DetailsScreenState.Error(true))
-                } else if (pair.first == null) {
-                    _screenState.postValue(DetailsScreenState.Error(false))
-                } else {
-                    _screenState.postValue(DetailsScreenState.Content(pair.first!!, pair.first!!.isFavorite))
+                when {
+                    pair.second == NO_INTERNET_CODE -> _screenState.postValue(DetailsScreenState.NoInternet)
+                    pair.second != null -> _screenState.postValue(DetailsScreenState.Error(isServerError = true))
+                    pair.first == null -> _screenState.postValue(DetailsScreenState.Error(isServerError = false))
+                    else -> _screenState.postValue(DetailsScreenState.Content(pair.first!!, pair.first!!.isFavorite))
                 }
             }
         }
@@ -45,5 +44,9 @@ class DetailsViewModel(
         viewModelScope.launch {
             favoriteInteractor.deleteFavoriteVacancyById(vacancy.id)
         }
+    }
+
+    companion object {
+        private const val NO_INTERNET_CODE = "-1"
     }
 }

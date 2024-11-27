@@ -12,9 +12,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig.HH_ACCESS_TOKEN
 import ru.practicum.android.diploma.data.NetworkClient
+import ru.practicum.android.diploma.data.converter.SharedPreferencesConverterImpl
 import ru.practicum.android.diploma.data.db.AppDataBase
 import ru.practicum.android.diploma.data.network.HHApiClient
 import ru.practicum.android.diploma.data.network.HhApi
+import ru.practicum.android.diploma.domain.SharedPreferencesConverter
 
 private const val HHBaseUrl = "https://api.hh.ru"
 val dataModule = module {
@@ -60,5 +62,9 @@ val dataModule = module {
 
     single<SharedPreferences> {
         get<Context>().getSharedPreferences("practicum_android_diploma_preferences", Context.MODE_PRIVATE)
+    }
+
+    single<SharedPreferencesConverter> {
+        SharedPreferencesConverterImpl(gson = get())
     }
 }

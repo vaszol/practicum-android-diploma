@@ -11,17 +11,19 @@ data class VacancyDto(
 ) {
 
     data class Employer(
-        @SerializedName("logo_urls") val logoUrls: LogoUrls?,
-        @SerializedName("name") val name: String,
+        @SerializedName("logo_urls")
+        val logoUrls: LogoUrls?,
+        val name: String,
     ) {
         data class LogoUrls(
-            @SerializedName("90") val url90: String?,
+            @SerializedName("90")
+            val url90: String?,
         )
     }
 
     data class Salary(
-        @SerializedName("currency") val currency: String?,
-        @SerializedName("from") val from: Int?,
-        @SerializedName("to") val to: Int?,
+        val currency: String?,
+        val from: Int?,
+        val to: Int?,
     )
 }
