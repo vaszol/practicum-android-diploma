@@ -27,6 +27,19 @@
         app:layout_constraintStart_toEndOf="@+id/back_arrow"
         app:layout_constraintTop_toTopOf="@+id/back_arrow" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/size_24dp"
+        android:indeterminateTint="@color/blue"
+        app:layout_constraintTop_toBottomOf="@id/back_arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/select_country_button"
         android:layout_width="match_parent"
@@ -44,6 +57,7 @@
             style="@style/InputValueStyle"
             android:text="@string/country"
             android:textColor="?attr/colorOnSecondary"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,6 +115,7 @@
             style="@style/InputValueStyle"
             android:text="@string/region"
             android:textColor="?attr/colorOnSecondary"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"

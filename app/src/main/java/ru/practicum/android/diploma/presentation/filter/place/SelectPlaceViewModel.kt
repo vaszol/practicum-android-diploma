@@ -9,113 +9,126 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Area.Companion.AREA_DEFAULT_VALUE
+import javax.net.ssl.HttpsURLConnection
 
 class SelectPlaceViewModel(
     private val hhInteractor: HhInteractor,
 ) : ViewModel() {
-    private val _state = MutableLiveData<PlaceState>()
-    val state: LiveData<PlaceState> = _state
-    private val emptyPlaceState = PlaceState(
+    private val _state = MutableLiveData<PlaceScreenState>()
+    val state: LiveData<PlaceScreenState> = _state
+    private val emptyPlaceData = PlaceScreenState.PlaceData(
         country = null,
         region = null,
         error = false,
-        noInternet = false,
-        noSuchRegion = false
+        noInternet = false
     )
     private var allAreas: List<Area> = emptyList()
     private val _areasToDisplay = MutableLiveData<List<Area>>()
     val areasToDisplay: LiveData<List<Area>> = _areasToDisplay
 
-
     init {
         getAreas()
-        _state.value = emptyPlaceState
     }
 
     private fun getAreas() {
+        _state.value = PlaceScreenState.Loading
         viewModelScope.launch {
             hhInteractor.getAreas().collect { pair ->
                 when {
-                    pair.second != null -> _state.setValue(state.value?.copy(error = true))
-                    pair.first.isNullOrEmpty() -> _state.setValue(state.value?.copy(noSuchRegion = true))
-                    else -> allAreas = pair.first!!
+                    pair.second == HttpsURLConnection.HTTP_BAD_REQUEST.toString() ->
+                        _state.setValue(emptyPlaceData.copy(error = true))
+
+                    pair.second != null -> _state.setValue(emptyPlaceData.copy(noInternet = true))
+                    else -> {
+                        allAreas = pair.first!!
+                        _state.value = emptyPlaceData
+                    }
                 }
             }
         }
     }
 
     fun getRegionsList() {
-        if (state.value?.country != null) {
-            _areasToDisplay.setValue(
+        val currentState = _state.value
+        if (currentState is PlaceScreenState.PlaceData) {
+            val regions = if (currentState.country != null) {
                 allAreas
-                    .filter { it.id == state.value!!.country!!.id } // Оставляем только выбранную страну
-                    .flatMap { it.flattenAreas() } // Собираем регионы выбранной страны
-                    .filter { it.parentId != AREA_DEFAULT_VALUE } // Убираем саму страну
-            )
-        } else {
-            _areasToDisplay.setValue(
+                    .filter { it.id == currentState.country.id }
+                    .flatMap { it.flattenAreas() }
+                    .filter { it.parentId != AREA_DEFAULT_VALUE }
+            } else {
                 allAreas
                     .flatMap { it.flattenAreas() }
-                    .filter { it.parentId != AREA_DEFAULT_VALUE } // Собираем регионы всех стран (без самих стран)
-            )
+                    .filter { it.parentId != AREA_DEFAULT_VALUE }
+            }
+            _areasToDisplay.value = regions
         }
+
     }
 
     fun filterRegions(query: String) {
-        if (query.isEmpty()) {
-            getRegionsList()
-        } else {
-            val filteredList =
-                if (state.value?.country != null) {
-                    allAreas
-                        .filter { it.id == state.value!!.country!!.id } // Оставляем только выбранную страну
-                        .flatMap { it.flattenAreas() } // Собираем регионы выбранной страны
-                        .filter { it.name.contains(query, ignoreCase = true) }
-
-                } else {
-                    allAreas
-                        .flatMap { it.flattenAreas() }
-                        .filter { it.parentId != AREA_DEFAULT_VALUE } // Собираем регионы всех стран (без самих стран)
-                        .filter { it.name.contains(query, ignoreCase = true) }
-                }
-            if (filteredList.isEmpty()) {
-                _state.setValue(state.value?.copy(noSuchRegion = true))
-            } else {
-                _areasToDisplay.setValue(filteredList)
+        val currentState = _state.value
+        if (currentState is PlaceScreenState.PlaceData) {
+            if (query.isEmpty()) {
+                getRegionsList()
+                return
             }
+
+            val filteredList = if (currentState.country != null) {
+                allAreas
+                    .filter { it.id == currentState.country.id }
+                    .flatMap { it.flattenAreas() }
+                    .filter { it.name.contains(query, ignoreCase = true) }
+            } else {
+                allAreas
+                    .flatMap { it.flattenAreas() }
+                    .filter { it.parentId != AREA_DEFAULT_VALUE }
+                    .filter { it.name.contains(query, ignoreCase = true) }
+            }
+            _areasToDisplay.value = filteredList
         }
     }
 
     fun clearCountry() {
-        _state.value = state.value?.copy(
-            country = null,
-            region = null,
-        )
+        val currentState = _state.value
+        if (currentState is PlaceScreenState.PlaceData) {
+            _state.value = currentState.copy(country = null, region = null)
+        }
     }
 
     fun clearRegion() {
-        _state.value = state.value?.copy(region = null)
+        val currentState = _state.value
+        if (currentState is PlaceScreenState.PlaceData) {
+            _state.value = currentState.copy(region = null)
+        }
+
     }
 
     fun setPlace(workPlaceState: WorkPlaceState?) {
-        if (workPlaceState != null) {
-            _state.value = state.value?.copy(
-                country = workPlaceState.country,
-                region = workPlaceState.region,
-            )
+        val currentState = _state.value
+        if (currentState is PlaceScreenState.PlaceData) {
+            if (workPlaceState != null) {
+                _state.value = currentState.copy(
+                    country = workPlaceState.country,
+                    region = workPlaceState.region,
+                )
+            }
         }
     }
 
     fun setCountry(country: Area) {
-        _state.value = state.value?.copy(
-            country = country,
-            region = null,
-        )
+        val currentState = _state.value
+        if (currentState is PlaceScreenState.PlaceData) {
+            _state.value = currentState.copy(country = country, region = null)
+        }
     }
 
     fun setRegion(region: Area) {
         val parentCountry = findRootArea(region)
-        _state.value = state.value?.copy(region = region, country = parentCountry)
+        val currentState = _state.value
+        if (parentCountry != null && currentState is PlaceScreenState.PlaceData) {
+            _state.value = currentState.copy(region = region, country = parentCountry)
+        }
     }
 
     fun getCountriesList() {
