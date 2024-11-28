@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.presentation.filter
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,11 +17,11 @@ class FilterViewModel(
     val filter = MutableStateFlow(FilterState())
     val state: StateFlow<FilterState> = filter.asStateFlow()
 
-    private val _isApplyButtonEnabled = MutableStateFlow(false)
-    val isApplyButtonEnabled: StateFlow<Boolean> = _isApplyButtonEnabled.asStateFlow()
+    private val _isApplyButtonEnabled = MutableLiveData<Boolean>()
+    val isApplyButtonEnabled: LiveData<Boolean> = _isApplyButtonEnabled
 
-    private val _isResetButtonVisible = MutableStateFlow(false)
-    val isResetButtonVisible: StateFlow<Boolean> = _isResetButtonVisible.asStateFlow()
+    private val _isResetButtonVisible = MutableLiveData<Boolean>()
+    val isResetButtonVisible: LiveData<Boolean> = _isResetButtonVisible
 
     private var initialFilterState: FilterState = FilterState()
 

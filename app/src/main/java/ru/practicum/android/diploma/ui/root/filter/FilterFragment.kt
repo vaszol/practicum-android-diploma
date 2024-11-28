@@ -231,13 +231,13 @@ class FilterFragment : Fragment() {
 
     private fun observeButtonVisibility() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isApplyButtonEnabled.collect { isEnabled ->
+            viewModel.isApplyButtonEnabled.observe(viewLifecycleOwner) { isEnabled ->
                 binding.apply.isVisible = isEnabled
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isResetButtonVisible.collect { isVisible ->
+            viewModel.isResetButtonVisible.observe(viewLifecycleOwner) { isVisible ->
                 binding.reset.isVisible = isVisible
             }
         }
@@ -278,7 +278,7 @@ class FilterFragment : Fragment() {
             viewModel.state.value.salary != null
 
         binding.apply.isVisible = isButtonEnabled
-        binding.reset.isVisible = viewModel.isResetButtonVisible.value
+        binding.reset.isVisible = viewModel.isResetButtonVisible.value!!
     }
 
     private fun Context.getThemeColor(attr: Int): Int {
