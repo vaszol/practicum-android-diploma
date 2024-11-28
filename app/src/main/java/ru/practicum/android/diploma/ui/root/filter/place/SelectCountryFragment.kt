@@ -7,17 +7,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSelectCountryBinding
-import ru.practicum.android.diploma.presentation.filter.place.SelectCountryViewModel
+import ru.practicum.android.diploma.domain.models.Area
+import ru.practicum.android.diploma.presentation.filter.place.SelectPlaceViewModel
 
 class SelectCountryFragment : Fragment() {
 
     private var _binding: FragmentSelectCountryBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModel<SelectCountryViewModel>()
+    private val viewModel by activityViewModel<SelectPlaceViewModel>()
 
     private val areaAdapter by lazy {
         AreaAdapter {
@@ -38,11 +39,14 @@ class SelectCountryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeState().observe(viewLifecycleOwner) {
-            render(it)
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when {
+                state.showError -> showError()
+                state.noInternet -> showNoInternet()
+                state.areas.isEmpty() -> viewModel.getAreas()
+                else -> showContent(state.areas)
+            }
         }
-
-        viewModel.getCountries()
 
         with(binding) {
             backArrow.setOnClickListener {
@@ -50,23 +54,6 @@ class SelectCountryFragment : Fragment() {
             }
             recyclerView.adapter = areaAdapter
             recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        }
-    }
-
-    private fun render(state: AreaState) {
-        when (state) {
-            is AreaState.Content -> {
-                showContent()
-                areaAdapter.updateList(state.areas)
-            }
-
-            is AreaState.NoInternet -> {
-                showNoInternet()
-            }
-
-            else -> {
-                showError()
-            }
         }
     }
 
@@ -82,7 +69,8 @@ class SelectCountryFragment : Fragment() {
         binding.recyclerView.visibility = View.GONE
     }
 
-    private fun showContent() {
+    private fun showContent(areas: List<Area>) {
+        areaAdapter.updateList(areas)
         binding.placeholder.visibility = View.GONE
         binding.recyclerView.visibility = View.VISIBLE
     }

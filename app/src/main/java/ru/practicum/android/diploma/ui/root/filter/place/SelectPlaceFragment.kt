@@ -1,23 +1,30 @@
 package ru.practicum.android.diploma.ui.root.filter.place
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSelectPlaceBinding
+import ru.practicum.android.diploma.presentation.filter.place.PlaceState
 import ru.practicum.android.diploma.presentation.filter.place.SelectPlaceViewModel
+import ru.practicum.android.diploma.presentation.filter.place.WorkPlaceState
+import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.APPLY_PLACE_KEY
+import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.PLACE_REQUEST_KEY
+import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.SELECTED_PLACE_KEY
 
 class SelectPlaceFragment : Fragment() {
-
     private var _binding: FragmentSelectPlaceBinding? = null
     private val binding get() = _binding!!
-
-    private val viewModel by viewModel<SelectPlaceViewModel>()
+    private val viewModel by activityViewModel<SelectPlaceViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,22 +38,24 @@ class SelectPlaceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.setState()
-
-        viewModel.observeState().observe(viewLifecycleOwner) {
-            render(it)
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when {
+                state.showError -> render(state)
+                state.noInternet -> render(state)
+                else -> render(state)
+            }
         }
-
-        setupClickListeners()
+        viewModel.getAreas()
+        setupListeners()
     }
 
-    private fun setupClickListeners() {
+    private fun setupListeners() {
         with(binding) {
             selectCountryButton.setOnClickListener {
-                navigateToSelectCountry()
+                findNavController().navigate(R.id.action_selectPlaceFragment_to_selectCountryFragment)
             }
             selectRegionButton.setOnClickListener {
-                navigateToSelectRegion()
+                findNavController().navigate(R.id.action_selectPlaceFragment_to_selectRegionFragment)
             }
             backArrow.setOnClickListener {
                 findNavController().popBackStack()
@@ -58,17 +67,20 @@ class SelectPlaceFragment : Fragment() {
                 clearRegion()
             }
             selectButton.setOnClickListener {
+                val workPlaceState = WorkPlaceState(viewModel.state.value?.country, viewModel.state.value?.region)
+                setFragmentResult(APPLY_PLACE_KEY, bundleOf(SELECTED_PLACE_KEY to workPlaceState))
                 findNavController().popBackStack()
             }
         }
-    }
-
-    private fun navigateToSelectCountry() {
-        findNavController().navigate(R.id.action_selectPlaceFragment_to_selectCountryFragment)
-    }
-
-    private fun navigateToSelectRegion() {
-        findNavController().navigate(R.id.action_selectPlaceFragment_to_selectRegionFragment)
+        setFragmentResultListener(PLACE_REQUEST_KEY) { _, bundle ->
+            val workPlaceState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getSerializable(SELECTED_PLACE_KEY, WorkPlaceState::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                bundle.getSerializable(SELECTED_PLACE_KEY) as? WorkPlaceState
+            }
+            viewModel.setPlace(workPlaceState)
+        }
     }
 
     private fun clearCountry() {
@@ -81,7 +93,7 @@ class SelectPlaceFragment : Fragment() {
         binding.inputRegion.text = EMPTY_TEXT
     }
 
-    private fun render(state: WorkPlaceState) {
+    private fun render(state: PlaceState) {
         with(binding) {
             if (state.country != null) {
                 countryTitle.isVisible = false
