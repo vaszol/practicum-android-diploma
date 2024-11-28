@@ -65,7 +65,6 @@ class FilterIndustry : Fragment() {
             buttonIndustry.setOnClickListener {
                 val selectedIndustry = viewModel.selectedIndustry.value
                 selectedIndustry?.let { industry ->
-                    viewModel.saveSelectedIndustry(industry)
 
                     setFragmentResult(
                         FilterFragmentKeys.INDUSTRY_REQUEST_KEY,
