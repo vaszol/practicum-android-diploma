@@ -30,39 +30,14 @@ class RootActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.filterFragment -> {
-                    binding.bottomNavigationView.isVisible = false
-                    binding.line.isVisible = false
-                }
-
-                R.id.filterIndustry -> {
-                    binding.bottomNavigationView.isVisible = false
-                    binding.line.isVisible = false
-                }
-
-                R.id.detailsFragment -> {
-                    binding.bottomNavigationView.isVisible = false
-                    binding.line.isVisible = false
-                }
-
-                R.id.selectRegionFragment -> {
-                    binding.bottomNavigationView.isVisible = false
-                    binding.line.isVisible = false
-                }
-
-                R.id.selectCountryFragment -> {
-                    binding.bottomNavigationView.isVisible = false
-                    binding.line.isVisible = false
-                }
-
-                R.id.selectPlaceFragment -> {
-                    binding.bottomNavigationView.isVisible = false
-                    binding.line.isVisible = false
+                R.id.mainFragment, R.id.teamFragment, R.id.favoritesFragment -> {
+                    binding.bottomNavigationView.isVisible = true
+                    binding.line.isVisible = true
                 }
 
                 else -> {
-                    binding.bottomNavigationView.isVisible = true
-                    binding.line.isVisible = true
+                    binding.bottomNavigationView.isVisible = false
+                    binding.line.isVisible = false
                 }
             }
         }
