@@ -20,6 +20,6 @@ data class WorkPlaceState(
     }
 
     companion object {
-        const val serialVersionUID = 1L
+        const val serialVersionUID = "-1"
     }
 }

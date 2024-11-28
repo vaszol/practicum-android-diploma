@@ -74,8 +74,7 @@ class FilterViewModel(
         val currentState = filter.value
         val newState = currentState.copy(industry = industry)
 
-        _filterState.value = newState
-     //   filter.value = newState
+        filter.value = newState
     }
 
     fun toggleShowOnlyWithSalary() {
@@ -145,7 +144,7 @@ class FilterViewModel(
     }
 
     fun isFilterChanged(): Boolean {
-        val currentState = _filterState.value
+        val currentState = filter.value
         return initialFilterState.salary != currentState.salary ||
             initialFilterState.industry != currentState.industry ||
             initialFilterState.country != currentState.country ||
