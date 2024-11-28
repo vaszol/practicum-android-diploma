@@ -128,6 +128,7 @@ class SelectRegionFragment : Fragment() {
             errorMessage.setText(R.string.no_internet)
             placeholder.visibility = View.VISIBLE
             errorMessage.visibility = View.VISIBLE
+            searchMagnifier.visibility = View.GONE
         }
     }
 
