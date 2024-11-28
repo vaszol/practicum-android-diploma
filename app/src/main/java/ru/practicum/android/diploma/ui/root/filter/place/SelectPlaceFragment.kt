@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSelectPlaceBinding
-import ru.practicum.android.diploma.presentation.filter.place.PlaceState
+import ru.practicum.android.diploma.presentation.filter.place.PlaceScreenState
 import ru.practicum.android.diploma.presentation.filter.place.SelectPlaceViewModel
 import ru.practicum.android.diploma.presentation.filter.place.WorkPlaceState
 import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.APPLY_PLACE_KEY
@@ -25,6 +25,7 @@ class SelectPlaceFragment : Fragment() {
     private var _binding: FragmentSelectPlaceBinding? = null
     private val binding get() = _binding!!
     private val viewModel by activityViewModel<SelectPlaceViewModel>()
+    private var pendingWorkPlaceState: WorkPlaceState? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,15 +38,17 @@ class SelectPlaceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            when {
-                state.showError -> render(state)
-                state.noInternet -> render(state)
-                else -> render(state)
+            state?.let {
+                render(it)
+
+                if (state != PlaceScreenState.Loading && pendingWorkPlaceState != null) {
+                    // Устанавливаем переданные из настроек фильтрации данные после завершения загрузки
+                    viewModel.setPlace(pendingWorkPlaceState)
+                    pendingWorkPlaceState = null
+                }
             }
         }
-        viewModel.getAreas()
         setupListeners()
     }
 
@@ -67,9 +70,12 @@ class SelectPlaceFragment : Fragment() {
                 clearRegion()
             }
             selectButton.setOnClickListener {
-                val workPlaceState = WorkPlaceState(viewModel.state.value?.country, viewModel.state.value?.region)
-                setFragmentResult(APPLY_PLACE_KEY, bundleOf(SELECTED_PLACE_KEY to workPlaceState))
-                findNavController().popBackStack()
+                val currentState = viewModel.state.value
+                if (currentState is PlaceScreenState.PlaceData) {
+                    val workPlaceState = WorkPlaceState(currentState.country, currentState.region)
+                    setFragmentResult(APPLY_PLACE_KEY, bundleOf(SELECTED_PLACE_KEY to workPlaceState))
+                    findNavController().popBackStack()
+                }
             }
         }
         setFragmentResultListener(PLACE_REQUEST_KEY) { _, bundle ->
@@ -79,7 +85,11 @@ class SelectPlaceFragment : Fragment() {
                 @Suppress("DEPRECATION")
                 bundle.getSerializable(SELECTED_PLACE_KEY) as? WorkPlaceState
             }
-            viewModel.setPlace(workPlaceState)
+            pendingWorkPlaceState = workPlaceState
+            if (viewModel.state.value is PlaceScreenState.PlaceData) {
+                workPlaceState?.let { viewModel.setPlace(it) }
+                pendingWorkPlaceState = null
+            }
         }
     }
 
@@ -93,12 +103,13 @@ class SelectPlaceFragment : Fragment() {
         binding.inputRegion.text = EMPTY_TEXT
     }
 
-    private fun render(state: PlaceState) {
+    private fun showPlace(currentData: PlaceScreenState.PlaceData) {
         with(binding) {
-            if (state.country != null) {
+            progressBar.visibility = View.GONE
+            if (currentData.country != null) {
                 countryTitle.isVisible = false
                 subtitleCountry.isVisible = true
-                inputCountry.text = state.country.name
+                inputCountry.text = currentData.country.name
                 inputCountry.isVisible = true
                 deleteCountry.isVisible = true
             } else {
@@ -109,10 +120,10 @@ class SelectPlaceFragment : Fragment() {
                 deleteCountry.isVisible = false
             }
 
-            if (state.region != null) {
+            if (currentData.region != null) {
                 region.isVisible = false
                 subtitleRegion.isVisible = true
-                inputRegion.text = state.region.name
+                inputRegion.text = currentData.region.name
                 inputRegion.isVisible = true
                 deleteRegion.isVisible = true
             } else {
@@ -122,8 +133,47 @@ class SelectPlaceFragment : Fragment() {
                 inputRegion.isVisible = false
                 deleteRegion.isVisible = false
             }
+            selectButton.isVisible = currentData.country != null || currentData.region != null
+        }
+    }
 
-            selectButton.isVisible = state.country != null || state.region != null
+    private fun render(state: PlaceScreenState) {
+        if (state is PlaceScreenState.Loading) {
+            showLoading()
+        } else {
+            prepareViews()
+            state as PlaceScreenState.PlaceData
+            if (state.country != null) {
+                showPlace(state)
+            }
+        }
+    }
+
+    private fun showLoading() {
+        with(binding) {
+            progressBar.visibility = View.VISIBLE
+            countryTitle.visibility = View.GONE
+            subtitleCountry.visibility = View.GONE
+            inputCountry.visibility = View.GONE
+            deleteCountry.visibility = View.GONE
+            region.visibility = View.GONE
+            subtitleRegion.visibility = View.GONE
+            inputRegion.visibility = View.GONE
+            deleteRegion.visibility = View.GONE
+        }
+    }
+
+    private fun prepareViews() {
+        with(binding) {
+            progressBar.visibility = View.GONE
+            countryTitle.visibility = View.VISIBLE
+            subtitleCountry.visibility = View.GONE
+            inputCountry.visibility = View.GONE
+            deleteCountry.visibility = View.GONE
+            region.visibility = View.VISIBLE
+            subtitleRegion.visibility = View.GONE
+            inputRegion.visibility = View.GONE
+            deleteRegion.visibility = View.GONE
         }
     }
 

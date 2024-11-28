@@ -11,10 +11,10 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSelectCountryBinding
 import ru.practicum.android.diploma.domain.models.Area
+import ru.practicum.android.diploma.presentation.filter.place.PlaceScreenState
 import ru.practicum.android.diploma.presentation.filter.place.SelectPlaceViewModel
 
 class SelectCountryFragment : Fragment() {
-
     private var _binding: FragmentSelectCountryBinding? = null
     private val binding get() = _binding!!
 
@@ -38,13 +38,17 @@ class SelectCountryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.state.value?.let { state ->
+            if (state is PlaceScreenState.PlaceData) {
+                when {
+                    state.error -> showError()
+                    state.noInternet -> showNoInternet()
+                    else -> viewModel.getCountriesList()
+                }
 
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            when {
-                state.showError -> showError()
-                state.noInternet -> showNoInternet()
-                state.areas.isEmpty() -> viewModel.getAreas()
-                else -> showContent(state.areas)
+                viewModel.areasToDisplay.observe(viewLifecycleOwner) { countries ->
+                    showContent(countries)
+                }
             }
         }
 
@@ -58,20 +62,28 @@ class SelectCountryFragment : Fragment() {
     }
 
     private fun showError() {
-        binding.placeholderImage.setImageResource(R.drawable.placeholder_empty_industry_list)
-        binding.placeholder.visibility = View.VISIBLE
-        binding.recyclerView.visibility = View.GONE
+        with(binding) {
+            placeholderImage.setImageResource(R.drawable.placeholder_empty_industry_list)
+            placeholderMessage.setText(R.string.error_industry)
+            placeholder.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+        }
     }
 
     private fun showNoInternet() {
-        binding.placeholderImage.setImageResource(R.drawable.placeholder_no_internet)
-        binding.placeholder.visibility = View.VISIBLE
-        binding.recyclerView.visibility = View.GONE
+        with(binding) {
+            placeholderImage.setImageResource(R.drawable.placeholder_no_internet)
+            placeholderMessage.setText(R.string.no_internet)
+            placeholder.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+        }
     }
 
-    private fun showContent(areas: List<Area>) {
-        areaAdapter.updateList(areas)
-        binding.placeholder.visibility = View.GONE
-        binding.recyclerView.visibility = View.VISIBLE
+    private fun showContent(countries: List<Area>) {
+        with(binding) {
+            placeholder.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
+        areaAdapter.updateList(countries)
     }
 }

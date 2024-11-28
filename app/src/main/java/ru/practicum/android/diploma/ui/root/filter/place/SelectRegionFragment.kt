@@ -13,6 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSelectRegionBinding
 import ru.practicum.android.diploma.domain.models.Area
+import ru.practicum.android.diploma.presentation.filter.place.PlaceScreenState
 import ru.practicum.android.diploma.presentation.filter.place.SelectPlaceViewModel
 
 class SelectRegionFragment : Fragment() {
@@ -40,15 +41,18 @@ class SelectRegionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            when {
-                state.showError -> showError()
-                state.noInternet -> showNoInternet()
-                state.areas.isEmpty() -> viewModel.getAreas()
-                state.regions.isEmpty() -> showNoSuchRegion()
-                else -> showContent(state.regions)
+        viewModel.state.value?.let { state ->
+            if (state is PlaceScreenState.PlaceData) {
+                when {
+                    state.error -> showError()
+                    state.noInternet -> showNoInternet()
+                    else -> viewModel.getRegionsList()
+                }
             }
+        }
+
+        viewModel.areasToDisplay.observe(viewLifecycleOwner) { regions ->
+            showContent(regions)
         }
 
         with(binding) {
@@ -80,37 +84,52 @@ class SelectRegionFragment : Fragment() {
     }
 
     private fun showContent(regions: List<Area>) {
-        binding.searchView.visibility = View.VISIBLE
-        binding.recyclerView.visibility = View.VISIBLE
-        binding.placeholder.visibility = View.GONE
-        binding.errorMessage.visibility = View.GONE
-        areaAdapter.updateList(regions)
+        if (regions.isEmpty()) {
+            showNoSuchRegion()
+        } else {
+            with(binding) {
+                searchView.visibility = View.VISIBLE
+                recyclerView.visibility = View.VISIBLE
+                placeholder.visibility = View.GONE
+                errorMessage.visibility = View.GONE
+            }
+            areaAdapter.updateList(regions)
+        }
     }
 
     private fun showNoSuchRegion() {
-        binding.searchView.visibility = View.VISIBLE
-        binding.recyclerView.visibility = View.GONE
-        binding.placeholderImage.setImageResource(R.drawable.placeholder_no_vacancy)
-        binding.errorMessage.setText(R.string.no_such_region)
-        binding.placeholder.visibility = View.VISIBLE
-        binding.errorMessage.visibility = View.VISIBLE
+        with(binding) {
+            searchView.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+            placeholderImage.setImageResource(R.drawable.placeholder_no_vacancy)
+            errorMessage.setText(R.string.no_such_region)
+            placeholder.visibility = View.VISIBLE
+            errorMessage.visibility = View.VISIBLE
+        }
     }
 
     private fun showError() {
-        binding.searchView.visibility = View.GONE
-        binding.recyclerView.visibility = View.GONE
-        binding.placeholderImage.setImageResource(R.drawable.placeholder_empty_industry_list)
-        binding.errorMessage.setText(R.string.error_industry)
-        binding.placeholder.visibility = View.VISIBLE
-        binding.errorMessage.visibility = View.VISIBLE
+        with(binding) {
+            searchView.visibility = View.GONE
+            recyclerView.visibility = View.GONE
+            placeholderImage.setImageResource(R.drawable.placeholder_empty_industry_list)
+            errorMessage.setText(R.string.error_industry)
+            placeholder.visibility = View.VISIBLE
+            errorMessage.visibility = View.VISIBLE
+            searchMagnifier.visibility = View.GONE
+        }
     }
 
     private fun showNoInternet() {
-        binding.recyclerView.visibility = View.GONE
-        binding.placeholderImage.setImageResource(R.drawable.placeholder_no_internet)
-        binding.errorMessage.setText(R.string.no_internet)
-        binding.placeholder.visibility = View.VISIBLE
-        binding.errorMessage.visibility = View.VISIBLE
+        with(binding) {
+            searchView.visibility = View.GONE
+            recyclerView.visibility = View.GONE
+            placeholderImage.setImageResource(R.drawable.placeholder_no_internet)
+            errorMessage.setText(R.string.no_internet)
+            placeholder.visibility = View.VISIBLE
+            errorMessage.visibility = View.VISIBLE
+            searchMagnifier.visibility = View.GONE
+        }
     }
 
     companion object {
