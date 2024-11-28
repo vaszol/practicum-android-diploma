@@ -43,17 +43,11 @@ class SelectRegionFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when {
-                state == null -> {
-                    showError()
-                }
-
-                state.noSuchRegion -> {
-                    showNoSuchRegion()
-                }
-
-                else -> {
-                    showContent(state.regions)
-                }
+                state.showError -> showError()
+                state.noInternet -> showNoInternet()
+                state.areas.isEmpty() -> viewModel.getAreas()
+                state.regions.isEmpty() -> showNoSuchRegion()
+                else -> showContent(state.regions)
             }
         }
 
@@ -107,6 +101,14 @@ class SelectRegionFragment : Fragment() {
         binding.recyclerView.visibility = View.GONE
         binding.placeholderImage.setImageResource(R.drawable.placeholder_empty_industry_list)
         binding.errorMessage.setText(R.string.error_industry)
+        binding.placeholder.visibility = View.VISIBLE
+        binding.errorMessage.visibility = View.VISIBLE
+    }
+
+    private fun showNoInternet() {
+        binding.recyclerView.visibility = View.GONE
+        binding.placeholderImage.setImageResource(R.drawable.placeholder_no_internet)
+        binding.errorMessage.setText(R.string.no_internet)
         binding.placeholder.visibility = View.VISIBLE
         binding.errorMessage.visibility = View.VISIBLE
     }

@@ -11,7 +11,17 @@ import ru.practicum.android.diploma.domain.models.Area
 class SelectPlaceViewModel(
     private val hhInteractor: HhInteractor,
 ) : ViewModel() {
-    private val _state = MutableLiveData<PlaceState>()
+    private val _state = MutableLiveData(
+        PlaceState(
+            areas = emptyList(),
+            regions = emptyList(),
+            showError = false,
+            noInternet = false,
+            noSuchRegion = false,
+            country = null,
+            region = null
+        )
+    )
     val state: LiveData<PlaceState> = _state
 
     init {
@@ -19,7 +29,8 @@ class SelectPlaceViewModel(
             PlaceState(
                 areas = emptyList(),
                 regions = emptyList(),
-                error = false,
+                showError = false,
+                noInternet = false,
                 noSuchRegion = false,
                 country = null,
                 region = null
@@ -31,8 +42,8 @@ class SelectPlaceViewModel(
         viewModelScope.launch {
             hhInteractor.getAreas().collect { pair ->
                 when {
-                    pair.second != null -> _state.postValue(state.value?.copy(error = true))
-                    pair.first.isNullOrEmpty() -> _state.postValue(state.value?.copy(noSuchRegion = true))
+                    pair.second != null -> _state.postValue(state.value?.copy(noInternet = true))
+                    pair.first.isNullOrEmpty() -> _state.postValue(state.value?.copy(showError = true))
                     else -> updateAreas(pair.first!!)
                 }
             }
@@ -43,10 +54,10 @@ class SelectPlaceViewModel(
         val country = state.value?.country
         val region = state.value?.region
         _state.postValue(
-            PlaceState(
+            state.value?.copy(
                 areas = areas,
-                regions = areas.flatMap { it.areas ?: emptyList() },
-                error = false,
+                regions = filterRegions(country),
+                showError = false,
                 noSuchRegion = false,
                 country = country,
                 region = region

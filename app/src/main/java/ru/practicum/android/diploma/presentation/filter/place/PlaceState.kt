@@ -7,6 +7,7 @@ data class PlaceState(
     val regions: List<Area>,
     val country: Area?,
     val region: Area?,
-    val error: Boolean = false,
+    val showError: Boolean = false,
+    val noInternet: Boolean = false,
     val noSuchRegion: Boolean = false,
 )

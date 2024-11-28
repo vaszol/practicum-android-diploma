@@ -38,12 +38,14 @@ class SelectPlaceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.state.observe(viewLifecycleOwner) {
-            if (it == null) {
-                viewModel.getAreas()
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when {
+                state.showError -> render(state)
+                state.noInternet -> render(state)
+                else -> render(state)
             }
-            it?.let { render(it) }
         }
+        viewModel.getAreas()
         setupListeners()
     }
 
