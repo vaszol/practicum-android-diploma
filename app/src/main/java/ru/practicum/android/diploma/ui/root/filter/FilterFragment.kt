@@ -46,6 +46,7 @@ class FilterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.setInitialState()
         setupViews()
         setupListeners()
         observeFilterState()
@@ -81,7 +82,6 @@ class FilterFragment : Fragment() {
                 binding.subtitleIndustry.isVisible = false
                 binding.deleteIndustry.isVisible = false
             }
-            updateButtonVisibility(state)
         }
     }
 

@@ -51,7 +51,6 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //filterViewModel.getInitialState()
         updateFilterUI()
 
         binding.searchFilterNotActvie.setOnClickListener {
@@ -241,7 +240,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun updateFilterUI() {
-        val hasActiveFilters = filterViewModel.hasActiveFilters()
+        val hasActiveFilters = filterViewModel.hasPrefs()
         if (hasActiveFilters) {
             binding.searchFilterActive.visibility = View.VISIBLE
             binding.searchFilterNotActvie.visibility = View.GONE
