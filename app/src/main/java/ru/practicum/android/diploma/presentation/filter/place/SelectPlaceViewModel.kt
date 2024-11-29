@@ -26,24 +26,39 @@ class SelectPlaceViewModel(
     private val _areasToDisplay = MutableLiveData<List<Area>>()
     val areasToDisplay: LiveData<List<Area>> = _areasToDisplay
 
+    var isRetrying: Boolean = false
+        private set
+
     init {
+        _state.value = emptyPlaceData
         getAreas()
     }
 
     private fun getAreas() {
+        val currentState = _state.value
         _state.value = PlaceScreenState.Loading
         viewModelScope.launch {
+            isRetrying = true
             hhInteractor.getAreas().collect { pair ->
                 when {
                     pair.second == HttpsURLConnection.HTTP_BAD_REQUEST.toString() ->
-                        _state.setValue(emptyPlaceData.copy(error = true))
+                        if (currentState is PlaceScreenState.PlaceData) {
+                            _state.value = currentState.copy(error = true)
+                        }
 
-                    pair.second != null -> _state.setValue(emptyPlaceData.copy(noInternet = true))
+                    pair.second != null ->
+                        if (currentState is PlaceScreenState.PlaceData) {
+                            _state.value = currentState.copy(noInternet = true)
+                        }
+
                     else -> {
                         allAreas = pair.first!!
-                        _state.value = emptyPlaceData
+                        if (currentState is PlaceScreenState.PlaceData) {
+                            _state.value = currentState.copy(error = false, noInternet = false)
+                        }
                     }
                 }
+                isRetrying = false
             }
         }
     }
@@ -152,5 +167,11 @@ class SelectPlaceViewModel(
             current = parent
         }
         return current
+    }
+
+    fun reloadData() {
+        if (!isRetrying) {
+            getAreas()
+        }
     }
 }
