@@ -26,7 +26,11 @@ class FilterViewModel(
 
         val locationString = listOfNotNull(country?.name, region?.name).joinToString(", ")
         val showOnlyWithSalary =
-            if (isFromSearchFragment) sharedPreferencesInteractor.getShowOnlyWithSalary() else currentState.showOnlyWithSalary
+            if (isFromSearchFragment) {
+                sharedPreferencesInteractor.getShowOnlyWithSalary()
+            } else {
+                currentState.showOnlyWithSalary
+            }
 
         val reset = if (isFromSearchFragment) hasPrefs() else hasActiveFilters()
 
