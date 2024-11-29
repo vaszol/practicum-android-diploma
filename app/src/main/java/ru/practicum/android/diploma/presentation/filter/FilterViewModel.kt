@@ -1,11 +1,11 @@
 package ru.practicum.android.diploma.presentation.filter
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Industry
@@ -14,148 +14,72 @@ class FilterViewModel(
     private val sharedPreferencesInteractor: SharedPreferencesInteractor,
 ) : ViewModel() {
 
-    val filter = MutableStateFlow(FilterState())
-    val state: StateFlow<FilterState> = filter.asStateFlow()
-
-    private val _isApplyButtonEnabled = MutableLiveData<Boolean>()
-    val isApplyButtonEnabled: LiveData<Boolean> = _isApplyButtonEnabled
-
-    private val _isResetButtonVisible = MutableLiveData<Boolean>()
-    val isResetButtonVisible: LiveData<Boolean> = _isResetButtonVisible
-
-    private var initialFilterState: FilterState = FilterState()
-
-    init {
-        getInitialState()
-        updateButtonStates()
-    }
-
-    fun getInitialState() {
-        val savedSalary = sharedPreferencesInteractor.getSalary()
-        val savedIndustry = sharedPreferencesInteractor.getIndustry()
-        val savedCountry = sharedPreferencesInteractor.getCountry()
-        val savedRegion = sharedPreferencesInteractor.getRegion()
-        val savedShowOnlyWithSalary = sharedPreferencesInteractor.getShowOnlyWithSalary()
-        val locationString = createLocationString(savedCountry, savedRegion)
-
-        initialFilterState = FilterState(
-            salary = savedSalary,
-            industry = savedIndustry,
-            country = savedCountry,
-            region = savedRegion,
-            showOnlyWithSalary = savedShowOnlyWithSalary,
-            locationString = locationString
-        )
-
-        filter.value = initialFilterState.copy()
-    }
+    val filterState = MutableStateFlow(FilterState())
+    val observeState: StateFlow<FilterState> = filterState.asStateFlow()
 
     fun updateLocation(country: Area?, region: Area?) {
-        val currentState = filter.value
-        val locationString = createLocationString(country, region)
-
-        val newState = currentState.copy(
-            country = country,
-            region = region,
-            locationString = locationString
-        )
-
-        filter.value = newState
-
-        updateButtonStates()
+        filterState.update { state ->
+            state.copy(
+                country = country,
+                region = region,
+                locationString = "${country?.name}, ${region?.name}"
+            )
+        }
+        Log.d("FVM updateLocation", filterState.value.toString())
     }
 
     fun updateSalary(salary: Int?) {
-        val currentState = filter.value
-        val newState = currentState.copy(salary = salary)
-        filter.value = newState
-        updateButtonStates()
+        filterState.update { state -> state.copy(salary = salary) }
+        Log.d("FVM updateSalary", filterState.value.toString())
     }
 
     fun updateIndustries(industry: Industry?) {
-        val currentState = filter.value
-        val newState = currentState.copy(industry = industry)
-
-        filter.value = newState
+        filterState.update { state -> state.copy(industry = industry) }
+        Log.d("FVM updateIndustries", filterState.value.toString())
     }
 
     fun toggleShowOnlyWithSalary() {
-        val currentState = filter.value
-        val newState = currentState.copy(
-            showOnlyWithSalary = !currentState.showOnlyWithSalary
-        )
-        filter.value = newState
-        updateButtonStates()
+        filterState.update { state ->
+            state.copy(
+                showOnlyWithSalary = !filterState.value.showOnlyWithSalary
+            )
+        }
+        Log.d("FVM toggleSalary", filterState.value.toString())
+    }
+
+    fun updateReset() {
+        filterState.update { state -> state.copy(reset = hasActiveFilters()) }
+        Log.d("FVM updateButtons", filterState.value.toString())
+    }
+
+    fun updateApply() {
+
     }
 
     fun applyFilter() {
-        val currentState = filter.value
+        val currentState = filterState.value
 
         sharedPreferencesInteractor.setSalary(currentState.salary)
-
         sharedPreferencesInteractor.setIndustry(currentState.industry)
-
         sharedPreferencesInteractor.setCountry(currentState.country)
         sharedPreferencesInteractor.setRegion(currentState.region)
-
-        currentState.country?.let { sharedPreferencesInteractor.setCountry(it) }
-        currentState.region?.let { sharedPreferencesInteractor.setRegion(it) }
-
         sharedPreferencesInteractor.setShowOnlyWithSalary(currentState.showOnlyWithSalary)
-
-        initialFilterState = currentState.copy()
-
-        updateButtonStates()
+        Log.d("FVM applyFilter", filterState.value.toString())
     }
 
     fun resetFilter() {
-        filter.value = FilterState()
+        filterState.update { FilterState() }
 
         sharedPreferencesInteractor.setSalary(null)
         sharedPreferencesInteractor.setIndustry(null)
         sharedPreferencesInteractor.setCountry(null)
         sharedPreferencesInteractor.setRegion(null)
         sharedPreferencesInteractor.setShowOnlyWithSalary(false)
-
-        initialFilterState = filter.value
-
-        updateButtonStates()
-    }
-
-    private fun createLocationString(country: Area?, region: Area?): String {
-        val locationParts = mutableListOf<String>()
-
-        country?.name?.let { locationParts.add(it) }
-        region?.name?.let { locationParts.add(it) }
-
-        return locationParts.joinToString(", ")
-    }
-
-    private fun updateButtonStates() {
-        val currentState = filter.value
-
-        _isResetButtonVisible.value = listOf<Any?>(
-            currentState.salary,
-            currentState.industry,
-            currentState.country,
-            currentState.region,
-            currentState.showOnlyWithSalary.takeIf { it }
-        ).any { it != null }
-
-        _isApplyButtonEnabled.value = isFilterChanged()
-    }
-
-    fun isFilterChanged(): Boolean {
-        val currentState = filter.value
-        return initialFilterState.salary != currentState.salary ||
-            initialFilterState.industry != currentState.industry ||
-            initialFilterState.country != currentState.country ||
-            initialFilterState.region != currentState.region ||
-            initialFilterState.showOnlyWithSalary != currentState.showOnlyWithSalary
+        Log.d("FVM resetFilter", filterState.value.toString())
     }
 
     fun hasActiveFilters(): Boolean {
-        val currentState = filter.value
+        val currentState = filterState.value
         val hasFilters = currentState.salary != null ||
             currentState.industry != null ||
             currentState.country != null ||

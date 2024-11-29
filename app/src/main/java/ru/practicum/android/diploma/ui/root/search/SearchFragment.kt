@@ -51,7 +51,7 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        filterViewModel.getInitialState()
+        //filterViewModel.getInitialState()
         updateFilterUI()
 
         binding.searchFilterNotActvie.setOnClickListener {
