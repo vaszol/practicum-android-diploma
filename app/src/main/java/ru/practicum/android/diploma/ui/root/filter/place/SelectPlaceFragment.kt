@@ -47,6 +47,12 @@ class SelectPlaceFragment : Fragment() {
                     viewModel.setPlace(pendingWorkPlaceState)
                     pendingWorkPlaceState = null
                 }
+
+                if (state is PlaceScreenState.PlaceData && (state.noInternet || state.error)) {
+                    if (!viewModel.isRetrying) { // Проверка, не идет ли уже повторная попытка
+                        viewModel.reloadData()
+                    }
+                }
             }
         }
         setupListeners()
