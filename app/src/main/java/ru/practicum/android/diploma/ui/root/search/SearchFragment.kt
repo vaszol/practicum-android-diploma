@@ -51,7 +51,6 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        filterViewModel.getInitialState()
         updateFilterUI()
 
         binding.searchFilterNotActvie.setOnClickListener {
@@ -128,11 +127,13 @@ class SearchFragment : Fragment() {
             }
 
             searchFilterNotActvie.setOnClickListener {
-                findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
+                val bundle = bundleOf(BUNDLE_KEY to true)
+                findNavController().navigate(R.id.action_mainFragment_to_filterFragment, bundle)
             }
 
             searchFilterActive.setOnClickListener {
-                findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
+                val bundle = bundleOf(BUNDLE_KEY to true)
+                findNavController().navigate(R.id.action_mainFragment_to_filterFragment, bundle)
             }
         }
 
@@ -241,7 +242,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun updateFilterUI() {
-        val hasActiveFilters = filterViewModel.hasActiveFilters()
+        val hasActiveFilters = filterViewModel.hasPrefs()
         if (hasActiveFilters) {
             binding.searchFilterActive.visibility = View.VISIBLE
             binding.searchFilterNotActvie.visibility = View.GONE
@@ -273,5 +274,6 @@ class SearchFragment : Fragment() {
 
     companion object {
         const val EMPTY_TEXT = ""
+        const val BUNDLE_KEY = "key"
     }
 }

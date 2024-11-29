@@ -43,7 +43,7 @@ class HhRepositoryImpl(
             VacanciesRequest(
                 text = text,
                 currency = currency,
-                area = filter.getRegion()?.id,
+                area = filter.getRegion()?.id ?: filter.getCountry()?.id,
                 industry = filter.getIndustry()?.id,
                 salary = filter.getSalary(),
                 onlyWithSalary = filter.getShowOnlyWithSalary(),

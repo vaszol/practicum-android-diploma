@@ -20,15 +20,15 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.domain.models.Industry
+import ru.practicum.android.diploma.presentation.filter.FilterState
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.presentation.filter.place.WorkPlaceState
-import ru.practicum.android.diploma.ui.root.RootActivity
+import ru.practicum.android.diploma.ui.root.search.SearchFragment
 import ru.practicum.android.diploma.util.constants.FilterFragmentKeys
 import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.APPLY_PLACE_KEY
 import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.PLACE_REQUEST_KEY
@@ -47,13 +47,13 @@ class FilterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getInitialState()
-
+        val isFromSearch = requireArguments().getBoolean(SearchFragment.BUNDLE_KEY)
+        viewModel.setInitialState(isFromSearch)
+        setUpFragmentResultListener()
         setupViews()
         setupListeners()
-        observeViewModel()
-        setUpFragmentResultListener()
-
+        observeFilterState()
+        requireArguments().clear()
     }
 
     @SuppressLint("SetTextI18n")
@@ -61,7 +61,7 @@ class FilterFragment : Fragment() {
         binding.salary.inputType = InputType.TYPE_CLASS_NUMBER
         binding.deleteSalary.isVisible = false
 
-        viewModel.state.value.let { state ->
+        viewModel.observeState.value.let { state ->
             // Установка зарплаты
             state.salary?.let {
                 binding.salary.setText(it.toString())
@@ -86,8 +86,6 @@ class FilterFragment : Fragment() {
                 binding.deleteIndustry.isVisible = false
             }
         }
-
-        updateButtonVisibility()
     }
 
     private fun setupListeners() {
@@ -96,10 +94,10 @@ class FilterFragment : Fragment() {
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
             workplace.setOnClickListener {
-                navigateToPlase()
+                navigateToPlace()
             }
             inputWorkplace.setOnClickListener {
-                navigateToPlase()
+                navigateToPlace()
             }
             deleteWorkplace.setOnClickListener {
                 viewModel.updateLocation(null, null)
@@ -127,7 +125,7 @@ class FilterFragment : Fragment() {
                 viewModel.updateSalary(currentSalary)
                 viewModel.applyFilter()
                 setFragmentResult("applyFilter", bundleOf("updated" to true))
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+                findNavController().navigate(R.id.action_filterFragment_to_mainFragment)
             }
             reset.setOnClickListener {
                 viewModel.resetFilter()
@@ -137,13 +135,13 @@ class FilterFragment : Fragment() {
         }
     }
 
-    private fun navigateToPlase() {
+    private fun navigateToPlace() {
         setFragmentResult(
             PLACE_REQUEST_KEY,
             bundleOf(
                 SELECTED_PLACE_KEY to WorkPlaceState(
-                    viewModel.filter.value.country,
-                    viewModel.filter.value.region
+                    viewModel.filterState.value.country,
+                    viewModel.filterState.value.region
                 )
             )
         )
@@ -181,14 +179,9 @@ class FilterFragment : Fragment() {
         }
     }
 
-    private fun observeViewModel() {
-        observeFilterState()
-        observeButtonVisibility()
-    }
-
     private fun observeFilterState() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state.collect { state ->
+            viewModel.observeState.collect { state ->
                 binding.apply {
                     checkBox.isChecked = state.showOnlyWithSalary
                     deleteSalary.isVisible = state.salary != null
@@ -220,23 +213,9 @@ class FilterFragment : Fragment() {
                         deleteIndustry.isVisible = false
                         binding.industry.isVisible = true
                     }
+                    updateButtonVisibility(state)
                 }
-                updateButtonVisibility()
                 getColorExpectedSalary(binding.checkBox)
-            }
-        }
-    }
-
-    private fun observeButtonVisibility() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isApplyButtonEnabled.observe(viewLifecycleOwner) { isEnabled ->
-                binding.apply.isVisible = isEnabled
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isResetButtonVisible.observe(viewLifecycleOwner) { isVisible ->
-                binding.reset.isVisible = isVisible
             }
         }
     }
@@ -250,6 +229,7 @@ class FilterFragment : Fragment() {
                 @Suppress("DEPRECATION")
                 bundle.getSerializable(FilterFragmentKeys.SELECTED_INDUSTRY_KEY) as? Industry
             }
+
             viewModel.updateIndustries(selectedIndustry)
         }
 
@@ -268,15 +248,9 @@ class FilterFragment : Fragment() {
         }
     }
 
-    private fun updateButtonVisibility() {
-        val isButtonEnabled = viewModel.isFilterChanged() ||
-            viewModel.state.value.industry != null ||
-            viewModel.state.value.country != null ||
-            viewModel.state.value.region != null ||
-            viewModel.state.value.salary != null
-
-        binding.apply.isVisible = isButtonEnabled
-        binding.reset.isVisible = viewModel.isResetButtonVisible.value!!
+    private fun updateButtonVisibility(state: FilterState) {
+        binding.apply.isVisible = state.apply
+        binding.reset.isVisible = state.reset
     }
 
     private fun Context.getThemeColor(attr: Int): Int {
