@@ -127,11 +127,13 @@ class SearchFragment : Fragment() {
             }
 
             searchFilterNotActvie.setOnClickListener {
-                findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
+                val bundle = bundleOf(BUNDLE_KEY to true)
+                findNavController().navigate(R.id.action_mainFragment_to_filterFragment, bundle)
             }
 
             searchFilterActive.setOnClickListener {
-                findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
+                val bundle = bundleOf(BUNDLE_KEY to true)
+                findNavController().navigate(R.id.action_mainFragment_to_filterFragment, bundle)
             }
         }
 
@@ -272,5 +274,6 @@ class SearchFragment : Fragment() {
 
     companion object {
         const val EMPTY_TEXT = ""
+        const val BUNDLE_KEY = "key"
     }
 }

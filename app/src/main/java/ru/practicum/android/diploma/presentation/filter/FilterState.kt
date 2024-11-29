@@ -12,8 +12,4 @@ data class FilterState(
     val showOnlyWithSalary: Boolean = false,
     val reset: Boolean = false,
     val apply: Boolean = false
-) {
-    override fun toString(): String {
-        return "$salary, $industry, ${country?.name}, ${region?.name}, $showOnlyWithSalary, $reset, $apply"
-    }
-}
+)

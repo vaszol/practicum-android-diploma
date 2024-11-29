@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.presentation.filter
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,15 +16,19 @@ class FilterViewModel(
     val filterState = MutableStateFlow(FilterState())
     val observeState: StateFlow<FilterState> = filterState.asStateFlow()
 
-    fun setInitialState() {
-        val salary = sharedPreferencesInteractor.getSalary()
-        val industry = sharedPreferencesInteractor.getIndustry()
-        val country = sharedPreferencesInteractor.getCountry()
-        val region = sharedPreferencesInteractor.getRegion()
-        val locationString = listOfNotNull(country?.name, region?.name)
-            .joinToString(", ")
-        val showOnlyWithSalary = sharedPreferencesInteractor.getShowOnlyWithSalary()
-        val reset = hasPrefs()
+    fun setInitialState(isF: Boolean) {
+        val currentState = filterState.value
+
+        val salary = if (isF) sharedPreferencesInteractor.getSalary() else currentState.salary
+        val industry = if (isF) sharedPreferencesInteractor.getIndustry() else currentState.industry
+        val country = if (isF) sharedPreferencesInteractor.getCountry() else currentState.country
+        val region = if (isF) sharedPreferencesInteractor.getRegion() else currentState.region
+
+        val locationString = listOfNotNull(country?.name, region?.name).joinToString(", ")
+        val showOnlyWithSalary =
+            if (isF) sharedPreferencesInteractor.getShowOnlyWithSalary() else currentState.showOnlyWithSalary
+
+        val reset = if (isF) hasPrefs() else hasActiveFilters()
 
         filterState.update {
             FilterState(
@@ -36,7 +39,6 @@ class FilterViewModel(
                 locationString,
                 showOnlyWithSalary,
                 reset,
-                false
             )
         }
     }
@@ -48,19 +50,16 @@ class FilterViewModel(
             state.copy(country = country, region = region, locationString = locationString)
         }
         updateButtonsVisibility()
-        Log.d("FVM updateLocation", filterState.value.toString())
     }
 
     fun updateSalary(salary: Int?) {
         filterState.update { state -> state.copy(salary = salary) }
         updateButtonsVisibility()
-        Log.d("FVM updateSalary", filterState.value.toString())
     }
 
     fun updateIndustries(industry: Industry?) {
         filterState.update { state -> state.copy(industry = industry) }
         updateButtonsVisibility()
-        Log.d("FVM updateIndustries", filterState.value.toString())
     }
 
     fun toggleShowOnlyWithSalary() {
@@ -69,7 +68,6 @@ class FilterViewModel(
                 showOnlyWithSalary = !filterState.value.showOnlyWithSalary
             )
         }
-        Log.d("FVM toggleSalary", filterState.value.toString())
         updateButtonsVisibility()
     }
 
@@ -80,7 +78,6 @@ class FilterViewModel(
 
     private fun updateResetButtonVisibility() {
         filterState.update { state -> state.copy(reset = hasActiveFilters()) }
-        Log.d("FVM updateButtons", filterState.value.toString())
     }
 
     private fun updateApplyButtonVisibility() {
@@ -97,7 +94,7 @@ class FilterViewModel(
         sharedPreferencesInteractor.setCountry(currentState.country)
         sharedPreferencesInteractor.setRegion(currentState.region)
         sharedPreferencesInteractor.setShowOnlyWithSalary(currentState.showOnlyWithSalary)
-        Log.d("FVM applyFilter", filterState.value.toString())
+
         updateButtonsVisibility()
     }
 
@@ -110,7 +107,6 @@ class FilterViewModel(
         sharedPreferencesInteractor.setRegion(null)
         sharedPreferencesInteractor.setShowOnlyWithSalary(false)
         updateButtonsVisibility()
-        Log.d("FVM resetFilter", filterState.value.toString())
     }
 
     private fun hasActiveFilters(): Boolean {
@@ -121,7 +117,6 @@ class FilterViewModel(
             currentState.country != null ||
             currentState.region != null ||
             currentState.showOnlyWithSalary
-        Log.d("FVM hasActiveFilters", hasFilters.toString())
         return hasFilters
     }
 

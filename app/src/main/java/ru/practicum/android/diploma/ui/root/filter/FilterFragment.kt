@@ -28,6 +28,7 @@ import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.presentation.filter.FilterState
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.presentation.filter.place.WorkPlaceState
+import ru.practicum.android.diploma.ui.root.search.SearchFragment
 import ru.practicum.android.diploma.util.constants.FilterFragmentKeys
 import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.APPLY_PLACE_KEY
 import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.PLACE_REQUEST_KEY
@@ -46,11 +47,13 @@ class FilterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.setInitialState()
+        val isFromSearch = requireArguments().getBoolean(SearchFragment.BUNDLE_KEY)
+        viewModel.setInitialState(isFromSearch)
+        setUpFragmentResultListener()
         setupViews()
         setupListeners()
         observeFilterState()
-        setUpFragmentResultListener()
+        requireArguments().clear()
     }
 
     @SuppressLint("SetTextI18n")
@@ -122,7 +125,7 @@ class FilterFragment : Fragment() {
                 viewModel.updateSalary(currentSalary)
                 viewModel.applyFilter()
                 setFragmentResult("applyFilter", bundleOf("updated" to true))
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+                findNavController().navigate(R.id.action_filterFragment_to_mainFragment)
             }
             reset.setOnClickListener {
                 viewModel.resetFilter()
@@ -226,6 +229,7 @@ class FilterFragment : Fragment() {
                 @Suppress("DEPRECATION")
                 bundle.getSerializable(FilterFragmentKeys.SELECTED_INDUSTRY_KEY) as? Industry
             }
+
             viewModel.updateIndustries(selectedIndustry)
         }
 
