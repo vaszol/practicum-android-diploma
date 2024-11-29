@@ -48,8 +48,11 @@ class SelectPlaceFragment : Fragment() {
                     pendingWorkPlaceState = null
                 }
 
-                if (state is PlaceScreenState.PlaceData && (state.noInternet || state.error) && !viewModel.isRetrying) {
-                    viewModel.reloadData()
+                if (state is PlaceScreenState.PlaceData) {
+                    val currentState = state
+                    if ((currentState.noInternet || currentState.error) && !viewModel.isRetrying) {
+                        viewModel.reloadData()
+                    }
                 }
             }
         }
