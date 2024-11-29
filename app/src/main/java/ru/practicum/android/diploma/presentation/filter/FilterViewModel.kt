@@ -16,19 +16,19 @@ class FilterViewModel(
     val filterState = MutableStateFlow(FilterState())
     val observeState: StateFlow<FilterState> = filterState.asStateFlow()
 
-    fun setInitialState(isF: Boolean) {
+    fun setInitialState(isFromSearchFragment: Boolean) {
         val currentState = filterState.value
 
-        val salary = if (isF) sharedPreferencesInteractor.getSalary() else currentState.salary
-        val industry = if (isF) sharedPreferencesInteractor.getIndustry() else currentState.industry
-        val country = if (isF) sharedPreferencesInteractor.getCountry() else currentState.country
-        val region = if (isF) sharedPreferencesInteractor.getRegion() else currentState.region
+        val salary = if (isFromSearchFragment) sharedPreferencesInteractor.getSalary() else currentState.salary
+        val industry = if (isFromSearchFragment) sharedPreferencesInteractor.getIndustry() else currentState.industry
+        val country = if (isFromSearchFragment) sharedPreferencesInteractor.getCountry() else currentState.country
+        val region = if (isFromSearchFragment) sharedPreferencesInteractor.getRegion() else currentState.region
 
         val locationString = listOfNotNull(country?.name, region?.name).joinToString(", ")
         val showOnlyWithSalary =
-            if (isF) sharedPreferencesInteractor.getShowOnlyWithSalary() else currentState.showOnlyWithSalary
+            if (isFromSearchFragment) sharedPreferencesInteractor.getShowOnlyWithSalary() else currentState.showOnlyWithSalary
 
-        val reset = if (isF) hasPrefs() else hasActiveFilters()
+        val reset = if (isFromSearchFragment) hasPrefs() else hasActiveFilters()
 
         filterState.update {
             FilterState(
