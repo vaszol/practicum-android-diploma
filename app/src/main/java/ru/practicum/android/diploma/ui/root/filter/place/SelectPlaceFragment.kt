@@ -48,10 +48,8 @@ class SelectPlaceFragment : Fragment() {
                     pendingWorkPlaceState = null
                 }
 
-                if (state is PlaceScreenState.PlaceData && (state.noInternet || state.error)) {
-                    if (!viewModel.isRetrying) { // Проверка, не идет ли уже повторная попытка
-                        viewModel.reloadData()
-                    }
+                if (state is PlaceScreenState.PlaceData && (state.noInternet || state.error) && !viewModel.isRetrying) {
+                    viewModel.reloadData()
                 }
             }
         }
