@@ -15,6 +15,10 @@ class Debouncer(private val coroutineScope: CoroutineScope, private val delayMil
             action()
         }
     }
+
+    fun cancel() {
+        job?.cancel()
+    }
 }
 
 /*

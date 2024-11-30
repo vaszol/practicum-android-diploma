@@ -29,6 +29,8 @@ import ru.practicum.android.diploma.presentation.filter.FilterState
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 import ru.practicum.android.diploma.presentation.filter.place.WorkPlaceState
 import ru.practicum.android.diploma.ui.root.search.SearchFragment
+import ru.practicum.android.diploma.ui.root.search.SearchFragment.Companion.APPLY_FILTER
+import ru.practicum.android.diploma.ui.root.search.SearchFragment.Companion.UPDATED
 import ru.practicum.android.diploma.util.constants.FilterFragmentKeys
 import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.APPLY_PLACE_KEY
 import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.PLACE_REQUEST_KEY
@@ -37,6 +39,7 @@ import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.SELECTED_P
 class FilterFragment : Fragment() {
     private val viewModel: FilterViewModel by viewModel()
     private val binding by lazy { FragmentFilterBinding.inflate(layoutInflater) }
+    private var query: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,8 +49,10 @@ class FilterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val isFromSearch = requireArguments().getBoolean(SearchFragment.BUNDLE_KEY)
+        if (isFromSearch) {
+            query = requireArguments().getString(SearchFragment.SEARCH_QUERY)
+        }
         viewModel.setInitialState(isFromSearch)
         setUpFragmentResultListener()
         setupViews()
@@ -124,7 +129,13 @@ class FilterFragment : Fragment() {
                 val currentSalary = salary.text.toString().toIntOrNull()
                 viewModel.updateSalary(currentSalary)
                 viewModel.applyFilter()
-                setFragmentResult("applyFilter", bundleOf("updated" to true))
+
+                val bundle = bundleOf(
+                    UPDATED to true,
+                    SearchFragment.SEARCH_QUERY to query
+                )
+                setFragmentResult(APPLY_FILTER, bundle)
+
                 findNavController().navigate(R.id.action_filterFragment_to_mainFragment)
             }
             reset.setOnClickListener {
@@ -274,7 +285,7 @@ class FilterFragment : Fragment() {
     }
 
     private fun getStateFocus(editText: EditText) {
-        editText.setOnFocusChangeListener { view, hasFocus ->
+        editText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.expectedSalary.setTextColor(
                     requireContext().getThemeColor(org.koin.android.R.attr.colorAccent)

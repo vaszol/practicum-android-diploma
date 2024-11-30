@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Area.Companion.AREA_DEFAULT_VALUE
+import ru.practicum.android.diploma.util.extentions.flattenAreas
 import javax.net.ssl.HttpsURLConnection
 
 class SelectPlaceViewModel(
@@ -40,25 +41,29 @@ class SelectPlaceViewModel(
         viewModelScope.launch {
             isRetrying = true
             hhInteractor.getAreas().collect { pair ->
-                when {
-                    pair.second == HttpsURLConnection.HTTP_BAD_REQUEST.toString() ->
-                        if (currentState is PlaceScreenState.PlaceData) {
-                            _state.value = currentState.copy(error = true)
-                        }
-
-                    pair.second != null ->
-                        if (currentState is PlaceScreenState.PlaceData) {
-                            _state.value = currentState.copy(noInternet = true)
-                        }
-
-                    else -> {
-                        allAreas = pair.first!!
-                        if (currentState is PlaceScreenState.PlaceData) {
-                            _state.value = currentState.copy(error = false, noInternet = false)
-                        }
-                    }
-                }
+                handleAreaResponse(pair, currentState)
                 isRetrying = false
+            }
+        }
+    }
+
+    private fun handleAreaResponse(pair: Pair<List<Area>?, String?>, currentState: PlaceScreenState?) {
+        when {
+            pair.second == HttpsURLConnection.HTTP_BAD_REQUEST.toString() ->
+                if (currentState is PlaceScreenState.PlaceData) {
+                    _state.value = currentState.copy(error = true)
+                }
+
+            pair.second != null ->
+                if (currentState is PlaceScreenState.PlaceData) {
+                    _state.value = currentState.copy(noInternet = true)
+                }
+
+            else -> {
+                allAreas = pair.first!!
+                if (currentState is PlaceScreenState.PlaceData) {
+                    _state.value = currentState.copy(error = false, noInternet = false)
+                }
             }
         }
     }
@@ -121,13 +126,12 @@ class SelectPlaceViewModel(
 
     fun setPlace(workPlaceState: WorkPlaceState?) {
         val currentState = _state.value
-        if (currentState is PlaceScreenState.PlaceData) {
-            if (workPlaceState != null) {
-                _state.value = currentState.copy(
-                    country = workPlaceState.country,
-                    region = workPlaceState.region,
-                )
-            }
+        if (currentState is PlaceScreenState.PlaceData && workPlaceState != null) {
+            _state.value = currentState.copy(
+                country = workPlaceState.country,
+                region = workPlaceState.region,
+            )
+
         }
     }
 

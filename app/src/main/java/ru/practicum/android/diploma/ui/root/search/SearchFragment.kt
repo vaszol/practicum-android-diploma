@@ -50,12 +50,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         updateFilterUI()
-
-        binding.searchFilterNotActvie.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
-        }
 
         viewModel.searchScreenState.observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -86,6 +81,8 @@ class SearchFragment : Fragment() {
                     viewModel.searchDebounce(s.toString())
                 } else {
                     binding.searchMagnifier.setImageResource(R.drawable.ic_search)
+                    viewModel.cancelSearchRequest()
+                    setKeyboardVisibility(binding.searchEditText, false)
                 }
             }
 
@@ -116,7 +113,7 @@ class SearchFragment : Fragment() {
                 }
             })
 
-            binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
+            searchEditText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     viewModel.searchDebounce(searchEditText.text.toString())
                     setKeyboardVisibility(searchEditText, false)
@@ -125,21 +122,30 @@ class SearchFragment : Fragment() {
                     false
                 }
             }
-
             searchFilterNotActvie.setOnClickListener {
-                val bundle = bundleOf(BUNDLE_KEY to true)
+                val query = binding.searchEditText.text.toString()
+                val bundle = bundleOf(
+                    SEARCH_QUERY to query,
+                    BUNDLE_KEY to true
+                )
                 findNavController().navigate(R.id.action_mainFragment_to_filterFragment, bundle)
             }
 
             searchFilterActive.setOnClickListener {
-                val bundle = bundleOf(BUNDLE_KEY to true)
+                val query = binding.searchEditText.text.toString()
+                val bundle = bundleOf(
+                    SEARCH_QUERY to query,
+                    BUNDLE_KEY to true
+                )
                 findNavController().navigate(R.id.action_mainFragment_to_filterFragment, bundle)
             }
         }
 
-        setFragmentResultListener("applyFilter") { _, bundle ->
-            if (bundle.getSerializable("updated") as Boolean) {
-                viewModel.updateFilter()
+        setFragmentResultListener(APPLY_FILTER) { _, bundle ->
+            if (bundle.getSerializable(UPDATED) as Boolean) {
+                val savedQuery = bundle.getString(SEARCH_QUERY)
+                binding.searchEditText.setText(savedQuery)
+                viewModel.updateFilter(savedQuery)
                 updateFilterUI()
             }
         }
@@ -275,5 +281,8 @@ class SearchFragment : Fragment() {
     companion object {
         const val EMPTY_TEXT = ""
         const val BUNDLE_KEY = "key"
+        const val SEARCH_QUERY = "search_query"
+        const val UPDATED = "updated"
+        const val APPLY_FILTER = "applyFilter"
     }
 }

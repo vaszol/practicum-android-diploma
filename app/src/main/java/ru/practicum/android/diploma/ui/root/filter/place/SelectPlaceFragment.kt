@@ -57,6 +57,19 @@ class SelectPlaceFragment : Fragment() {
             }
         }
         setupListeners()
+        setFragmentResultListener(PLACE_REQUEST_KEY) { _, bundle ->
+            val workPlaceState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getSerializable(SELECTED_PLACE_KEY, WorkPlaceState::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                bundle.getSerializable(SELECTED_PLACE_KEY) as? WorkPlaceState
+            }
+            pendingWorkPlaceState = workPlaceState
+            if (viewModel.state.value is PlaceScreenState.PlaceData) {
+                workPlaceState?.let { viewModel.setPlace(it) }
+                pendingWorkPlaceState = null
+            }
+        }
     }
 
     private fun setupListeners() {
@@ -83,19 +96,6 @@ class SelectPlaceFragment : Fragment() {
                     setFragmentResult(APPLY_PLACE_KEY, bundleOf(SELECTED_PLACE_KEY to workPlaceState))
                     findNavController().popBackStack()
                 }
-            }
-        }
-        setFragmentResultListener(PLACE_REQUEST_KEY) { _, bundle ->
-            val workPlaceState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                bundle.getSerializable(SELECTED_PLACE_KEY, WorkPlaceState::class.java)
-            } else {
-                @Suppress("DEPRECATION")
-                bundle.getSerializable(SELECTED_PLACE_KEY) as? WorkPlaceState
-            }
-            pendingWorkPlaceState = workPlaceState
-            if (viewModel.state.value is PlaceScreenState.PlaceData) {
-                workPlaceState?.let { viewModel.setPlace(it) }
-                pendingWorkPlaceState = null
             }
         }
     }
