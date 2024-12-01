@@ -52,7 +52,7 @@
     <string name="vacancy_error">Вакансия не найдена или\n удалена</string>
     <string name="vacancy_error_server">Ошибка сервера</string>
 
-    <!--Строки для экрана фильтрации-->
+    <!--Строки для экрана настроек фильтрации-->
     <string name="filter_settings">Настройки фильтрации</string>
     <string name="workplace">Место работы</string>
     <string name="industry">Отрасль</string>
@@ -62,7 +62,7 @@
     <string name="apply">Применить</string>
     <string name="reset">Сбросить</string>
 
-    <!--Строки для экрана фильтра-->
+    <!--Строки для экрана выбора места работы-->
     <string name="select_place_work">Выбор места работы</string>
     <string name="country">Страна</string>
     <string name="region">Регион</string>
@@ -71,9 +71,11 @@
     <string name="input_region">Введите регион</string>
     <string name="no_such_region">Такого региона нет</string>
 
+    <!--Строки для экрана выбора отрасли-->
     <string name="choose_industry">Выбор отрасли</string>
     <string name="industry_hint">Введите отрасль</string>
     <string name="error_industry">Не удалось получить\nсписок</string>
     <string name="industry_button_text">Выбрать</string>
     <string name="select_text">Выбрать</string>
+    <string name="no_such_industry">Такой отрасли нет</string>
 </resources>
