@@ -93,61 +93,62 @@
         app:layout_constraintEnd_toEndOf="@+id/search_industry"
         app:layout_constraintTop_toTopOf="@+id/search_industry" />
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/size_8dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_industry"
+    <LinearLayout
+        android:id="@+id/industry_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_industry">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:id="@+id/industry_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
+        <!--Плейсхолдер ошибки-->
+        <ImageView
+            android:id="@+id/img_industry_error"
+            android:layout_width="328dp"
+            android:layout_height="223dp"
+            android:src="@drawable/placeholder_empty_industry_list" />
 
-            <!--Плейсхолдер ошибки-->
-            <ImageView
-                android:id="@+id/img_industry_error"
-                android:layout_width="328dp"
-                android:layout_height="223dp"
-                android:src="@drawable/placeholder_empty_industry_list" />
-
-            <!--Текст ошибки-->
-            <TextView
-                android:id="@+id/txt_industry_error"
-                style="@style/TextStyleMedium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/error_industry" />
-
-        </LinearLayout>
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
-        <!--Список-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <!--Текст ошибки-->
+        <TextView
+            android:id="@+id/txt_industry_error"
+            style="@style/TextStyleMedium"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/size_16dp"
-            android:layout_marginTop="@dimen/size_16dp"
-            android:layout_marginEnd="@dimen/size_4dp"
-            android:visibility="visible"
-            app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/item_industry" />
-    </FrameLayout>
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/error_industry" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!--Список-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_0dp"
+        android:layout_marginTop="@dimen/size_16dp"
+        android:layout_marginStart="@dimen/size_16dp"
+        android:layout_marginEnd="@dimen/size_4dp"
+        android:visibility="visible"
+        app:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/item_industry"
+        app:layout_constraintBottom_toTopOf="@id/button_industry"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_industry"/>
 
     <!--Кнопка выбрать-->
     <TextView

@@ -40,7 +40,7 @@ class FilterIndustry : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.adapter = adapter
+        binding.recyclerview.adapter = adapter
         viewModel.getIndustries()
         setupStateObservers()
 
@@ -50,14 +50,13 @@ class FilterIndustry : Fragment() {
                 if (!s.isNullOrBlank()) {
                     binding.clearSearchIndustry.visibility = View.VISIBLE
                     binding.searchIconIndustry.visibility = View.GONE
-                    adapter.filter(s.toString())
+                    viewModel.filter(s.toString())
                 } else {
                     binding.clearSearchIndustry.visibility = View.GONE
                     binding.searchIconIndustry.visibility = View.VISIBLE
-                    adapter.filter("")
+                    viewModel.filter("")
                 }
             }
-
             override fun afterTextChanged(s: Editable?) = Unit
         }
 
@@ -66,12 +65,10 @@ class FilterIndustry : Fragment() {
             buttonIndustry.setOnClickListener {
                 val selectedIndustry = viewModel.selectedIndustry.value
                 selectedIndustry?.let { industry ->
-
                     setFragmentResult(
                         FilterFragmentKeys.INDUSTRY_REQUEST_KEY,
                         bundleOf(FilterFragmentKeys.SELECTED_INDUSTRY_KEY to industry)
                     )
-
                     requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
             }
@@ -80,7 +77,7 @@ class FilterIndustry : Fragment() {
                 setKeyboardVisibility(edtSearchIndustry, false)
             }
             edtSearchIndustry.addTextChangedListener(textWatcher)
-            recyclerView.addOnScrollListener(
+            recyclerview.addOnScrollListener(
                 object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
                     override fun onScrolled(
                         recyclerView: androidx.recyclerview.widget.RecyclerView,
@@ -100,21 +97,11 @@ class FilterIndustry : Fragment() {
     private fun setupStateObservers() {
         viewModel.industryScreenState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is IndustryScreenState.Loading -> {
-                    showLoading()
-                }
-
-                is IndustryScreenState.Error -> {
-                    showError()
-                }
-
-                is IndustryScreenState.NoInternet -> {
-                    showNoInternet()
-                }
-
-                is IndustryScreenState.Content -> {
-                    showIndustries(state.industries)
-                }
+                is IndustryScreenState.Loading -> showLoading()
+                is IndustryScreenState.Error -> showError()
+                is IndustryScreenState.NoInternet -> showNoInternet()
+                is IndustryScreenState.Content -> showIndustries(state.industries)
+                is IndustryScreenState.NoResults -> showNoResults()
             }
         }
 
@@ -128,10 +115,20 @@ class FilterIndustry : Fragment() {
         }
     }
 
+    private fun showNoResults() {
+        binding.apply {
+            progressBar.visibility = View.GONE
+            recyclerview.visibility = View.GONE
+            imgIndustryError.setImageResource(R.drawable.placeholder_no_vacancy)
+            txtIndustryError.setText(R.string.no_such_industry)
+            industryError.visibility = View.VISIBLE
+        }
+    }
+
     private fun showNoInternet() {
         binding.apply {
             progressBar.visibility = View.GONE
-            recyclerView.visibility = View.GONE
+            recyclerview.visibility = View.GONE
             imgIndustryError.setImageResource(R.drawable.placeholder_no_internet)
             txtIndustryError.setText(R.string.no_internet)
             industryError.visibility = View.VISIBLE
@@ -141,7 +138,7 @@ class FilterIndustry : Fragment() {
     private fun showError() {
         binding.apply {
             progressBar.visibility = View.GONE
-            recyclerView.visibility = View.GONE
+            recyclerview.visibility = View.GONE
             imgIndustryError.setImageResource(R.drawable.placeholder_empty_industry_list)
             txtIndustryError.setText(R.string.error_industry)
             industryError.visibility = View.VISIBLE
@@ -151,7 +148,7 @@ class FilterIndustry : Fragment() {
     private fun showIndustries(industries: List<Industry>) {
         binding.apply {
             progressBar.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
+            recyclerview.visibility = View.VISIBLE
             industryError.visibility = View.GONE
         }
         adapter.updateList(industries)
@@ -160,7 +157,7 @@ class FilterIndustry : Fragment() {
     private fun showLoading() {
         binding.apply {
             progressBar.visibility = View.VISIBLE
-            recyclerView.visibility = View.GONE
+            recyclerview.visibility = View.GONE
             industryError.visibility = View.GONE
         }
     }
