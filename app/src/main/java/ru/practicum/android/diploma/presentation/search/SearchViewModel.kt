@@ -124,6 +124,8 @@ class SearchViewModel(
         page = 0
         currentVacancies.clear()
         latestSearchText = query
+        searchJob?.cancel()
+        debouncer.cancel()
         searchRequest()
     }
 
