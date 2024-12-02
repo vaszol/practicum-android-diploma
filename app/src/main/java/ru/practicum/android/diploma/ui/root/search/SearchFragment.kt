@@ -157,6 +157,9 @@ class SearchFragment : Fragment() {
             searchImgPlaceholder.visibility = View.VISIBLE
             searchRecyclerView.visibility = View.GONE
             searchVacancyCount.visibility = View.GONE
+            searchError.visibility = View.GONE
+            searchProgressBar.visibility = View.GONE
+            searchProgressBarBottom.visibility = View.GONE
         }
     }
 
