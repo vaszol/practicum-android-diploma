@@ -11,8 +11,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.EditText
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -170,23 +168,20 @@ class FilterFragment : Fragment() {
                         val salaryText = s.toString()
                         val salary = salaryText.takeIf { it.isNotBlank() }?.toIntOrNull()
                         viewModel.updateSalary(salary)
-
-                        val context = expectedSalary.context
-                        val colorAccent = context.getThemeColor(org.koin.android.R.attr.colorAccent)
-                        val colorOnSecondary =
-                            context.getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
-
-                        if (!s.isNullOrEmpty() && !checkBox.isChecked) {
-                            expectedSalary.setTextColor(colorAccent)
-                            deleteSalary.isVisible = true
-                        } else if (!checkBox.isChecked) {
-                            expectedSalary.setTextColor(colorOnSecondary)
-                            deleteSalary.isVisible = false
-                        }
+                        updateExpectedSalaryColor()
+                        deleteSalary.isVisible = !s.isNullOrEmpty()
                     }
                 }
             )
-            getStateFocus(salary)
+
+            salary.setOnFocusChangeListener { _, hasFocus ->
+                updateExpectedSalaryColor(hasFocus)
+            }
+
+            checkBox.setOnClickListener {
+                viewModel.toggleShowOnlyWithSalary()
+                updateExpectedSalaryColor()
+            }
         }
     }
 
@@ -195,7 +190,7 @@ class FilterFragment : Fragment() {
             viewModel.observeState.collect { state ->
                 binding.apply {
                     checkBox.isChecked = state.showOnlyWithSalary
-                    deleteSalary.isVisible = state.salary != null
+                    deleteSalary.isVisible = salary.text.trim().isNotEmpty()
 
                     if (state.locationString.isNotEmpty()) {
                         inputWorkplace.text = state.locationString
@@ -225,8 +220,8 @@ class FilterFragment : Fragment() {
                         binding.industry.isVisible = true
                     }
                     updateButtonVisibility(state)
+                    updateExpectedSalaryColor()
                 }
-                getColorExpectedSalary(binding.checkBox)
             }
         }
     }
@@ -270,31 +265,16 @@ class FilterFragment : Fragment() {
         return typedValue.data
     }
 
-    private fun getColorExpectedSalary(checkBox: CheckBox) {
-        if (checkBox.isChecked) {
-            binding.expectedSalary.setTextColor(requireContext().getColor(R.color.black))
-        } else if (!checkBox.isChecked && binding.salary.text.trim().isNotEmpty()) {
-            binding.expectedSalary.setTextColor(
-                requireContext().getThemeColor(com.google.android.material.R.attr.colorAccent)
-            )
-        } else {
-            binding.expectedSalary.setTextColor(
-                requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
-            )
-        }
-    }
+    private fun updateExpectedSalaryColor(hasFocus: Boolean = false) {
+        val context = binding.expectedSalary.context
+        val colorAccent = context.getThemeColor(org.koin.android.R.attr.colorAccent)
+        val colorOnSecondary = context.getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
 
-    private fun getStateFocus(editText: EditText) {
-        editText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.expectedSalary.setTextColor(
-                    requireContext().getThemeColor(org.koin.android.R.attr.colorAccent)
-                )
-            } else {
-                binding.expectedSalary.setTextColor(
-                    requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
-                )
+        binding.expectedSalary.setTextColor(
+            when {
+                hasFocus || (binding.salary.text.trim().isNotEmpty()) -> colorAccent
+                else -> colorOnSecondary
             }
-        }
+        )
     }
 }
