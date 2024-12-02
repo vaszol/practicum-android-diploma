@@ -25,7 +25,7 @@ import ru.practicum.android.diploma.presentation.search.SearchEventState
 import ru.practicum.android.diploma.presentation.search.SearchScreenState
 import ru.practicum.android.diploma.presentation.search.SearchViewModel
 import ru.practicum.android.diploma.ui.root.details.DetailsFragment.Companion.VACANCY_ID
-import java.text.DecimalFormat
+import ru.practicum.android.diploma.util.extentions.getFormattedCount
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
@@ -190,7 +190,7 @@ class SearchFragment : Fragment() {
             searchError.visibility = View.GONE
             searchProgressBar.visibility = View.GONE
             searchProgressBarBottom.visibility = View.GONE
-            val formattedCount = DecimalFormat("#,###").format(totalCount)
+            val formattedCount = getFormattedCount(totalCount)
             searchVacancyCount.text = "${
                 resources.getQuantityString(
                     R.plurals.count_postfix_found,
