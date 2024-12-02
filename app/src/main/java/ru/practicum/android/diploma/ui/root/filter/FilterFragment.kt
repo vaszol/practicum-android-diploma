@@ -272,7 +272,7 @@ class FilterFragment : Fragment() {
 
         binding.expectedSalary.setTextColor(
             when {
-                hasFocus || (binding.salary.text.trim().isNotEmpty()) -> colorAccent
+                hasFocus || binding.salary.text.trim().isNotEmpty() -> colorAccent
                 else -> colorOnSecondary
             }
         )
