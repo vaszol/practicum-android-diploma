@@ -47,7 +47,7 @@ class SearchViewModel(
 
     fun setDefaultState() {
         _searchScreenState.postValue(SearchScreenState.DefaultPage)
-        latestSearchText = null;
+        latestSearchText = null
     }
 
     private fun searchRequest() {
