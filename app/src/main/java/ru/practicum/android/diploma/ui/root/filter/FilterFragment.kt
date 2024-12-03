@@ -9,6 +9,7 @@ import android.text.InputFilter
 import android.text.InputType
 import android.text.Spanned
 import android.text.TextWatcher
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -305,7 +306,7 @@ class MinMaxFilter() : InputFilter {
                 return null
             }
         } catch (e: NumberFormatException) {
-            e.printStackTrace()
+            Log.d("NumberFormatException in MinMaxFilter: $e", e.toString())
         }
         return ""
     }
