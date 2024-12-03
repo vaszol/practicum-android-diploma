@@ -71,19 +71,24 @@ class SelectPlaceViewModel(
     fun getRegionsList() {
         val currentState = _state.value
         if (currentState is PlaceScreenState.PlaceData) {
-            val regions = if (currentState.country != null) {
-                allAreas
-                    .filter { it.id == currentState.country.id }
-                    .flatMap { it.flattenAreas() }
-                    .filter { it.parentId != AREA_DEFAULT_VALUE }
-            } else {
-                allAreas
-                    .flatMap { it.flattenAreas() }
-                    .filter { it.parentId != AREA_DEFAULT_VALUE }
-            }
+            val regions = when {
+                currentState.country != null -> {
+                    val areas = allAreas.filter { it.id == currentState.country.id }
+                    if (currentState.country.id == OTHER_REGIONS_ID) {
+                        areas.flatMap { // разворачиваются только вложенные элементы первого уровня
+                            it.areas ?: emptyList()
+                        }
+                    } else {
+                        areas.flatMap { it.flattenAreas() } // разворачиваются все вложенные элементы
+                    }
+                }
+
+                else -> {
+                    allAreas.flatMap { it.flattenAreas() }
+                }
+            }.filter { it.parentId != AREA_DEFAULT_VALUE }
             _areasToDisplay.value = regions
         }
-
     }
 
     fun filterRegions(query: String) {
@@ -94,16 +99,28 @@ class SelectPlaceViewModel(
                 return
             }
 
-            val filteredList = if (currentState.country != null) {
-                allAreas
-                    .filter { it.id == currentState.country.id }
-                    .flatMap { it.flattenAreas() }
-                    .filter { it.name.contains(query, ignoreCase = true) }
-            } else {
-                allAreas
-                    .flatMap { it.flattenAreas() }
-                    .filter { it.parentId != AREA_DEFAULT_VALUE }
-                    .filter { it.name.contains(query, ignoreCase = true) }
+            val filteredList = when {
+                currentState.country != null -> {
+                    val areas = allAreas.filter { it.id == currentState.country.id }
+                    if (currentState.country.id == OTHER_REGIONS_ID) {
+                        areas
+                            .flatMap { // разворачиваются только вложенные элементы первого уровня
+                                it.areas ?: emptyList()
+                            }
+                            .filter { it.name.contains(query, ignoreCase = true) }
+                    } else {
+                        areas
+                            .flatMap { it.flattenAreas() } // разворачиваются все вложенные элементы
+                            .filter { it.name.contains(query, ignoreCase = true) }
+                    }
+                }
+
+                else -> {
+                    allAreas
+                        .flatMap { it.flattenAreas() }
+                        .filter { it.parentId != AREA_DEFAULT_VALUE }
+                        .filter { it.name.contains(query, ignoreCase = true) }
+                }
             }
             _areasToDisplay.value = filteredList
         }
@@ -151,7 +168,9 @@ class SelectPlaceViewModel(
     }
 
     fun getCountriesList() {
-        val countriesList = allAreas.filter { it.parentId == AREA_DEFAULT_VALUE }
+        val countriesList = allAreas
+            .filter { it.parentId == AREA_DEFAULT_VALUE }
+            .sortedBy { it.id.toIntOrNull() ?: Int.MAX_VALUE }
         _areasToDisplay.value = countriesList
     }
 
@@ -177,5 +196,9 @@ class SelectPlaceViewModel(
         if (!isRetrying) {
             getAreas()
         }
+    }
+
+    companion object {
+        private const val OTHER_REGIONS_ID = "1001"
     }
 }
