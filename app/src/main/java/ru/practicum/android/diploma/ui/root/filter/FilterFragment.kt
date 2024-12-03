@@ -5,7 +5,9 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.InputType
+import android.text.Spanned
 import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -62,6 +64,7 @@ class FilterFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun setupViews() {
         binding.salary.inputType = InputType.TYPE_CLASS_NUMBER
+        binding.salary.filters = arrayOf<InputFilter>(MinMaxFilter(1, Int.MAX_VALUE))
         binding.deleteSalary.isVisible = false
 
         viewModel.observeState.value.let { state ->
@@ -276,5 +279,38 @@ class FilterFragment : Fragment() {
                 else -> colorOnSecondary
             }
         )
+    }
+}
+
+class MinMaxFilter() : InputFilter {
+    private var intMin: Int = 1
+    private var intMax: Int = Int.MAX_VALUE
+
+    constructor(minValue: Int, maxValue: Int) : this() {
+        this.intMin = minValue
+        this.intMax = maxValue
+    }
+
+    override fun filter(
+        source: CharSequence,
+        start: Int,
+        end: Int,
+        dest: Spanned,
+        dStart: Int,
+        dEnd: Int
+    ): CharSequence? {
+        try {
+            val input = Integer.parseInt(dest.toString() + source.toString())
+            if (isInRange(intMin, intMax, input)) {
+                return null
+            }
+        } catch (e: NumberFormatException) {
+            e.printStackTrace()
+        }
+        return ""
+    }
+
+    private fun isInRange(a: Int, b: Int, c: Int): Boolean {
+        return if (b > a) c in a..b else c in b..a
     }
 }
