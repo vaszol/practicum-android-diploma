@@ -5,14 +5,15 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.InputType
+import android.text.Spanned
 import android.text.TextWatcher
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.EditText
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -20,20 +21,26 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
-import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Industry
+import ru.practicum.android.diploma.presentation.filter.FilterState
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
-import ru.practicum.android.diploma.ui.root.RootActivity
+import ru.practicum.android.diploma.presentation.filter.place.WorkPlaceState
+import ru.practicum.android.diploma.ui.root.search.SearchFragment
+import ru.practicum.android.diploma.ui.root.search.SearchFragment.Companion.APPLY_FILTER
+import ru.practicum.android.diploma.ui.root.search.SearchFragment.Companion.UPDATED
 import ru.practicum.android.diploma.util.constants.FilterFragmentKeys
+import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.APPLY_PLACE_KEY
+import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.PLACE_REQUEST_KEY
+import ru.practicum.android.diploma.util.constants.FilterFragmentKeys.SELECTED_PLACE_KEY
 
 class FilterFragment : Fragment() {
     private val viewModel: FilterViewModel by viewModel()
     private val binding by lazy { FragmentFilterBinding.inflate(layoutInflater) }
+    private var query: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,24 +50,25 @@ class FilterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as? RootActivity)?.findViewById<BottomNavigationView>(R.id.bottom_navigation_view)?.visibility =
-            View.GONE
-
-        viewModel.getInitialState()
-
+        val isFromSearch = requireArguments().getBoolean(SearchFragment.BUNDLE_KEY)
+        if (isFromSearch) {
+            query = requireArguments().getString(SearchFragment.SEARCH_QUERY)
+        }
+        viewModel.setInitialState(isFromSearch)
+        setUpFragmentResultListener()
         setupViews()
         setupListeners()
-        observeViewModel()
-        setUpFragmentResultListener()
-
+        observeFilterState()
+        requireArguments().clear()
     }
 
     @SuppressLint("SetTextI18n")
     private fun setupViews() {
         binding.salary.inputType = InputType.TYPE_CLASS_NUMBER
+        binding.salary.filters = arrayOf<InputFilter>(MinMaxFilter(1, Int.MAX_VALUE))
         binding.deleteSalary.isVisible = false
 
-        viewModel.filterState.value.let { state ->
+        viewModel.observeState.value.let { state ->
             // Установка зарплаты
             state.salary?.let {
                 binding.salary.setText(it.toString())
@@ -85,8 +93,6 @@ class FilterFragment : Fragment() {
                 binding.deleteIndustry.isVisible = false
             }
         }
-
-        updateButtonVisibility()
     }
 
     private fun setupListeners() {
@@ -94,57 +100,66 @@ class FilterFragment : Fragment() {
             backButton.setOnClickListener {
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
-
             workplace.setOnClickListener {
-                findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
+                navigateToPlace()
             }
-
             inputWorkplace.setOnClickListener {
-                findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
+                navigateToPlace()
             }
-
             deleteWorkplace.setOnClickListener {
                 viewModel.updateLocation(null, null)
                 inputWorkplace.text = ""
             }
-
             industry.setOnClickListener {
                 findNavController().navigate(R.id.action_filterFragment_to_filterIndustry)
             }
-
             inputIndustry.setOnClickListener {
                 findNavController().navigate(R.id.action_filterFragment_to_filterIndustry)
             }
-
             deleteIndustry.setOnClickListener {
                 viewModel.updateIndustries(null)
                 inputIndustry.text = ""
             }
-
             checkBox.setOnClickListener {
                 viewModel.toggleShowOnlyWithSalary()
             }
-
             deleteSalary.setOnClickListener {
                 salary.text.clear()
                 viewModel.updateSalary(null)
             }
-
             apply.setOnClickListener {
                 val currentSalary = salary.text.toString().toIntOrNull()
                 viewModel.updateSalary(currentSalary)
                 viewModel.applyFilter()
-                setFragmentResult("applyFilter", bundleOf("updated" to true))
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-            }
 
+                val bundle = bundleOf(
+                    UPDATED to true,
+                    SearchFragment.SEARCH_QUERY to query
+                )
+                setFragmentResult(APPLY_FILTER, bundle)
+
+                findNavController().navigate(R.id.action_filterFragment_to_mainFragment)
+            }
             reset.setOnClickListener {
                 viewModel.resetFilter()
                 salary.text.clear()
             }
-
             setupSalaryListener()
         }
+    }
+
+    private fun navigateToPlace() {
+        setFragmentResult(
+            PLACE_REQUEST_KEY,
+            bundleOf(
+                SELECTED_PLACE_KEY to WorkPlaceState(
+                    viewModel.filterState.value.country,
+                    viewModel.filterState.value.region
+                )
+            )
+        )
+
+        findNavController().navigate(R.id.action_filterFragment_to_selectPlaceFragment)
     }
 
     private fun setupSalaryListener() {
@@ -157,37 +172,29 @@ class FilterFragment : Fragment() {
                         val salaryText = s.toString()
                         val salary = salaryText.takeIf { it.isNotBlank() }?.toIntOrNull()
                         viewModel.updateSalary(salary)
-
-                        val context = expectedSalary.context
-                        val colorAccent = context.getThemeColor(org.koin.android.R.attr.colorAccent)
-                        val colorOnSecondary =
-                            context.getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
-
-                        if (!s.isNullOrEmpty() && !checkBox.isChecked) {
-                            expectedSalary.setTextColor(colorAccent)
-                            deleteSalary.isVisible = true
-                        } else if (!checkBox.isChecked) {
-                            expectedSalary.setTextColor(colorOnSecondary)
-                            deleteSalary.isVisible = false
-                        }
+                        updateExpectedSalaryColor()
+                        deleteSalary.isVisible = !s.isNullOrEmpty()
                     }
                 }
             )
-            getStateFocus(salary)
-        }
-    }
 
-    private fun observeViewModel() {
-        observeFilterState()
-        observeButtonVisibility()
+            salary.setOnFocusChangeListener { _, hasFocus ->
+                updateExpectedSalaryColor(hasFocus)
+            }
+
+            checkBox.setOnClickListener {
+                viewModel.toggleShowOnlyWithSalary()
+                updateExpectedSalaryColor()
+            }
+        }
     }
 
     private fun observeFilterState() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.filterState.collect { state ->
+            viewModel.observeState.collect { state ->
                 binding.apply {
                     checkBox.isChecked = state.showOnlyWithSalary
-                    deleteSalary.isVisible = state.salary != null
+                    deleteSalary.isVisible = salary.text.trim().isNotEmpty()
 
                     if (state.locationString.isNotEmpty()) {
                         inputWorkplace.text = state.locationString
@@ -216,23 +223,9 @@ class FilterFragment : Fragment() {
                         deleteIndustry.isVisible = false
                         binding.industry.isVisible = true
                     }
+                    updateButtonVisibility(state)
+                    updateExpectedSalaryColor()
                 }
-                updateButtonVisibility()
-                getColorExpectedSalary(binding.checkBox)
-            }
-        }
-    }
-
-    private fun observeButtonVisibility() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isApplyButtonEnabled.collect { isEnabled ->
-                binding.apply.isVisible = isEnabled
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isResetButtonVisible.collect { isVisible ->
-                binding.reset.isVisible = isVisible
             }
         }
     }
@@ -246,38 +239,28 @@ class FilterFragment : Fragment() {
                 @Suppress("DEPRECATION")
                 bundle.getSerializable(FilterFragmentKeys.SELECTED_INDUSTRY_KEY) as? Industry
             }
+
             viewModel.updateIndustries(selectedIndustry)
         }
 
         // Для Area (Country и Region)
-        setFragmentResultListener(FilterFragmentKeys.COUNTRY_REQUEST_KEY) { _, bundle ->
-            val selectedCountry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                bundle.getSerializable(FilterFragmentKeys.SELECTED_COUNTRY_KEY, Area::class.java)
+        setFragmentResultListener(APPLY_PLACE_KEY) { _, bundle ->
+            val workPlaceState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getSerializable(SELECTED_PLACE_KEY, WorkPlaceState::class.java)
             } else {
                 @Suppress("DEPRECATION")
-                bundle.getSerializable(FilterFragmentKeys.SELECTED_COUNTRY_KEY) as? Area
+                bundle.getSerializable(SELECTED_PLACE_KEY) as? WorkPlaceState
             }
 
-            val selectedRegion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                bundle.getSerializable(FilterFragmentKeys.SELECTED_REGION_KEY, Area::class.java)
-            } else {
-                @Suppress("DEPRECATION")
-                bundle.getSerializable(FilterFragmentKeys.SELECTED_REGION_KEY) as? Area
+            if (workPlaceState != null) {
+                viewModel.updateLocation(workPlaceState.country, workPlaceState.region)
             }
-
-            viewModel.updateLocation(selectedCountry, selectedRegion)
         }
     }
 
-    private fun updateButtonVisibility() {
-        val isButtonEnabled = viewModel.isFilterChanged() ||
-            viewModel.filterState.value.industry != null ||
-            viewModel.filterState.value.country != null ||
-            viewModel.filterState.value.region != null ||
-            viewModel.filterState.value.salary != null
-
-        binding.apply.isVisible = isButtonEnabled
-        binding.reset.isVisible = viewModel.isResetButtonVisible.value
+    private fun updateButtonVisibility(state: FilterState) {
+        binding.apply.isVisible = state.apply
+        binding.reset.isVisible = state.reset
     }
 
     private fun Context.getThemeColor(attr: Int): Int {
@@ -286,31 +269,49 @@ class FilterFragment : Fragment() {
         return typedValue.data
     }
 
-    private fun getColorExpectedSalary(checkBox: CheckBox) {
-        if (checkBox.isChecked) {
-            binding.expectedSalary.setTextColor(requireContext().getColor(R.color.black))
-        } else if (!checkBox.isChecked && binding.salary.text.trim().isNotEmpty()) {
-            binding.expectedSalary.setTextColor(
-                requireContext().getThemeColor(com.google.android.material.R.attr.colorAccent)
-            )
-        } else {
-            binding.expectedSalary.setTextColor(
-                requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
-            )
-        }
+    private fun updateExpectedSalaryColor(hasFocus: Boolean = false) {
+        val context = binding.expectedSalary.context
+        val colorAccent = context.getThemeColor(org.koin.android.R.attr.colorAccent)
+        val colorOnSecondary = context.getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
+
+        binding.expectedSalary.setTextColor(
+            when {
+                hasFocus || binding.salary.text.trim().isNotEmpty() -> colorAccent
+                else -> colorOnSecondary
+            }
+        )
+    }
+}
+
+class MinMaxFilter() : InputFilter {
+    private var intMin: Int = 1
+    private var intMax: Int = Int.MAX_VALUE
+
+    constructor(minValue: Int, maxValue: Int) : this() {
+        this.intMin = minValue
+        this.intMax = maxValue
     }
 
-    private fun getStateFocus(editText: EditText) {
-        editText.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus) {
-                binding.expectedSalary.setTextColor(
-                    requireContext().getThemeColor(org.koin.android.R.attr.colorAccent)
-                )
-            } else {
-                binding.expectedSalary.setTextColor(
-                    requireContext().getThemeColor(com.google.android.material.R.attr.colorOnSecondary)
-                )
+    override fun filter(
+        source: CharSequence,
+        start: Int,
+        end: Int,
+        dest: Spanned,
+        dStart: Int,
+        dEnd: Int
+    ): CharSequence? {
+        try {
+            val input = Integer.parseInt(dest.toString() + source.toString())
+            if (isInRange(intMin, intMax, input)) {
+                return null
             }
+        } catch (e: NumberFormatException) {
+            Log.d("NumberFormatException in MinMaxFilter: $e", e.toString())
         }
+        return ""
+    }
+
+    private fun isInRange(a: Int, b: Int, c: Int): Boolean {
+        return if (b > a) c in a..b else c in b..a
     }
 }

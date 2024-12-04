@@ -4,171 +4,140 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import ru.practicum.android.diploma.domain.api.SharedPreferencesInteractor
 import ru.practicum.android.diploma.domain.models.Area
 import ru.practicum.android.diploma.domain.models.Industry
-import ru.practicum.android.diploma.presentation.filter.industry.IndustryViewModel
 
 class FilterViewModel(
     private val sharedPreferencesInteractor: SharedPreferencesInteractor,
-    industryViewModel: IndustryViewModel
 ) : ViewModel() {
 
-    private val _filterState = MutableStateFlow(FilterState())
-    val filterState: StateFlow<FilterState> = _filterState.asStateFlow()
+    val filterState = MutableStateFlow(FilterState())
+    val observeState: StateFlow<FilterState> = filterState.asStateFlow()
 
-    private val _isApplyButtonEnabled = MutableStateFlow(false)
-    val isApplyButtonEnabled: StateFlow<Boolean> = _isApplyButtonEnabled.asStateFlow()
+    fun setInitialState(isFromSearchFragment: Boolean) {
+        val currentState = filterState.value
 
-    private val _isResetButtonVisible = MutableStateFlow(false)
-    val isResetButtonVisible: StateFlow<Boolean> = _isResetButtonVisible.asStateFlow()
+        val salary = if (isFromSearchFragment) sharedPreferencesInteractor.getSalary() else currentState.salary
+        val industry = if (isFromSearchFragment) sharedPreferencesInteractor.getIndustry() else currentState.industry
+        val country = if (isFromSearchFragment) sharedPreferencesInteractor.getCountry() else currentState.country
+        val region = if (isFromSearchFragment) sharedPreferencesInteractor.getRegion() else currentState.region
 
-    private var initialFilterState: FilterState = FilterState()
+        val locationString = listOfNotNull(country?.name, region?.name).joinToString(", ")
+        val showOnlyWithSalary =
+            if (isFromSearchFragment) {
+                sharedPreferencesInteractor.getShowOnlyWithSalary()
+            } else {
+                currentState.showOnlyWithSalary
+            }
 
-    init {
-        industryViewModel.selectedIndustry.observeForever { selectedIndustry ->
-            updateIndustries(selectedIndustry)
+        val reset = if (isFromSearchFragment) hasPrefs() else hasActiveFilters()
+
+        filterState.update {
+            FilterState(
+                salary,
+                industry,
+                country,
+                region,
+                locationString,
+                showOnlyWithSalary,
+                reset,
+            )
         }
-        getInitialState()
-        updateButtonStates()
-    }
-
-    fun getInitialState() {
-        val savedSalary = sharedPreferencesInteractor.getSalary()
-        val savedIndustry = sharedPreferencesInteractor.getIndustry()
-        val savedCountry = sharedPreferencesInteractor.getCountry()
-        val savedRegion = sharedPreferencesInteractor.getRegion()
-        val savedShowOnlyWithSalary = sharedPreferencesInteractor.getShowOnlyWithSalary()
-        val locationString = createLocationString(savedCountry, savedRegion)
-
-        initialFilterState = FilterState(
-            salary = savedSalary,
-            industry = savedIndustry,
-            country = savedCountry,
-            region = savedRegion,
-            showOnlyWithSalary = savedShowOnlyWithSalary,
-            locationString = locationString
-        )
-
-        _filterState.value = initialFilterState.copy()
     }
 
     fun updateLocation(country: Area?, region: Area?) {
-        val currentState = _filterState.value
-        val locationString = createLocationString(country, region)
-
-        val newState = currentState.copy(
-            country = country,
-            region = region,
-            locationString = locationString
-        )
-
-        _filterState.value = newState
-
-        sharedPreferencesInteractor.setCountry(country)
-        sharedPreferencesInteractor.setRegion(region)
-
-        updateButtonStates()
+        filterState.update { state ->
+            val locationString = listOfNotNull(country?.name, region?.name)
+                .joinToString(", ")
+            state.copy(country = country, region = region, locationString = locationString)
+        }
+        updateButtonsVisibility()
     }
 
     fun updateSalary(salary: Int?) {
-        val currentState = _filterState.value
-        val newState = currentState.copy(salary = salary)
-        _filterState.value = newState
-        updateButtonStates()
+        filterState.update { state -> state.copy(salary = salary) }
+        updateButtonsVisibility()
     }
 
     fun updateIndustries(industry: Industry?) {
-        val currentState = _filterState.value
-        val newState = currentState.copy(industry = industry)
-        _filterState.value = newState
-        sharedPreferencesInteractor.setIndustry(industry)
+        filterState.update { state -> state.copy(industry = industry) }
+        updateButtonsVisibility()
     }
 
     fun toggleShowOnlyWithSalary() {
-        val currentState = _filterState.value
-        val newState = currentState.copy(
-            showOnlyWithSalary = !currentState.showOnlyWithSalary
-        )
-        _filterState.value = newState
-        updateButtonStates()
+        filterState.update { state ->
+            state.copy(
+                showOnlyWithSalary = !filterState.value.showOnlyWithSalary
+            )
+        }
+        updateButtonsVisibility()
+    }
+
+    private fun updateButtonsVisibility() {
+        updateResetButtonVisibility()
+        updateApplyButtonVisibility()
+    }
+
+    private fun updateResetButtonVisibility() {
+        filterState.update { state -> state.copy(reset = hasActiveFilters()) }
+    }
+
+    private fun updateApplyButtonVisibility() {
+        val currentState = filterState.value
+        val hasChanges = !compareWithSavedState(currentState)
+        filterState.update { state -> state.copy(apply = hasChanges) }
     }
 
     fun applyFilter() {
-        val currentState = _filterState.value
+        val currentState = filterState.value
 
         sharedPreferencesInteractor.setSalary(currentState.salary)
-
         sharedPreferencesInteractor.setIndustry(currentState.industry)
-
         sharedPreferencesInteractor.setCountry(currentState.country)
         sharedPreferencesInteractor.setRegion(currentState.region)
-
-        currentState.country?.let { sharedPreferencesInteractor.setCountry(it) }
-        currentState.region?.let { sharedPreferencesInteractor.setRegion(it) }
-
         sharedPreferencesInteractor.setShowOnlyWithSalary(currentState.showOnlyWithSalary)
 
-        initialFilterState = currentState.copy()
-
-        updateButtonStates()
+        updateButtonsVisibility()
     }
 
     fun resetFilter() {
-        _filterState.value = FilterState()
+        filterState.update { FilterState() }
 
         sharedPreferencesInteractor.setSalary(null)
         sharedPreferencesInteractor.setIndustry(null)
         sharedPreferencesInteractor.setCountry(null)
         sharedPreferencesInteractor.setRegion(null)
         sharedPreferencesInteractor.setShowOnlyWithSalary(false)
-
-        initialFilterState = _filterState.value
-
-        updateButtonStates()
+        updateButtonsVisibility()
     }
 
-    private fun createLocationString(country: Area?, region: Area?): String {
-        val locationParts = mutableListOf<String>()
+    private fun hasActiveFilters(): Boolean {
 
-        country?.name?.let { locationParts.add(it) }
-        region?.name?.let { locationParts.add(it) }
-
-        return locationParts.joinToString(", ")
-    }
-
-    private fun updateButtonStates() {
-        val currentState = _filterState.value
-
-        _isResetButtonVisible.value = listOf<Any?>(
-            currentState.salary,
-            currentState.industry,
-            currentState.country,
-            currentState.region,
-            currentState.showOnlyWithSalary.takeIf { it }
-        ).any { it != null }
-
-        _isApplyButtonEnabled.value = isFilterChanged() ||
-            currentState.industry != null ||
-            currentState.country != null ||
-            currentState.region != null
-    }
-
-    fun isFilterChanged(): Boolean {
-        return initialFilterState.salary != _filterState.value.salary ||
-            initialFilterState.industry != _filterState.value.industry ||
-            initialFilterState.country != _filterState.value.country ||
-            initialFilterState.region != _filterState.value.region ||
-            initialFilterState.showOnlyWithSalary != _filterState.value.showOnlyWithSalary
-    }
-
-    fun hasActiveFilters(): Boolean {
-        val currentState = _filterState.value
+        val currentState = filterState.value
         val hasFilters = currentState.salary != null ||
             currentState.industry != null ||
             currentState.country != null ||
             currentState.region != null ||
             currentState.showOnlyWithSalary
         return hasFilters
+    }
+
+    fun hasPrefs(): Boolean {
+        return sharedPreferencesInteractor.getSalary() != null ||
+            sharedPreferencesInteractor.getIndustry() != null ||
+            sharedPreferencesInteractor.getCountry() != null ||
+            sharedPreferencesInteractor.getRegion() != null ||
+            sharedPreferencesInteractor.getShowOnlyWithSalary()
+
+    }
+
+    private fun compareWithSavedState(currentState: FilterState): Boolean {
+        return currentState.salary == sharedPreferencesInteractor.getSalary() &&
+            currentState.industry == sharedPreferencesInteractor.getIndustry() &&
+            currentState.country == sharedPreferencesInteractor.getCountry() &&
+            currentState.region == sharedPreferencesInteractor.getRegion() &&
+            currentState.showOnlyWithSalary == sharedPreferencesInteractor.getShowOnlyWithSalary()
     }
 }

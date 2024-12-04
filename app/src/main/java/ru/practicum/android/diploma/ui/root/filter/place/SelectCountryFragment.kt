@@ -7,16 +7,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSelectCountryBinding
-import ru.practicum.android.diploma.presentation.filter.place.SelectCountryViewModel
+import ru.practicum.android.diploma.domain.models.Area
+import ru.practicum.android.diploma.presentation.filter.place.PlaceScreenState
+import ru.practicum.android.diploma.presentation.filter.place.SelectPlaceViewModel
 
 class SelectCountryFragment : Fragment() {
-
     private var _binding: FragmentSelectCountryBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModel<SelectCountryViewModel>()
+    private val viewModel by activityViewModel<SelectPlaceViewModel>()
 
     private val areaAdapter by lazy {
         AreaAdapter {
@@ -36,12 +38,19 @@ class SelectCountryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.state.value?.let { state ->
+            if (state is PlaceScreenState.PlaceData) {
+                when {
+                    state.error -> showError()
+                    state.noInternet -> showNoInternet()
+                    else -> viewModel.getCountriesList()
+                }
 
-        viewModel.observeState().observe(viewLifecycleOwner) {
-            render(it)
+                viewModel.areasToDisplay.observe(viewLifecycleOwner) { countries ->
+                    showContent(countries)
+                }
+            }
         }
-
-        viewModel.getCountries()
 
         with(binding) {
             backArrow.setOnClickListener {
@@ -52,23 +61,29 @@ class SelectCountryFragment : Fragment() {
         }
     }
 
-    private fun render(state: AreaState) {
-        if (state is AreaState.Content) {
-            showContent()
-            areaAdapter.updateList(state.areas)
-        } else {
-            showPlaceholder()
+    private fun showError() {
+        with(binding) {
+            placeholderImage.setImageResource(R.drawable.placeholder_empty_industry_list)
+            placeholderMessage.setText(R.string.error_industry)
+            placeholder.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
         }
-
     }
 
-    private fun showPlaceholder() {
-        binding.placeholder.visibility = View.VISIBLE
-        binding.recyclerView.visibility = View.GONE
+    private fun showNoInternet() {
+        with(binding) {
+            placeholderImage.setImageResource(R.drawable.placeholder_no_internet)
+            placeholderMessage.setText(R.string.no_internet)
+            placeholder.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+        }
     }
 
-    private fun showContent() {
-        binding.placeholder.visibility = View.GONE
-        binding.recyclerView.visibility = View.VISIBLE
+    private fun showContent(countries: List<Area>) {
+        with(binding) {
+            placeholder.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
+        areaAdapter.updateList(countries)
     }
 }

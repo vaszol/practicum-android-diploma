@@ -24,7 +24,7 @@ import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyDetail
 import javax.net.ssl.HttpsURLConnection
 
-private const val PAGES = 20
+private const val VACANCIES_PER_PAGE = 20
 
 class HhRepositoryImpl(
     private val networkClient: NetworkClient,
@@ -43,11 +43,11 @@ class HhRepositoryImpl(
             VacanciesRequest(
                 text = text,
                 currency = currency,
-                area = filter.getRegion()?.id,
+                area = filter.getRegion()?.id ?: filter.getCountry()?.id,
                 industry = filter.getIndustry()?.id,
                 salary = filter.getSalary(),
                 onlyWithSalary = filter.getShowOnlyWithSalary(),
-                size = PAGES,
+                size = VACANCIES_PER_PAGE,
                 page = page
             )
         )

@@ -42,14 +42,14 @@
             android:id="@+id/search_filter_not_actvie"
             android:layout_width="@dimen/size_48dp"
             android:layout_height="@dimen/size_48dp"
-            android:layout_margin="@dimen/size_4dp"
+            android:layout_marginEnd="@dimen/size_6dp"
             android:background="?attr/colorPrimary"
             android:contentDescription="@string/filter_description"
-            android:padding="@dimen/size_4dp"
             android:scaleType="center"
+            android:visibility="visible"
             android:src="@drawable/ic_filter_not_active"
             app:layout_constraintBottom_toBottomOf="@+id/search_vacancy"
-            app:layout_constraintEnd_toEndOf="@id/right_guideline"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/search_vacancy" />
 
         <!--Кнопка "Фильтр" активная-->
@@ -57,15 +57,14 @@
             android:id="@+id/search_filter_active"
             android:layout_width="@dimen/size_48dp"
             android:layout_height="@dimen/size_48dp"
-            android:layout_margin="@dimen/size_4dp"
+            android:layout_marginEnd="@dimen/size_8dp"
             android:contentDescription="@string/filter_description"
-            android:padding="@dimen/size_4dp"
             android:scaleType="center"
             android:src="@drawable/ic_filter_active"
             android:background="@null"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/search_vacancy"
-            app:layout_constraintEnd_toEndOf="@id/right_guideline"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/search_vacancy" />
 
         <!--Поисковый запрос-->
@@ -137,6 +136,7 @@
                 app:layoutManager="LinearLayoutManager"
                 app:reverseLayout="false"
                 tools:listitem="@layout/item_vacancy"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/search_progress_bar_bottom"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -188,7 +188,7 @@
             app:layout_constraintStart_toStartOf="@id/left_guideline"
             app:layout_constraintTop_toBottomOf="@id/search_view"
             app:layout_constraintVertical_chainStyle="packed"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
         <!-- Сообщение об ошибке! Текст заменится в зависимости от ошибки -->
         <TextView

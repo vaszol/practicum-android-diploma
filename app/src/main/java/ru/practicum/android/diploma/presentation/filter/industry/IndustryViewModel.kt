@@ -24,6 +24,8 @@ class IndustryViewModel(
     val selectedIndustry: LiveData<Industry?>
         get() = _selectedIndustry
 
+    private var originalList: List<Industry> = emptyList()
+
     fun getIndustries() {
         _industryScreenState.value = IndustryScreenState.Loading
         viewModelScope.launch(Dispatchers.IO) {
@@ -32,7 +34,7 @@ class IndustryViewModel(
                     when {
                         pair.second != null -> {
                             Log.e("IOException caught in IndustryViewModel", "IOException occurred")
-                            _industryScreenState.postValue(IndustryScreenState.Error)
+                            _industryScreenState.postValue(IndustryScreenState.NoInternet)
                         }
 
                         pair.first.isNullOrEmpty() -> {
@@ -41,6 +43,7 @@ class IndustryViewModel(
                         }
 
                         else -> {
+                            originalList = pair.first!!
                             _industryScreenState.postValue(Content(pair.first!!))
                         }
                     }
@@ -61,7 +64,19 @@ class IndustryViewModel(
         _selectedIndustry.value = industry
     }
 
-    fun saveSelectedIndustry(industry: Industry) {
-        sharedPrefInteractor.setIndustry(industry)
+    fun filter(query: String) {
+        viewModelScope.launch {
+            val filteredList = if (query.isEmpty()) {
+                originalList
+            } else {
+                originalList.filter { it.name.contains(query, ignoreCase = true) }
+            }
+
+            _industryScreenState.value = if (filteredList.isEmpty()) {
+                IndustryScreenState.NoResults
+            } else {
+                Content(filteredList)
+            }
+        }
     }
 }

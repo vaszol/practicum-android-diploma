@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.models.Host
@@ -22,6 +23,7 @@ class SearchViewModel(
     val event = SingleLiveEvent<SearchEventState>()
     private var latestSearchText: String? = null
     private val currentVacancies = mutableListOf<Vacancy>()
+    private var searchJob: Job? = null
     private var isLoadingNextPage = false
     private var isEndOfListReached = false
     private val debouncer = Debouncer(viewModelScope, SEARCH_DEBOUNCE_DELAY)
@@ -34,13 +36,18 @@ class SearchViewModel(
         page = 0
         currentVacancies.clear()
         isEndOfListReached = false
-        debouncer.debounce {
-            searchRequest()
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            debouncer.debounce {
+                searchRequest()
+            }
         }
+
     }
 
     fun setDefaultState() {
         _searchScreenState.postValue(SearchScreenState.DefaultPage)
+        latestSearchText = null
     }
 
     private fun searchRequest() {
@@ -114,10 +121,19 @@ class SearchViewModel(
         }
     }
 
-    fun updateFilter() {
+    fun updateFilter(query: String?) {
         page = 0
         currentVacancies.clear()
+        latestSearchText = query
+        searchJob?.cancel()
+        debouncer.cancel()
         searchRequest()
+    }
+
+    fun cancelSearchRequest() {
+        searchJob?.cancel()
+        debouncer.cancel()
+        setDefaultState()
     }
 
     companion object {

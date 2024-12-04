@@ -25,7 +25,7 @@ import ru.practicum.android.diploma.presentation.search.SearchEventState
 import ru.practicum.android.diploma.presentation.search.SearchScreenState
 import ru.practicum.android.diploma.presentation.search.SearchViewModel
 import ru.practicum.android.diploma.ui.root.details.DetailsFragment.Companion.VACANCY_ID
-import java.text.DecimalFormat
+import ru.practicum.android.diploma.util.extentions.getFormattedCount
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
@@ -50,13 +50,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        filterViewModel.getInitialState()
         updateFilterUI()
-
-        binding.searchFilterNotActvie.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
-        }
 
         viewModel.searchScreenState.observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -87,6 +81,8 @@ class SearchFragment : Fragment() {
                     viewModel.searchDebounce(s.toString())
                 } else {
                     binding.searchMagnifier.setImageResource(R.drawable.ic_search)
+                    viewModel.cancelSearchRequest()
+                    setKeyboardVisibility(binding.searchEditText, false)
                 }
             }
 
@@ -117,7 +113,7 @@ class SearchFragment : Fragment() {
                 }
             })
 
-            binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
+            searchEditText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     viewModel.searchDebounce(searchEditText.text.toString())
                     setKeyboardVisibility(searchEditText, false)
@@ -126,19 +122,30 @@ class SearchFragment : Fragment() {
                     false
                 }
             }
-
             searchFilterNotActvie.setOnClickListener {
-                findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
+                val query = binding.searchEditText.text.toString()
+                val bundle = bundleOf(
+                    SEARCH_QUERY to query,
+                    BUNDLE_KEY to true
+                )
+                findNavController().navigate(R.id.action_mainFragment_to_filterFragment, bundle)
             }
 
             searchFilterActive.setOnClickListener {
-                findNavController().navigate(R.id.action_mainFragment_to_filterFragment)
+                val query = binding.searchEditText.text.toString()
+                val bundle = bundleOf(
+                    SEARCH_QUERY to query,
+                    BUNDLE_KEY to true
+                )
+                findNavController().navigate(R.id.action_mainFragment_to_filterFragment, bundle)
             }
         }
 
-        setFragmentResultListener("applyFilter") { _, bundle ->
-            if (bundle.getSerializable("updated") as Boolean) {
-                viewModel.updateFilter()
+        setFragmentResultListener(APPLY_FILTER) { _, bundle ->
+            if (bundle.getSerializable(UPDATED) as Boolean) {
+                val savedQuery = bundle.getString(SEARCH_QUERY)
+                binding.searchEditText.setText(savedQuery)
+                viewModel.updateFilter(savedQuery)
                 updateFilterUI()
             }
         }
@@ -150,6 +157,9 @@ class SearchFragment : Fragment() {
             searchImgPlaceholder.visibility = View.VISIBLE
             searchRecyclerView.visibility = View.GONE
             searchVacancyCount.visibility = View.GONE
+            searchError.visibility = View.GONE
+            searchProgressBar.visibility = View.GONE
+            searchProgressBarBottom.visibility = View.GONE
         }
     }
 
@@ -183,7 +193,7 @@ class SearchFragment : Fragment() {
             searchError.visibility = View.GONE
             searchProgressBar.visibility = View.GONE
             searchProgressBarBottom.visibility = View.GONE
-            val formattedCount = DecimalFormat("#,###").format(totalCount)
+            val formattedCount = getFormattedCount(totalCount)
             searchVacancyCount.text = "${
                 resources.getQuantityString(
                     R.plurals.count_postfix_found,
@@ -241,7 +251,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun updateFilterUI() {
-        val hasActiveFilters = filterViewModel.hasActiveFilters()
+        val hasActiveFilters = filterViewModel.hasPrefs()
         if (hasActiveFilters) {
             binding.searchFilterActive.visibility = View.VISIBLE
             binding.searchFilterNotActvie.visibility = View.GONE
@@ -273,5 +283,9 @@ class SearchFragment : Fragment() {
 
     companion object {
         const val EMPTY_TEXT = ""
+        const val BUNDLE_KEY = "key"
+        const val SEARCH_QUERY = "search_query"
+        const val UPDATED = "updated"
+        const val APPLY_FILTER = "applyFilter"
     }
 }
